@@ -1,0 +1,9 @@
+# Idioma padrão: português. Mantém em sincronia com defaultLocale (src/i18n/config.ts).
+# 307, porque a escolha do idioma padrão pode mudar. Equivalente ao antigo redirects() do
+# next.config.ts, que não funciona com output: "export" (Cloudflare Pages).
+/ /pt 307
+
+# A página de QA (/dev/primitives) já devolve o HTML de "não encontrado" (a própria página
+# chama notFound() em produção), mas como arquivo estático isso viria com status 200. Aqui
+# força o status HTTP real de 404, para não ficar exposta como se existisse de verdade.
+/:lang/dev/* /404.html 404
