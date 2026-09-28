@@ -53,19 +53,6 @@
     linear-gradient(to bottom, rgb(6 7 11 / 0.4) 0%, rgb(6 7 11 / 0) 22%);
 }
 
-/* Assinatura vertical na borda esquerda, no lugar do "Available" de outros portfólios. */
-.signature {
-  position: absolute;
-  top: 44%;
-  left: 12px;
-  color: var(--ink-2);
-  font-size: 0.8125rem;
-  font-weight: 600;
-  letter-spacing: 0.14em;
-  writing-mode: vertical-rl;
-  transform: rotate(180deg) translateY(50%);
-}
-
 .social {
   position: absolute;
   top: 20px;
@@ -280,10 +267,6 @@
   }
 
   .shade {
-    display: none;
-  }
-
-  .signature {
     display: none;
   }
 

@@ -39,11 +39,6 @@ export function ProfilePanel({ dict }: { dict: Dictionary }) {
           </div>
           <div className={styles.shade} aria-hidden="true" />
 
-          {/* Assinatura discreta do autor. Decorativa: o nome já está no texto da página. */}
-          <span className={styles.signature} aria-hidden="true">
-            x7rG
-          </span>
-
           <ul className={styles.social} aria-label={a11y.socialNav}>
             {socials.map(({ name, href, Icon }) => (
               <li key={name}>
