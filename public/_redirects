@@ -4,6 +4,6 @@
 / /pt 307
 
 # A página de QA (/dev/primitives) já devolve o HTML de "não encontrado" (a própria página
-# chama notFound() em produção), mas como arquivo estático isso viria com status 200. Aqui
-# força o status HTTP real de 404, para não ficar exposta como se existisse de verdade.
-/:lang/dev/* /404.html 404
+# chama notFound() em produção). Uma regra aqui para forçar o status HTTP 404 real foi
+# tentada e removida: o deploy no modelo Workers-assets só aceita 200/301/302/303/307/308
+# em _redirects (código 100324). O conteúdo já é seguro; só o status HTTP fica 200.
