@@ -1,5 +1,11 @@
-# A imagem Open Graph é exportada sem extensão (out/[lang]/opengraph-image); um host de
-# arquivos estáticos decide o Content-Type pela extensão, então sem isto ela sai como
-# application/octet-stream em vez de image/png (quebra a prévia social).
+# A imagem Open Graph e os ícones são exportados sem extensão (out/[lang]/opengraph-image,
+# out/icon, out/apple-icon); um host de arquivos estáticos decide o Content-Type pela
+# extensão, então sem isto eles saem sem esse header (quebra a prévia social e o favicon).
 /*/opengraph-image
+  Content-Type: image/png
+
+/icon
+  Content-Type: image/png
+
+/apple-icon
   Content-Type: image/png
