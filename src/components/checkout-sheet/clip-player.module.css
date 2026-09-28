@@ -1,0 +1,96 @@
+/*
+ * Uma gravação do protótipo (interface clara) numa moldura, com um botão de reproduzir dentro dela.
+ * A moldura fixa a proporção do vídeo, então nada se move quando ele carrega.
+ */
+
+.frame {
+  position: relative;
+  overflow: hidden;
+  inline-size: 100%;
+  max-inline-size: var(--clip-max, none);
+  aspect-ratio: var(--ar-n);
+  border-radius: 12px;
+  background: #f5f6fa;
+  box-shadow:
+    0 0 0 1px rgb(255 255 255 / 0.12),
+    0 22px 40px -20px rgb(0 0 0 / 0.85);
+}
+
+.poster {
+  position: absolute;
+  inset: 0;
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+  object-position: var(--pos-n);
+}
+
+.video {
+  position: relative;
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+  object-position: var(--pos-n);
+  opacity: 0;
+}
+
+.frame[data-started] .video {
+  opacity: 1;
+}
+
+/* Coluna larga: o enquadramento inteiro da gravação. */
+@container (min-width: 620px) {
+  .frame {
+    aspect-ratio: var(--ar);
+  }
+
+  .poster,
+  .video {
+    object-position: 50% 50%;
+  }
+}
+
+.control {
+  position: absolute;
+  inset-inline-start: 10px;
+  inset-block-end: 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-block-size: 36px;
+  padding: 0 14px 0 11px;
+  border: 1px solid rgb(0 0 0 / 0.55);
+  border-radius: 999px;
+  background: rgb(15 15 15 / 0.82);
+  color: var(--ink);
+  font: inherit;
+  font-size: var(--text-meta);
+  font-weight: 500;
+  line-height: 1;
+  cursor: pointer;
+  transition:
+    background-color var(--dur-fast) var(--ease-press),
+    border-color var(--dur-fast) var(--ease-press);
+}
+
+.control svg {
+  font-size: 1.0625rem;
+  color: var(--ck-ink, var(--accent));
+}
+
+.control:hover {
+  background: rgb(15 15 15 / 0.94);
+  border-color: var(--ck-ink, var(--accent));
+}
+
+.control:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .control {
+    transition: none;
+  }
+}

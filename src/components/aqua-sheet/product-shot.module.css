@@ -1,0 +1,36 @@
+/*
+ * Captura real recortada por CSS. A imagem inteira fica dentro de uma caixa com a proporção do
+ * recorte; as variáveis vêm de ProductShot. Coluna estreita usa o recorte "-n"; a partir de
+ * 560 px de coluna (o mesmo ponto das outras folhas) usa o recorte largo.
+ */
+
+.shot {
+  position: relative;
+  overflow: hidden;
+  inline-size: 100%;
+  aspect-ratio: var(--ar-n);
+  /* Cinza claro do próprio app: evita um clarão escuro antes de a imagem carregar. */
+  background: #eef1f3;
+}
+
+.shot img {
+  position: absolute;
+  display: block;
+  max-inline-size: none;
+  block-size: auto;
+  inline-size: var(--w-n);
+  inset-inline-start: var(--l-n);
+  inset-block-start: var(--t-n);
+}
+
+@container (min-width: 560px) {
+  .shot {
+    aspect-ratio: var(--ar);
+  }
+
+  .shot img {
+    inline-size: var(--w);
+    inset-inline-start: var(--l);
+    inset-block-start: var(--t);
+  }
+}

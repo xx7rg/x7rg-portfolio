@@ -1,0 +1,5 @@
+.crop {
+  position: relative;
+  overflow: hidden;
+  inline-size: 100%;
+}

@@ -1,0 +1,594 @@
+/*
+ * A faixa de projeto: um TERRITÓRIO próprio, horizontal, em coluna com as outras. Um sistema só (mesma tipografia,
+ * espaçamento, borda, movimento e interação) com QUATRO composições de imagem:
+ *  - divisão (`.split`):   texto à esquerda, mídia à direita, sumindo para o texto;
+ *  - reverso (`.reverse`): mídia à esquerda, texto à direita;
+ *  - sangria (`.bleed`):   a mídia atravessa a faixa e o texto fica sobre o degradê que a protege;
+ *  - objeto (`.object`):   um elemento isolado no espaço negativo.
+ * `.textEnd` põe o texto à direita (só na coluna larga). Cada projeto tem duas cores medidas nos materiais dele
+ * (`--acc` e `--acc2`); o resto do portfólio continua escuro e neutro, e a cor de um projeto NUNCA passa da borda dele.
+ *
+ * SEPARAÇÃO. Cada faixa é independente: tem a própria borda, o próprio recorte (`overflow: clip`) e um vão de fundo
+ * visível entre ela e a vizinha (projects.module.css). Nada de uma faixa entra na outra: não há sobreposição, margem
+ * negativa nem sombra que escape do recorte. As camadas de imagem se sobrepõem à vontade, mas DENTRO da faixa.
+ *
+ * FECHADA (índice): 92 px com o número, a categoria, o nome, a cor do projeto e um trecho da imagem real, e uma seta
+ * discreta. É o que se vê em toda parte: no toque e no celular a faixa é sempre assim, e um toque abre o projeto.
+ * EXPANDIDA (só com mouse fino, ou com o foco de teclado): a altura cresce PARA BAIXO (layout de verdade), as de baixo
+ * descem, e a frase, a imagem inteira e o "Abrir →" aparecem. É a única faixa com essa presença: a luz de borda dela
+ * é a mais forte da lista. Fora a altura e a cor, nada se move: sem deslocamento lateral, sem escala.
+ * Três intensidades de cor por faixa, cada uma transitável (\`--st-edge\`, \`--st-wash\`, \`--st-glow\`):
+ *  - QUIETA (as demais): cor baixa e a imagem entra pouco; é o índice;
+ *  - ATIVA (região de atenção da rolagem): atenção secundária, um pouco mais de cor; a altura não muda;
+ *  - EXPANDIDA (ponteiro ou foco): a mais forte. O ponteiro tem prioridade sobre a rolagem.
+ */
+
+/* Quanto a máscara da imagem recua: positivo = a imagem entra menos na faixa. */
+@property --st-q {
+  syntax: "<percentage>";
+  inherits: true;
+  initial-value: 0%;
+}
+
+/* A cor do projeto, em três intensidades: a luz da borda, o véu de cor no fundo e o brilho de DENTRO. */
+@property --st-edge {
+  syntax: "<percentage>";
+  inherits: true;
+  initial-value: 16%;
+}
+
+@property --st-wash {
+  syntax: "<percentage>";
+  inherits: true;
+  initial-value: 8%;
+}
+
+@property --st-glow {
+  syntax: "<percentage>";
+  inherits: true;
+  initial-value: 0%;
+}
+
+.strip {
+  --acc: #8a8a8a;
+  --acc2: var(--acc);
+  /* As duas alturas: fechada e expandida. A caixa da imagem tem sempre a altura expandida e a faixa a recorta. */
+  --h0: 92px;
+  --h1: 236px;
+
+  position: relative;
+  isolation: isolate;
+  display: block;
+  block-size: var(--h0);
+  /* clip (e não só hidden): um elemento focado dentro de um contêiner hidden o rolaria por dentro; o clip nunca rola. */
+  overflow: hidden;
+  overflow: clip;
+  border: 1px solid color-mix(in srgb, var(--acc) var(--st-edge), rgb(255 255 255 / 0.07));
+  border-radius: 20px;
+  background:
+    radial-gradient(72% 160% at 4% 0%, color-mix(in srgb, var(--acc) var(--st-wash), transparent), transparent 68%),
+    color-mix(in srgb, var(--acc) 5%, #0e0e0e);
+  box-shadow:
+    /* a luz do projeto na borda de baixo e um brilho de dentro: nada disto passa da borda da faixa */
+    inset 0 -1px 0 color-mix(in srgb, var(--acc2) calc(var(--st-edge) * 0.9), transparent),
+    inset 0 0 48px -30px color-mix(in srgb, var(--acc) var(--st-glow), transparent);
+  transition:
+    opacity 500ms var(--ease-settle),
+    --st-q 700ms var(--ease-settle),
+    --st-edge 450ms var(--ease-settle),
+    --st-wash 450ms var(--ease-settle),
+    --st-glow 450ms var(--ease-settle),
+    block-size 480ms var(--ease-settle);
+}
+
+/* ---------- A imagem ---------- */
+
+.visual {
+  --dir: 90deg;
+  --f0: 6%;
+  --f1: 44%;
+  --rest: 12px;
+
+  position: absolute;
+  inset-block: 0 auto;
+  inset-inline: auto 0;
+  z-index: -1;
+  inline-size: var(--vw, 62%);
+  block-size: var(--h1);
+  mask-image: linear-gradient(
+    var(--dir),
+    transparent 0,
+    transparent calc(var(--f0) + var(--st-q)),
+    #000 calc(var(--f1) + var(--st-q))
+  );
+  transition:
+    filter 500ms var(--ease-settle),
+    transform 700ms var(--ease-settle),
+    translate 700ms var(--ease-settle),
+    opacity 700ms var(--ease-settle);
+}
+
+/* ---------- O texto ---------- */
+
+.copy {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  inline-size: 100%;
+  min-block-size: var(--h1);
+  padding: 20px 56px 26px 18px;
+}
+
+.meta {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin: 0;
+  color: var(--ink-3);
+  font-size: var(--text-meta);
+  line-height: 1.2;
+}
+
+.num {
+  color: var(--acc);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.cat {
+  color: var(--ink-2);
+  font-weight: 500;
+}
+
+.year {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Uma linha só: o nome não pode mudar a altura da faixa fechada. */
+.title {
+  max-inline-size: 100%;
+  margin: 0;
+  overflow: hidden;
+  font-family: var(--strip-serif, inherit);
+  font-size: clamp(1.25rem, 5.6cqi, 1.6rem);
+  font-weight: 500;
+  line-height: 1.02;
+  letter-spacing: -0.035em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  /* O ponteiro empurra o título um ou dois pixels; a transição suaviza o quadro a quadro. */
+  translate: calc(var(--px, 0) * 2px) calc(var(--py, 0) * 1.5px);
+  transition: translate 320ms var(--ease-press);
+}
+
+.title em {
+  color: var(--acc);
+  font-style: italic;
+  font-weight: 500;
+}
+
+/*
+ * O que a faixa expandida revela: a frase e o convite. Sempre no DOM e na ordem de leitura, mesmo com a faixa
+ * fechada (leitor de tela, teclado). A revelação do painel é só opacidade; o deslocamento vai na FRASE, que não contém
+ * o botão. NUNCA um transform em .more, .copy ou .cta: ele viraria o bloco de contenção do ::after esticado do botão
+ * e a área de clique deixaria de cobrir a faixa.
+ */
+.more {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  flex: 1;
+  gap: 8px;
+  opacity: 0;
+  transition: opacity 260ms var(--ease-press);
+}
+
+.statement {
+  margin: 0;
+  max-inline-size: 40ch;
+  color: var(--ink-2);
+  font-size: var(--text-small);
+  line-height: 1.45;
+  text-wrap: pretty;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  translate: 0 8px;
+  transition: translate 260ms var(--ease-press);
+}
+
+/*
+ * O botão de abrir: um convite curto ("Abrir →"). É um único botão real: o ::after dele se estica sobre a faixa
+ * inteira (a faixa é o elemento posicionado mais próximo), então clicar ou tocar em qualquer ponto abre o projeto,
+ * com a faixa fechada ou aberta. O nome acessível continua completo ("Abrir projeto: Neon Blockfall").
+ */
+.cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: auto;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--ink);
+  font: inherit;
+  font-size: var(--text-small);
+  font-weight: 500;
+  line-height: 1.2;
+  cursor: pointer;
+  transition: color 250ms var(--ease-press);
+}
+
+.cta svg {
+  color: var(--acc);
+  font-size: 1.125rem;
+  transition:
+    transform var(--dur-ui) var(--ease-settle),
+    color 250ms var(--ease-press);
+}
+
+.cta::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  border-radius: 20px;
+}
+
+.cta:focus-visible {
+  outline: none;
+}
+
+.cta:focus-visible::after {
+  outline: 2px solid var(--focus);
+  outline-offset: -3px;
+}
+
+/*
+ * A seta discreta da faixa fechada: o convite visível no TOQUE, onde não há hover nem expansão. Com mouse fino ela não
+ * aparece (o índice fica limpo; a faixa reage ao ponteiro e o "Abrir →" surge ao expandir). Decorativa; quem abre é o botão.
+ */
+.go {
+  display: none;
+  position: absolute;
+  inset-block-start: calc((var(--h0) - 28px) / 2);
+  inset-inline-end: 14px;
+  z-index: 1;
+  place-items: center;
+  inline-size: 28px;
+  block-size: 28px;
+  border: 1px solid color-mix(in srgb, var(--acc) 34%, transparent);
+  border-radius: 50%;
+  background: rgb(12 12 12 / 0.62);
+  color: var(--acc);
+  pointer-events: none;
+  transition: opacity 200ms var(--ease-press);
+}
+
+.go svg {
+  font-size: 1rem;
+}
+
+@media (hover: none), (pointer: coarse) {
+  .go {
+    display: grid;
+  }
+}
+
+/* ---------- Estados ---------- */
+
+.strip[data-strip="feito-pela-bya"] {
+  --strip-serif: var(--font-playfair), "Playfair Display", Georgia, serif;
+}
+
+/* Recibo Digital: a folha clara é um campo de propósito, de borda dura, sem fade. */
+.strip[data-strip="recibo-digital"] .visual {
+  mask-image: none;
+}
+
+/* QUIETA (as demais): a imagem entra pouco e um pouco mais escura. Nada de opacidade: é um índice limpo, não desligado. */
+.strip[data-js]:not([data-active]) .visual,
+.strip[data-js]:not([data-hover]):not([data-active]) .visual {
+  filter: saturate(0.9) brightness(0.9);
+}
+
+.strip[data-js]:not([data-hover]):not(:has(.cta:focus-visible)) {
+  --st-q: 12%;
+}
+
+/* ATIVA (região de atenção da rolagem): atenção secundária, um pouco mais de cor e de imagem; a altura não muda. */
+.strip[data-js][data-active] {
+  --st-edge: 34%;
+  --st-wash: 13%;
+  --st-glow: 16%;
+}
+
+.strip[data-js][data-active]:not([data-hover]):not(:has(.cta:focus-visible)) {
+  --st-q: 6%;
+}
+
+/* EXPANDIDA (ponteiro ou foco de teclado): a altura cresce para baixo e a luz do projeto chega ao máximo, contida na faixa. */
+.strip[data-js][data-hover],
+.strip:has(.cta:focus-visible) {
+  --st-edge: 62%;
+  --st-wash: 19%;
+  --st-glow: 36%;
+  --st-q: -6%;
+
+  block-size: var(--h1);
+}
+
+.strip[data-js][data-hover] .visual,
+.strip:has(.cta:focus-visible) .visual {
+  filter: saturate(1.05) contrast(1.03);
+  translate: 0 0;
+}
+
+/* Com o ponteiro em outra faixa, a ativa por rolagem volta a ficar quieta: o ponteiro é a atenção intencional. */
+[data-hovering] .strip[data-js][data-active]:not([data-hover]) {
+  --st-edge: 16%;
+  --st-wash: 8%;
+  --st-glow: 0%;
+}
+
+[data-hovering] .strip[data-js][data-active]:not([data-hover]) .visual {
+  filter: saturate(0.9) brightness(0.9);
+}
+
+/* A imagem da faixa fechada começa deslocada para a borda e assenta ao ficar ativa ou expandida. */
+.strip[data-js]:not([data-active]):not([data-hover]):not(:has(.cta:focus-visible)) .visual {
+  translate: var(--rest) 0;
+}
+
+/* Expandida: a frase e o convite aparecem; a seta some (o "Abrir →" toma o lugar dela). */
+.strip[data-js][data-hover] .more,
+.strip:has(.cta:focus-visible) .more {
+  opacity: 1;
+  transition: opacity 340ms var(--ease-settle) 110ms;
+}
+
+.strip[data-js][data-hover] .statement,
+.strip:has(.cta:focus-visible) .statement {
+  translate: 0 0;
+  transition: translate 340ms var(--ease-settle) 110ms;
+}
+
+.strip[data-js][data-hover] .go,
+.strip:has(.cta:focus-visible) .go {
+  opacity: 0;
+}
+
+.strip[data-hover] .cta svg,
+.strip:has(.cta:focus-visible) .cta svg {
+  transform: translateX(4px);
+}
+
+/*
+ * O "Abrir →", com ponteiro fino: quieto, e se acende quando a faixa é a ativa, é expandida ou tem o foco. No toque
+ * a faixa nunca expande: a seta discreta é o convite, e o toque em qualquer ponto abre o projeto.
+ */
+@media (hover: hover) and (pointer: fine) {
+  .cta {
+    color: var(--ink-2);
+  }
+
+  .cta svg {
+    color: var(--ink-3);
+  }
+
+  .strip[data-active] .cta,
+  .strip[data-hover] .cta,
+  .cta:focus-visible {
+    color: var(--ink);
+  }
+
+  .strip[data-active] .cta svg,
+  .strip[data-hover] .cta svg,
+  .cta:focus-visible svg {
+    color: var(--acc);
+  }
+}
+
+/*
+ * Revelar: só faixas abaixo da dobra na carga, uma vez, quando se aproximam. O deslocamento vai nos filhos
+ * de texto, NUNCA em .copy: um transform em .copy o tornaria o bloco de contenção do ::after do botão e a
+ * área de clique deixaria de cobrir a faixa. O botão só muda de opacidade.
+ */
+.strip[data-reveal="armed"] :is(.meta, .title) {
+  opacity: 0;
+  transform: translateY(14px);
+}
+
+.strip[data-reveal="armed"] .visual {
+  opacity: 0;
+  transform: translateX(24px) scale(1.02);
+}
+
+.strip[data-reveal="shown"] :is(.meta, .title) {
+  transition:
+    opacity 700ms var(--ease-settle),
+    transform 700ms var(--ease-settle),
+    translate 320ms var(--ease-press);
+}
+
+/* ---------- Coluna larga: a composição de cada família ---------- */
+
+@container (min-width: 540px) {
+  .copy {
+    inline-size: 45%;
+    padding: 20px 0 28px 30px;
+  }
+
+  .title {
+    font-size: clamp(1.5rem, 3.7cqi, 1.95rem);
+  }
+
+  .visual {
+    --vw: 62%;
+  }
+
+  /* Divisão: mídia à direita, sumindo para o texto. */
+  .split .visual {
+    inset-inline: auto 0;
+  }
+
+  /* Reverso: mídia à esquerda, texto à direita. */
+  .reverse .visual {
+    --vw: 64%;
+    --dir: 270deg;
+
+    inset-inline: 0 auto;
+  }
+
+  /* Sangria e objeto: a caixa é a faixa inteira; o texto fica sobre a parte que some. */
+  .bleed .visual,
+  .object .visual {
+    --vw: 100%;
+
+    inset-inline: 0;
+  }
+
+  .textEnd .visual {
+    --rest: -12px;
+  }
+
+  .textEnd .copy {
+    inline-size: 44%;
+    margin-inline-start: auto;
+    padding: 20px 56px 28px 0;
+  }
+
+  /* De cada projeto: quanto da caixa fica visível e onde o fade termina. */
+  .strip[data-strip="neon-blockfall"] .visual {
+    --f0: 6%;
+    --f1: 42%;
+    --vw: 64%;
+  }
+
+  .strip[data-strip="aquacontrol"] .visual {
+    --f0: 18%;
+    --f1: 58%;
+  }
+
+  .strip[data-strip="feito-pela-bya"] .visual {
+    --f0: 20%;
+    --f1: 56%;
+  }
+
+  .strip[data-strip="adriano-reformas-vigo"] .visual {
+    --f0: 30%;
+    --f1: 66%;
+  }
+
+  .strip[data-strip="login-the-moon"] .visual {
+    --vw: 68%;
+    --f0: 2%;
+    --f1: 38%;
+  }
+
+  .strip[data-strip="light-login"] .visual {
+    --f0: 32%;
+    --f1: 52%;
+  }
+
+  .strip[data-strip="checkout"] .visual {
+    --vw: 66%;
+    --f0: 16%;
+    --f1: 56%;
+  }
+
+  .strip[data-strip="discord-camera-live"] .visual {
+    --f0: 30%;
+    --f1: 60%;
+  }
+
+  /* Recibo Digital: a folha clara é um campo de propósito, de borda dura, sem fade. O texto fica ao lado dela. */
+  .strip[data-strip="recibo-digital"] .visual {
+    --vw: 44%;
+
+    inset-inline: 0 auto;
+  }
+
+  .strip[data-strip="recibo-digital"] .copy {
+    inline-size: 52%;
+  }
+
+  /* Light Login: a luz do abajur alcança o texto, dentro da faixa. */
+  .strip[data-strip="light-login"] {
+    background:
+      radial-gradient(38% 120% at 46% 54%, color-mix(in srgb, var(--acc) calc(var(--st-wash) * 1.1), transparent), transparent 70%),
+      radial-gradient(72% 160% at 4% 0%, color-mix(in srgb, var(--acc2) var(--st-wash), transparent), transparent 68%),
+      color-mix(in srgb, var(--acc) 5%, #0e0e0e);
+  }
+
+  .textEnd[data-reveal="armed"] .visual {
+    transform: translateX(-24px) scale(1.02);
+  }
+}
+
+/* Coluna larga porém estreita (perto de 540 px): o texto ganha largura para o nome caber numa linha. */
+@container (min-width: 540px) and (max-width: 699px) {
+  .copy {
+    inline-size: 50%;
+  }
+
+  .textEnd .copy {
+    inline-size: 48%;
+  }
+
+  .title {
+    font-size: clamp(1.25rem, 3.7cqi, 1.75rem);
+  }
+}
+
+/* Coluna estreita (celular): o texto ocupa a faixa, a imagem fica atrás, à direita, e o Recibo vira uma folha estreita. */
+@container (max-width: 539px) {
+  .strip[data-strip="recibo-digital"] .visual {
+    --vw: 34%;
+  }
+}
+
+/*
+ * Movimento reduzido: fica a composição estática (cores, camadas) e os estados de cor e foco. Saem o avanço da
+ * máscara, o paralaxe e as transições; a expansão continua, mas instantânea.
+ */
+@media (prefers-reduced-motion: reduce) {
+  .strip,
+  .more,
+  .statement,
+  .go {
+    transition: none;
+  }
+
+  .visual,
+  .title,
+  .cta svg {
+    transition: none;
+  }
+
+  .title {
+    translate: none;
+  }
+
+  .strip[data-js]:not([data-active]),
+  .strip[data-js][data-hover],
+  .strip:has(.cta:focus-visible),
+  [data-hovering] .strip[data-js][data-active]:not([data-hover]) {
+    --st-q: 0%;
+  }
+
+  .strip[data-js]:not([data-active]) .visual,
+  .strip[data-js]:not([data-hover]):not([data-active]) .visual,
+  [data-hovering] .strip[data-js][data-active]:not([data-hover]) .visual {
+    filter: none;
+    translate: none;
+  }
+
+  .strip[data-hover] .cta svg,
+  .strip:has(.cta:focus-visible) .cta svg {
+    transform: none;
+  }
+}

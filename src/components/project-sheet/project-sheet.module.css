@@ -1,0 +1,241 @@
+/*
+ * Folha de projeto: um cartão de vidro (moldura de 6 px) com superfície interna escura.
+ * A composição responde à largura da COLUNA onde ela está (container query no contêiner
+ * de projects.module.css), não à da janela, porque no desktop a coluna divide a tela
+ * com o painel fixo:
+ *  - estreita (celular, coluna curta): tudo empilhado, na ordem de leitura;
+ *  - larga (560+): título e ponto de partida lado a lado e decisões em duas colunas.
+ * O palco das capturas e as anotações têm CSS próprio (showcase, proof-build).
+ */
+
+.sheet {
+  padding: var(--bezel);
+  border-radius: var(--radius-panel);
+}
+
+.card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  row-gap: clamp(24px, 4svh, 36px);
+  padding: clamp(20px, 5cqi, 40px);
+  border-radius: var(--radius-inner);
+  background: var(--stock);
+}
+
+/* ---------- Identidade e contexto ---------- */
+
+.head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  justify-items: start;
+  row-gap: 16px;
+}
+
+.icon {
+  display: block;
+  inline-size: 56px;
+  block-size: 56px;
+  border-radius: 14px;
+  /* O símbolo do jogo emite a sua luz: ciano (#65efff) de um lado, magenta (#ff2ea6) do outro, com baixa opacidade. */
+  box-shadow:
+    0 0 0 1px rgb(101 239 255 / 0.28),
+    -6px 8px 26px -10px rgb(101 239 255 / 0.4),
+    8px 10px 26px -12px rgb(255 46 166 / 0.36);
+}
+
+.title {
+  margin: 0;
+  font-size: var(--text-project);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+
+/* Tipo, ano e estado em pílulas: leitura instantânea, sem tabela de metadados. */
+.facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.fact {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 14px;
+  border: 1px solid var(--rule-strong);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--ink-2);
+  font-size: var(--text-meta);
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+.factDot {
+  flex: none;
+  inline-size: 7px;
+  block-size: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.story {
+  margin: 0;
+  max-inline-size: 21em;
+  color: var(--ink);
+  font-size: clamp(1.0625rem, 2.4cqi, 1.3125rem);
+  line-height: 1.35;
+  letter-spacing: -0.015em;
+  text-wrap: pretty;
+}
+
+/* Legenda das capturas + paleta do jogo, logo abaixo do palco. */
+.mediaMeta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px 20px;
+}
+
+.mediaCaption {
+  margin: 0;
+  max-inline-size: 46ch;
+  color: var(--ink-3);
+  font-size: var(--text-meta);
+  line-height: 1.4;
+}
+
+.palette {
+  inline-size: 132px;
+  flex: none;
+}
+
+/* ---------- Decisões ---------- */
+
+.decisions {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.decision {
+  display: grid;
+  /* As decisões dividem a linha em coluna larga: sem isto, a mais curta estica as suas linhas internas. */
+  align-content: start;
+  justify-items: start;
+  row-gap: 8px;
+  padding-block: 20px 4px;
+  border-top: 1px solid var(--rule);
+}
+
+.decisionTitle {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+.decisionBody {
+  margin: 0;
+  max-inline-size: 44ch;
+  color: var(--ink-muted);
+  font-size: var(--text-small);
+  line-height: 1.5;
+}
+
+/* O placar do aparelho: a evidência visual do que o jogo tem hoje no lugar do ranking online. */
+.decisionEvidence {
+  margin-top: 8px;
+  overflow: hidden;
+  border: 1px solid var(--rule-strong);
+  border-radius: 14px;
+}
+
+/* Marca de desalinhamento + o que ela significa, em texto. */
+.unfinished {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  padding: 5px 12px 5px 9px;
+  border: 1px solid var(--rule-strong);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 0.75rem;
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+.credit {
+  padding-top: 18px;
+  border-top: 1px solid var(--rule);
+}
+
+/* ---------- Coluna larga ---------- */
+
+@container (min-width: 560px) {
+  .head {
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+    grid-template-areas:
+      "icon story"
+      "title story"
+      "facts story";
+    column-gap: 32px;
+  }
+
+  .icon {
+    grid-area: icon;
+  }
+
+  .title {
+    grid-area: title;
+  }
+
+  .facts {
+    grid-area: facts;
+  }
+
+  .story {
+    grid-area: story;
+    align-self: end;
+  }
+
+  .decisions {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 32px;
+  }
+}
+
+/*
+ * Paisagem curta (celular deitado): o cabeçalho encolhe para o jogo aparecer logo
+ * na primeira tela do cartão, em vez de depois de uma faixa de título e metadados.
+ */
+@media (max-height: 520px) {
+  .head {
+    row-gap: 10px;
+  }
+
+  .icon {
+    inline-size: 40px;
+    block-size: 40px;
+    border-radius: 11px;
+  }
+
+  .title {
+    font-size: clamp(1.75rem, 5cqi, 2.5rem);
+  }
+
+  .card {
+    row-gap: 18px;
+  }
+}

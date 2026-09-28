@@ -1,0 +1,175 @@
+/*
+ * Proof / Build: botões, pinos sobre as capturas e as três anotações do modo ativo.
+ * Coluna estreita: as anotações em lista, uma por linha, sem pinos (a lista basta).
+ * Coluna larga (container query): pinos numerados sobre as capturas e as anotações em
+ * três colunas, logo abaixo delas. Movimento de 240 ms, deslocamento curto, sem quique.
+ */
+
+.root {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  row-gap: 20px;
+}
+
+.control {
+  justify-self: start;
+  display: inline-flex;
+  padding: 4px;
+  border: 1px solid var(--rule-strong);
+  border-radius: 999px;
+  background: var(--surface);
+}
+
+.toggle {
+  min-block-size: 40px;
+  min-inline-size: 84px;
+  padding: 0 20px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ink-2);
+  font: inherit;
+  font-size: var(--text-small);
+  font-weight: 500;
+  line-height: 1;
+  cursor: pointer;
+  transition:
+    background-color var(--dur-fast) var(--ease-press),
+    color var(--dur-fast) var(--ease-press);
+}
+
+.toggle:hover {
+  color: var(--ink);
+}
+
+/* O botão ativo é a pílula de acento: estado legível sem depender só da cor (fica cheio). */
+.toggle[aria-pressed="true"] {
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-weight: 700;
+}
+
+.panel[hidden],
+.pins[hidden] {
+  display: none;
+}
+
+.caption {
+  margin: 0 0 4px;
+  color: var(--ink-3);
+  font-size: var(--text-meta);
+  line-height: 1.3;
+}
+
+.notes {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.note {
+  display: grid;
+  align-content: start;
+  row-gap: 8px;
+  padding-block: 16px 4px;
+  border-top: 1px solid var(--rule);
+}
+
+.noteHead {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* O número da anotação é o mesmo círculo do pino: um só vocabulário. */
+.num,
+.pin {
+  display: grid;
+  flex: none;
+  place-items: center;
+  inline-size: 24px;
+  block-size: 24px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-size: 0.75rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.noteTitle {
+  margin: 0;
+  font-size: 1.0625rem;
+  font-weight: 500;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+}
+
+.noteBody {
+  margin: 0;
+  color: var(--ink-muted);
+  font-size: var(--text-small);
+  line-height: 1.5;
+}
+
+/* Evidência dentro de uma anotação: um trecho de captura real, na moldura do sistema. */
+.evidence {
+  margin-top: 4px;
+  overflow: hidden;
+  border: 1px solid var(--rule-strong);
+  border-radius: 12px;
+}
+
+/* ---------- Pinos (só coluna larga) ---------- */
+
+.pins {
+  position: absolute;
+  inset: 0;
+  display: none;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  pointer-events: none;
+}
+
+.pin {
+  position: absolute;
+  margin: -12px 0 0 -12px;
+  box-shadow: 0 0 0 4px rgb(5 9 20 / 0.75);
+}
+
+/* ---------- Transição: só depois da primeira escolha ---------- */
+
+@keyframes align-in {
+  from {
+    opacity: 0;
+    transform: translate(6px, -4px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(0, 0);
+  }
+}
+
+.root[data-touched] .panel:not([hidden]),
+.root[data-touched] .pins:not([hidden]) .pin {
+  animation: align-in var(--dur-ui) var(--ease-settle) both;
+}
+
+/* ---------- Coluna larga ---------- */
+
+@container (min-width: 560px) {
+  .pins {
+    display: block;
+  }
+}
+
+@container (min-width: 700px) {
+  .notes {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    column-gap: 28px;
+  }
+}

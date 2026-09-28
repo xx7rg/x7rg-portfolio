@@ -1,0 +1,127 @@
+/*
+ * A comparação do mesmo quadro apagado e aceso. As duas capturas são empilhadas e a camada "aceso" é
+ * recortada por um clip-path à direita da divisória (--p): o abajur, o cordão e o formulário ficam no mesmo
+ * lugar nas duas, então a divisória mostra só a diferença de estado. Coluna estreita: o enquadramento se
+ * fecha no abajur (proporção e ponto de corte iguais nas duas camadas, para continuarem alinhadas).
+ */
+
+.frame {
+  position: relative;
+  inline-size: 100%;
+  aspect-ratio: var(--ar-n);
+  overflow: hidden;
+  background: #050607;
+  cursor: ew-resize;
+  touch-action: pan-y;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.layer {
+  object-fit: cover;
+  object-position: var(--pos-n);
+}
+
+.onWrap {
+  position: absolute;
+  inset: 0;
+  clip-path: inset(0 0 0 var(--p));
+}
+
+.line {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: var(--p);
+  inline-size: 2px;
+  margin-inline-start: -1px;
+  background: linear-gradient(180deg, transparent, var(--lamp) 14%, var(--lamp) 86%, transparent);
+  box-shadow: 0 0 16px rgb(232 168 79 / 0.6);
+  pointer-events: none;
+}
+
+.grip {
+  position: absolute;
+  inset-block-start: 50%;
+  inset-inline-start: 50%;
+  inline-size: 40px;
+  block-size: 40px;
+  margin: -20px 0 0 -20px;
+  border: 2px solid var(--lamp);
+  border-radius: 50%;
+  background: rgb(8 7 6 / 0.78);
+  box-shadow: 0 0 18px rgb(232 168 79 / 0.45);
+}
+
+.grip::before,
+.grip::after {
+  content: "";
+  position: absolute;
+  inset-block-start: 50%;
+  inline-size: 7px;
+  block-size: 7px;
+  margin-top: -3.5px;
+}
+
+.grip::before {
+  inset-inline-start: 9px;
+  border-inline-start: 2px solid var(--lamp-ink);
+  border-block-end: 2px solid var(--lamp-ink);
+  transform: rotate(45deg);
+}
+
+.grip::after {
+  inset-inline-end: 9px;
+  border-inline-end: 2px solid var(--lamp-ink);
+  border-block-start: 2px solid var(--lamp-ink);
+  transform: rotate(45deg);
+}
+
+.tag {
+  position: absolute;
+  inset-block-end: 14px;
+  padding: 5px 12px;
+  border: 1px solid rgb(232 168 79 / 0.35);
+  border-radius: 999px;
+  background: rgb(8 7 6 / 0.72);
+  color: var(--lamp-ink);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  line-height: 1.2;
+  pointer-events: none;
+}
+
+.tagOff {
+  inset-inline-start: 14px;
+}
+
+.tagOn {
+  inset-inline-end: 14px;
+}
+
+/* O controle deslizante de verdade: fora da vista, mas focável, com o anel de foco desenhado no quadro. */
+.range {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  opacity: 0;
+}
+
+.frame:has(.range:focus-visible) {
+  outline: 2px solid var(--focus);
+  outline-offset: -3px;
+}
+
+@container (min-width: 560px) {
+  .frame {
+    aspect-ratio: var(--ar);
+  }
+
+  .layer {
+    object-position: 50% 50%;
+  }
+}

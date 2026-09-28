@@ -1,0 +1,222 @@
+/*
+ * A apresentação interna compacta. Mesma casca das folhas (moldura de vidro de 6 px e cartão escuro), com a
+ * cor do projeto (`--acc`, medida nas capturas) só em detalhes: um ponto, um brilho atrás da imagem e o
+ * traço dos chips. A imagem principal vem primeiro e grande; o texto é curto; os links externos ficam por
+ * último, discretos, como evidência depois de o visitante entender o trabalho.
+ */
+
+.sheet {
+  --acc: #8a8a8a;
+
+  padding: var(--bezel);
+  border-radius: var(--radius-panel);
+}
+
+.card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  row-gap: clamp(20px, 3.6svh, 30px);
+  padding: clamp(20px, 5cqi, 36px);
+  border-radius: var(--radius-inner);
+  background: var(--stock);
+}
+
+.head {
+  display: grid;
+  row-gap: 12px;
+  justify-items: start;
+}
+
+.title {
+  margin: 0;
+  font-size: var(--text-project);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+
+.category {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  padding: 7px 14px;
+  border: 1px solid var(--rule-strong);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--ink-2);
+  font-size: var(--text-meta);
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+.dot {
+  flex: none;
+  inline-size: 7px;
+  block-size: 7px;
+  border-radius: 50%;
+  background: var(--acc);
+}
+
+/* ---------- A imagem principal ---------- */
+
+.stage {
+  display: grid;
+  justify-items: center;
+  padding: clamp(10px, 2.4cqi, 18px);
+  border-radius: 20px;
+  background:
+    radial-gradient(80% 70% at 12% 0%, color-mix(in srgb, var(--acc) 22%, transparent), transparent 62%),
+    linear-gradient(180deg, #181818, #121212);
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.07);
+}
+
+.hero {
+  inline-size: 100%;
+  overflow: hidden;
+  border-radius: 12px;
+  box-shadow:
+    0 0 0 1px rgb(255 255 255 / 0.12),
+    0 24px 40px -22px rgb(0 0 0 / 0.85);
+}
+
+.heroImage {
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
+  margin-inline: auto;
+}
+
+.statement {
+  margin: 0;
+  max-inline-size: 46ch;
+  color: var(--ink);
+  font-size: clamp(1.0625rem, 2.6cqi, 1.25rem);
+  line-height: 1.4;
+  letter-spacing: -0.012em;
+  text-wrap: pretty;
+}
+
+/* ---------- Capturas de apoio ---------- */
+
+.shots {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.shots li {
+  min-inline-size: 0;
+}
+
+.shotImage {
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
+  border-radius: 10px;
+  box-shadow: 0 0 0 1px rgb(255 255 255 / 0.1);
+}
+
+/* ---------- Tecnologias e links (por último) ---------- */
+
+.foot {
+  display: grid;
+  row-gap: 18px;
+  padding-top: 20px;
+  border-top: 1px solid var(--rule);
+}
+
+.tech {
+  display: grid;
+  row-gap: 10px;
+}
+
+.techTitle {
+  margin: 0;
+  color: var(--ink-3);
+  font-size: var(--text-meta);
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.chip {
+  padding: 6px 12px;
+  border: 1px solid color-mix(in srgb, var(--acc) 34%, var(--rule-strong));
+  border-radius: 999px;
+  color: var(--ink-2);
+  font-size: var(--text-meta);
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Links externos: texto simples, sem botão. Evidência, não chamada para ação. */
+.link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--ink-3);
+  font-size: var(--text-small);
+  font-weight: 500;
+  line-height: 1.3;
+  text-decoration: underline;
+  text-decoration-color: var(--rule-strong);
+  text-underline-offset: 4px;
+  transition:
+    color var(--dur-fast) var(--ease-press),
+    text-decoration-color var(--dur-fast) var(--ease-press);
+}
+
+.link:hover {
+  color: var(--ink);
+  text-decoration-color: var(--acc);
+}
+
+.link:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+.link svg {
+  color: var(--acc);
+  font-size: 0.9375rem;
+}
+
+@container (min-width: 560px) {
+  .shots {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .foot {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: end;
+    column-gap: 24px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .link {
+    transition: none;
+  }
+}

@@ -1,0 +1,40 @@
+/*
+ * Fundo atmosférico global: uma família de curvas quase invisível (.base) e, sobre ela, a luz
+ * ciano/violeta/roxo que percorre cada curva (.beam — o gradiente anima no componente; aqui só o
+ * traço). Nada daqui anima por CSS, então prefers-reduced-motion não precisa fazer nada por conta
+ * própria: o componente já decide, em JS, se o gradiente se move ou fica parado.
+ */
+
+.field {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.beams {
+  position: absolute;
+  inset: 0;
+  inline-size: 100%;
+  block-size: 100%;
+}
+
+.base path {
+  stroke: #7c86a1;
+  stroke-opacity: 0.05;
+  stroke-width: 0.5;
+}
+
+.beam {
+  stroke-width: 1;
+  stroke-opacity: 0.4;
+}
+
+/* Celular: metade dos feixes basta — menos para o navegador desenhar, mesma sensação. */
+@media (max-width: 640px) {
+  .base path:nth-child(even),
+  .beam:nth-of-type(even) {
+    display: none;
+  }
+}

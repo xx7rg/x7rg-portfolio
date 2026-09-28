@@ -1,0 +1,238 @@
+/*
+ * Hero. Duas camadas: uma identidade pequena (nome e função) e o manifesto em
+ * tipografia grande, com marca-texto no terço inferior de dois trechos. O selo
+ * circular fecha a composição. No desktop a seção ocupa a altura da tela.
+ */
+
+.hero {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding-block: clamp(32px, 6svh, 56px) clamp(48px, 8svh, 96px);
+}
+
+.identity {
+  display: grid;
+  gap: 2px;
+}
+
+.name,
+.role {
+  margin: 0;
+  line-height: 1.3;
+}
+
+.name {
+  color: var(--ink);
+  font-size: 1rem;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+
+.role {
+  color: var(--ink-muted);
+  font-size: var(--text-small);
+}
+
+/* O × cruza as duas disciplinas: desenhado como duas linhas, em ouro. */
+.roleTail {
+  white-space: nowrap;
+}
+
+.times {
+  display: inline-block;
+  inline-size: 0.62em;
+  block-size: 0.62em;
+  margin: 0 0.3em 0 0.12em;
+  vertical-align: -0.02em;
+}
+
+.times svg {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 1.6;
+  overflow: visible;
+}
+
+/* ---------- Manifesto ---------- */
+
+.headline {
+  margin: clamp(28px, 5svh, 44px) 0 0;
+  max-inline-size: 15.5em;
+  color: var(--ink);
+  font-size: clamp(2.5rem, 6vw, 3.75rem);
+  font-weight: 500;
+  line-height: 1.0667;
+  letter-spacing: -0.03em;
+  text-wrap: pretty;
+}
+
+/*
+ * Marca-texto: uma barra de ouro escuro no terço inferior da linha, com pontas
+ * redondas em cada fragmento (box-decoration-break: clone). O texto segue branco.
+ */
+.highlightA,
+.highlightB {
+  padding-inline: 0.04em;
+  border-radius: 999px;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+
+.highlightA {
+  background-image: linear-gradient(transparent 0 66%, var(--hl-1) 66% 100%);
+}
+
+.highlightB {
+  background-image: linear-gradient(transparent 0 70%, var(--hl-2) 70% 100%);
+}
+
+/* ---------- Selo circular ---------- */
+
+.badge {
+  position: relative;
+  align-self: center;
+  inline-size: 168px;
+  block-size: 168px;
+  margin-top: clamp(28px, 5svh, 48px);
+  border-radius: 50%;
+  background: #080808;
+  box-shadow: inset 0 0 0 1px var(--rule-strong);
+}
+
+.ring {
+  position: absolute;
+  inset: 0;
+  inline-size: 100%;
+  block-size: 100%;
+  /* Sem ponteiro: a caixa do SVG é quadrada e a área da interação do escudo é o círculo do selo. */
+  pointer-events: none;
+  animation: spin 18s linear infinite;
+}
+
+.ringText {
+  fill: var(--ink-2);
+  font-size: 13.5px;
+  font-weight: 600;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/*
+ * O escudo da marca, no miolo do anel. O ponto mais distante dele fica a ~44 px do centro e o texto do anel começa a
+ * ~62 px. O encaixe é o quadro em perspectiva (o círculo é a moldura e fica parado); quem gira é o escudo (BadgeShield),
+ * pelo próprio centro. O encaixe e o anel não recebem ponteiro: o selo, de raio 84 px, é a área da interação.
+ */
+.shieldSlot {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  perspective: 520px;
+  perspective-origin: 50% 50%;
+  pointer-events: none;
+}
+
+/* O emblema: as duas camadas (o escudo e o brilho) giram juntas, pelo centro. */
+.shieldBody {
+  display: grid;
+  place-items: center;
+  transform: translate3d(0, 0, 0);
+  transform-origin: 50% 50%;
+  will-change: transform;
+}
+
+.shield,
+.sheen,
+.shade {
+  grid-area: 1 / 1;
+  display: block;
+  inline-size: 72px;
+  block-size: auto;
+  max-inline-size: none;
+  user-select: none;
+}
+
+/*
+ * A luz sutil: duas cópias do PRÓPRIO escudo (mesma silhueta, mesmos detalhes): uma mais clara, revelada por uma máscara
+ * radial no lado do ponteiro, e uma mais escura, no lado oposto (BadgeShield escreve --gx, --gy e --sheen). Com --sheen em
+ * 0 (repouso, ponteiro no centro, toque e movimento reduzido) ambas são invisíveis e o escudo é o PNG puro.
+ */
+.sheen,
+.shade {
+  pointer-events: none;
+}
+
+.sheen {
+  opacity: var(--sheen, 0);
+  filter: brightness(1.7) contrast(1.05) saturate(1.1);
+  -webkit-mask-image: radial-gradient(circle at var(--gx, 50%) var(--gy, 50%), rgb(0 0 0 / 0.75) 0, transparent 46%);
+  mask-image: radial-gradient(circle at var(--gx, 50%) var(--gy, 50%), rgb(0 0 0 / 0.75) 0, transparent 46%);
+}
+
+.shade {
+  opacity: calc(var(--sheen, 0) * 0.9);
+  filter: brightness(0.5) saturate(1.05);
+  -webkit-mask-image: radial-gradient(circle at calc(100% - var(--gx, 50%)) calc(100% - var(--gy, 50%)), rgb(0 0 0 / 0.7) 0, transparent 50%);
+  mask-image: radial-gradient(circle at calc(100% - var(--gx, 50%)) calc(100% - var(--gy, 50%)), rgb(0 0 0 / 0.7) 0, transparent 50%);
+}
+
+/* ---------- Entrada: uma vez, ao carregar ---------- */
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.identity,
+.headline,
+.badge {
+  animation: rise 640ms var(--ease-settle) both;
+}
+
+.headline {
+  animation-delay: 90ms;
+}
+
+.badge {
+  animation-delay: 180ms;
+}
+
+/* ---------- Desktop ---------- */
+
+@media (min-width: 1100px) {
+  /*
+   * Ocupa a altura da tela: identidade e manifesto no alto, selo ancorado no pé, na
+   * altura da borda inferior do painel. A composição fica fechada dentro da primeira tela.
+   */
+  .hero {
+    min-block-size: 100vh;
+    min-block-size: 100svh;
+    padding-block: 72px 48px;
+  }
+
+  .headline {
+    max-inline-size: 13.2em;
+    margin-top: 43px;
+    font-size: clamp(2.75rem, 4.6vw, 4.25rem);
+  }
+
+  .badge {
+    align-self: flex-start;
+    margin-top: auto;
+    margin-left: 34%;
+  }
+}

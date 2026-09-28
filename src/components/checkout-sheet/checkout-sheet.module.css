@@ -1,0 +1,604 @@
+/*
+ * Folha do Checkout: o mesmo cartão de vidro escuro das outras folhas. O acento do caso é o azul-cobalto do
+ * próprio protótipo (--ck, medido na interface e no cartão), usado só em detalhes e no palco da abertura;
+ * a interface clara do protótipo aparece emoldurada, sem recolorir nem filtrar.
+ * A composição responde à largura da COLUNA (container query em projects.module.css):
+ *  - estreita: título e frase, depois o cartão grande sobre um pedaço da interface; o resto empilhado;
+ *  - 620+: a abertura em duas colunas, a gravação e o celular lado a lado com frente e verso, o pedido e o
+ *    fluxo com a mídia à direita, as relações do estado em duas colunas.
+ */
+
+.sheet {
+  --ck: #3658ff;
+  --ck-ink: #93a4ff;
+
+  padding: var(--bezel);
+  border-radius: var(--radius-panel);
+}
+
+.card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  row-gap: clamp(28px, 5svh, 44px);
+  padding: clamp(20px, 5cqi, 40px);
+  border-radius: var(--radius-inner);
+  background: var(--stock);
+}
+
+/* ---------- Abertura: o cartão ---------- */
+
+.stage {
+  position: relative;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  row-gap: 26px;
+  /* O palco avança um pouco sobre o respiro do cartão: o cartão de crédito é o protagonista da folha. */
+  margin-inline: calc(clamp(8px, 2.6cqi, 20px) * -1);
+  padding: clamp(20px, 4.6cqi, 36px);
+  border-radius: 22px;
+  background:
+    radial-gradient(90% 80% at 90% 8%, rgb(54 88 255 / 0.34), transparent 62%),
+    radial-gradient(70% 60% at 0% 100%, rgb(54 88 255 / 0.16), transparent 64%),
+    linear-gradient(180deg, #16171e, #0f1014);
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.07);
+}
+
+.intro {
+  display: grid;
+  align-content: start;
+  justify-items: start;
+  row-gap: 14px;
+}
+
+.title {
+  margin: 0;
+  font-size: var(--text-project);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+
+.facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.fact {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 14px;
+  border: 1px solid var(--rule-strong);
+  border-radius: 999px;
+  background: rgb(255 255 255 / 0.05);
+  color: var(--ink-2);
+  font-size: var(--text-meta);
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+.factDot {
+  flex: none;
+  inline-size: 7px;
+  block-size: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.statement {
+  margin: 4px 0 0;
+  max-inline-size: 27em;
+  color: var(--ink);
+  font-size: clamp(1rem, 2.5cqi, 1.1875rem);
+  line-height: 1.45;
+  letter-spacing: -0.012em;
+  text-wrap: pretty;
+}
+
+/* O cartão sobre um pedaço da interface: a interface mostra o pedido; o cartão, sozinho, ocupa o primeiro plano. */
+.visual {
+  position: relative;
+  aspect-ratio: 1 / 0.92;
+}
+
+.ui {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-end: 0;
+  inline-size: 82%;
+  block-size: 62%;
+  overflow: hidden;
+  border-radius: 14px;
+  background: #f5f6fa;
+  box-shadow:
+    0 0 0 1px rgb(255 255 255 / 0.12),
+    0 24px 44px -22px rgb(0 0 0 / 0.9);
+}
+
+.uiImage {
+  position: absolute;
+  inset-block-start: -8%;
+  inset-inline-end: -4%;
+  inline-size: 210%;
+  max-inline-size: none;
+  block-size: auto;
+}
+
+.cardImage {
+  position: absolute;
+  inset-block-end: -4%;
+  inset-inline-start: -5%;
+  inline-size: 100%;
+  block-size: auto;
+  transform: perspective(1200px) rotateY(-9deg) rotateX(4deg) rotate(-3deg);
+  transform-origin: 40% 60%;
+}
+
+.caption {
+  margin: 0;
+  color: var(--ink-3);
+  font-size: var(--text-meta);
+  line-height: 1.4;
+  text-wrap: pretty;
+}
+
+/* ---------- Blocos ---------- */
+
+.block {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  row-gap: 18px;
+  padding-top: 28px;
+  border-top: 1px solid var(--rule);
+}
+
+.blockHead {
+  display: grid;
+  row-gap: 6px;
+}
+
+.blockTitle {
+  margin: 0;
+  font-size: clamp(1.25rem, 3.4cqi, 1.5rem);
+  font-weight: 500;
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+}
+
+.blockLead {
+  margin: 0;
+  max-inline-size: 52ch;
+  color: var(--ink-2);
+  font-size: var(--text-small);
+  line-height: 1.5;
+  text-wrap: pretty;
+}
+
+/* Moldura das capturas: a interface clara do protótipo, sem filtro, com borda fina e sombra funda. */
+.frame {
+  overflow: hidden;
+  border-radius: 12px;
+  background: #f5f6fa;
+  box-shadow:
+    0 0 0 1px rgb(255 255 255 / 0.12),
+    0 22px 40px -20px rgb(0 0 0 / 0.85);
+}
+
+.fill {
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
+}
+
+.clip {
+  display: grid;
+  justify-items: start;
+  row-gap: 8px;
+  margin: 0;
+}
+
+/* ---------- O cartão é o formulário ---------- */
+
+.liveRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  row-gap: 26px;
+}
+
+.pairCol {
+  display: grid;
+  row-gap: 20px;
+  align-content: start;
+}
+
+/* Frente e verso do MESMO cartão, sobrepostos como um leque: dá para entender o giro sem o movimento. */
+.pair {
+  position: relative;
+  aspect-ratio: 1.34 / 1;
+}
+
+.face {
+  position: absolute;
+  inline-size: 76%;
+}
+
+.faceFront {
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  z-index: 2;
+}
+
+.faceBack {
+  inset-block-end: 0;
+  inset-inline-end: 0;
+  z-index: 1;
+}
+
+.faceImage {
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
+}
+
+.fields {
+  display: grid;
+  margin: 0;
+}
+
+.field {
+  display: grid;
+  row-gap: 2px;
+  padding-block: 9px;
+  border-top: 1px solid var(--rule);
+}
+
+.field:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.fieldLabel {
+  color: var(--ck-ink);
+  font-size: var(--text-small);
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+.fieldBody {
+  margin: 0;
+  color: var(--ink-muted);
+  font-size: var(--text-meta);
+  line-height: 1.5;
+}
+
+.phone {
+  display: none;
+  inline-size: min(100%, 210px);
+  justify-self: center;
+}
+
+/* A regra didática das bandeiras: a ressalva do bloco, com a marca do acento. */
+.rule {
+  margin: 0;
+  max-inline-size: 60ch;
+  padding-inline-start: 14px;
+  border-inline-start: 2px solid var(--ck);
+  color: var(--ink-2);
+  font-size: var(--text-meta);
+  line-height: 1.55;
+  text-wrap: pretty;
+}
+
+/* ---------- O pedido ---------- */
+
+.order {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  row-gap: 22px;
+}
+
+.orderText {
+  display: grid;
+  row-gap: 18px;
+  align-content: start;
+}
+
+.ledger {
+  display: grid;
+  margin: 0;
+}
+
+.ledgerRow {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  padding-block: 12px;
+  border-top: 1px solid var(--rule);
+}
+
+.ledgerLabel {
+  color: var(--ink-3);
+  font-size: var(--text-small);
+  line-height: 1.3;
+}
+
+.ledgerValue {
+  margin: 0;
+  color: var(--ink);
+  font-size: clamp(1.25rem, 3.6cqi, 1.625rem);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  text-align: end;
+}
+
+.ledgerTotal {
+  border-top: 2px solid var(--ck);
+}
+
+.ledgerTotal .ledgerLabel {
+  color: var(--ink);
+  font-weight: 500;
+}
+
+.ledgerTotal .ledgerValue {
+  color: var(--ck-ink);
+  font-size: clamp(1.75rem, 5.4cqi, 2.375rem);
+}
+
+.summary {
+  display: none;
+  inline-size: min(100%, 250px);
+  justify-self: center;
+}
+
+/* ---------- Do clique ao comprovante ---------- */
+
+.flow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  row-gap: 22px;
+}
+
+.flowText {
+  display: grid;
+  row-gap: 18px;
+  align-content: start;
+}
+
+.states {
+  display: grid;
+  gap: 14px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Três barras que ganham intensidade: o fluxo caminha de "idle" (apagado) até "approved" (aceso). */
+.state {
+  --o: 0.35;
+
+  display: grid;
+  row-gap: 2px;
+  padding-inline-start: 14px;
+  border-inline-start: 3px solid rgb(54 88 255 / var(--o));
+}
+
+.state[data-step="2"] {
+  --o: 0.65;
+}
+
+.state[data-step="3"] {
+  --o: 1;
+}
+
+.code {
+  color: var(--ck-ink);
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+}
+
+.stateBody {
+  margin: 0;
+  max-inline-size: 42ch;
+  color: var(--ink-2);
+  font-size: var(--text-small);
+  line-height: 1.5;
+  text-wrap: pretty;
+}
+
+/* ---------- Por dentro ---------- */
+
+.relations {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  margin: 0;
+}
+
+.relation {
+  display: grid;
+  align-content: start;
+  row-gap: 4px;
+  padding-block: 14px 8px;
+  border-top: 1px solid var(--rule);
+}
+
+.relationCode {
+  color: var(--ck-ink);
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  line-height: 1.4;
+}
+
+.relationBody {
+  margin: 0;
+  max-inline-size: 44ch;
+  color: var(--ink-muted);
+  font-size: var(--text-small);
+  line-height: 1.5;
+  text-wrap: pretty;
+}
+
+.tech {
+  margin: 0;
+  max-inline-size: 66ch;
+  color: var(--ink-3);
+  font-size: var(--text-meta);
+  line-height: 1.55;
+  text-wrap: pretty;
+}
+
+/* ---------- O que isto não é ---------- */
+
+.limits {
+  display: grid;
+  row-gap: 8px;
+  max-inline-size: 72ch;
+  padding: 16px 18px;
+  border-radius: 12px;
+  background: var(--surface);
+}
+
+.limitsTitle {
+  margin: 0;
+  font-size: var(--text-small);
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+.limitsBody {
+  margin: 0;
+  color: var(--ink-2);
+  font-size: var(--text-meta);
+  line-height: 1.6;
+  text-wrap: pretty;
+}
+
+/* ---------- Crédito e links ---------- */
+
+.credit {
+  display: grid;
+  row-gap: 14px;
+  padding-top: 18px;
+  border-top: 1px solid var(--rule);
+}
+
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Links externos: texto simples, sem botão. Evidência, não chamada para ação. */
+.link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--ink-3);
+  font-size: var(--text-small);
+  font-weight: 500;
+  line-height: 1.3;
+  text-decoration: underline;
+  text-decoration-color: var(--rule-strong);
+  text-underline-offset: 4px;
+  transition:
+    color var(--dur-fast) var(--ease-press),
+    text-decoration-color var(--dur-fast) var(--ease-press);
+}
+
+.link:hover {
+  color: var(--ink);
+  text-decoration-color: var(--ck);
+}
+
+.link:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+.link svg {
+  color: var(--ck-ink);
+  font-size: 0.9375rem;
+}
+
+/* ---------- Coluna larga ---------- */
+
+@container (min-width: 620px) {
+  .stage {
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+    align-items: center;
+    column-gap: 20px;
+  }
+
+  .visual {
+    aspect-ratio: 1 / 0.86;
+  }
+
+  .liveRow {
+    grid-template-columns: minmax(0, 1fr) 200px;
+    column-gap: 32px;
+    align-items: start;
+  }
+
+  .phone {
+    display: block;
+    justify-self: end;
+  }
+
+  .order {
+    grid-template-columns: minmax(0, 1fr) 250px;
+    column-gap: 36px;
+    align-items: start;
+  }
+
+  .summary {
+    display: block;
+    justify-self: end;
+  }
+
+  .flow {
+    grid-template-columns: minmax(0, 1fr) 340px;
+    column-gap: 32px;
+    align-items: start;
+  }
+
+  .relations {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 28px;
+  }
+
+  .field {
+    grid-template-columns: 5.25rem minmax(0, 1fr);
+    column-gap: 14px;
+  }
+}
+
+/*
+ * Paisagem curta (celular deitado): o cabeçalho e os espaços encolhem para o cartão aparecer logo.
+ */
+@media (max-height: 520px) {
+  .title {
+    font-size: clamp(1.75rem, 5cqi, 2.5rem);
+  }
+
+  .card {
+    row-gap: 22px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .link {
+    transition: none;
+  }
+}

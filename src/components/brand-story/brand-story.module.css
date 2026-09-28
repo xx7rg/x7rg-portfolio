@@ -1,0 +1,334 @@
+/*
+ * A identidade: a mesma folga editorial de Sobre e Contato — um bloco por momento do relato
+ * (origem, evolução, ENTERPRISE, identidade atual, fechamento), sem grade de cartões de logo.
+ * A arte vermelha original fica contida numa "chapa" pequena e emoldurada (um artefato preservado,
+ * não recolorido); o escudo dourado atual é o oposto — grande, sem moldura, iluminado por um brilho
+ * suave próprio, o momento visual mais forte da seção. As duas imagens nunca recebem o mesmo tratamento.
+ */
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(48px, 10svh, 96px);
+  padding-block: clamp(56px, 10svh, 112px);
+}
+
+/* ---------- Revelar ao rolar (uma vez, se ainda estiver fora da tela) ---------- */
+
+.reveal[data-reveal="armed"] {
+  opacity: 0;
+  transform: translateY(16px);
+}
+
+.reveal[data-reveal="shown"] {
+  transition:
+    opacity 640ms var(--ease-settle),
+    transform 640ms var(--ease-settle);
+}
+
+/* ---------- Abertura: "De rG a x7rG." ---------- */
+
+.intro {
+  max-inline-size: 14em;
+  margin: 0;
+  color: var(--ink);
+  font-size: clamp(2rem, 1.3rem + 3vw, 3.5rem);
+  font-weight: 500;
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  text-wrap: pretty;
+}
+
+/* ---------- Origem: a chapa preservada + o relato ---------- */
+
+.origin {
+  display: grid;
+  grid-template-columns: minmax(160px, 220px) 1fr;
+  gap: clamp(28px, 5vw, 56px);
+  align-items: start;
+}
+
+.originPlate {
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-inner);
+  background: rgb(255 255 255 / 0.03);
+  /* Contém o zoom interno da imagem: a chapa em si não cresce, só o que está dentro dela. */
+  overflow: hidden;
+}
+
+.originImage {
+  inline-size: 100%;
+  block-size: auto;
+  opacity: 0.92;
+}
+
+/* Zoom editorial e restrito: só onde o hover é de verdade (mouse fino) e sem prefers-reduced-motion. */
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .originImage {
+    transition:
+      transform 520ms var(--ease-settle),
+      opacity 520ms var(--ease-settle);
+  }
+
+  .originPlate:hover .originImage {
+    transform: scale(1.05);
+    opacity: 1;
+  }
+}
+
+.originText {
+  display: grid;
+  gap: 14px;
+  max-inline-size: 34em;
+}
+
+.originBody {
+  margin: 0;
+  color: var(--ink-2);
+  font-size: var(--text-body);
+  line-height: 1.6;
+}
+
+.originTurn {
+  margin: 6px 0 0;
+  color: var(--ink);
+  font-size: var(--text-body);
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+.originMark {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin: 2px 0;
+  padding-block: 10px;
+  border-block: 1px solid var(--rule);
+  color: var(--ink);
+  font-size: clamp(1.5rem, 1.2rem + 1.2vw, 2rem);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.originMarkName {
+  color: var(--ink-muted);
+  font-size: var(--text-small);
+  font-weight: 400;
+  letter-spacing: 0;
+}
+
+/* ---------- Evolução: x, 7, rG — sequência tipográfica ---------- */
+
+.evolution {
+  display: grid;
+  gap: 24px;
+}
+
+.evolutionLead {
+  margin: 0;
+  color: var(--ink);
+  font-size: var(--text-section);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  max-inline-size: 20em;
+}
+
+.evolutionList {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+  margin: 8px 0 0;
+  padding: 24px 0 0;
+  border-top: 1px solid var(--rule);
+  list-style: none;
+}
+
+.evolutionItem {
+  display: grid;
+  gap: 6px;
+  align-content: start;
+}
+
+.evolutionSymbol {
+  color: var(--ink);
+  font-size: clamp(2.5rem, 1.8rem + 3vw, 4rem);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.evolutionSymbol[data-accent="true"] {
+  color: var(--accent);
+}
+
+.evolutionLabel {
+  color: var(--ink);
+  font-size: var(--text-small);
+  font-weight: 500;
+}
+
+.evolutionBody {
+  color: var(--ink-muted);
+  font-size: var(--text-small);
+  line-height: 1.55;
+}
+
+/* ---------- ENTERPRISE: explicação curta, sem imagem ---------- */
+
+.enterprise {
+  display: grid;
+  gap: 14px;
+  max-inline-size: 34em;
+}
+
+.enterpriseTurn {
+  margin: 0;
+  color: var(--ink-2);
+  font-size: var(--text-body);
+  line-height: 1.6;
+}
+
+.enterpriseWord {
+  margin: 4px 0;
+  color: var(--accent);
+  font-size: clamp(1.5rem, 1.1rem + 1.6vw, 2.25rem);
+  font-weight: 600;
+  letter-spacing: 0.1em;
+}
+
+.enterpriseBody {
+  margin: 0;
+  color: var(--ink-2);
+  font-size: var(--text-body);
+  line-height: 1.6;
+}
+
+/* ---------- Identidade atual: o escudo é o momento visual mais forte ---------- */
+
+.current {
+  display: grid;
+  gap: 24px;
+  justify-items: center;
+  text-align: center;
+}
+
+.currentTurn {
+  margin: 0;
+  max-inline-size: 24em;
+  color: var(--ink);
+  font-size: var(--text-section);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+.shieldStage {
+  position: relative;
+  display: grid;
+  place-items: center;
+  inline-size: min(100%, 340px);
+  aspect-ratio: 1;
+  isolation: isolate;
+  /* O brilho do ::before sangra 20% para fora da caixa; contido aqui para nunca virar rolagem horizontal. */
+  overflow: hidden;
+}
+
+.shieldStage::before {
+  content: "";
+  position: absolute;
+  inset: -20%;
+  z-index: -1;
+  background: radial-gradient(closest-side, rgb(224 177 58 / 0.16), transparent 70%);
+}
+
+.shieldImage {
+  inline-size: 78%;
+  block-size: auto;
+  filter: drop-shadow(0 8px 32px rgb(224 177 58 / 0.22));
+}
+
+/* Mesmo zoom editorial do rG: só onde o hover é de verdade e sem prefers-reduced-motion. */
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .shieldImage {
+    transition:
+      transform 520ms var(--ease-settle),
+      filter 520ms var(--ease-settle);
+  }
+
+  .shieldStage:hover .shieldImage {
+    transform: scale(1.05);
+    filter: drop-shadow(0 8px 32px rgb(224 177 58 / 0.22)) brightness(1.04);
+  }
+}
+
+.currentLead {
+  margin: 0;
+  max-inline-size: 34em;
+  color: var(--ink-2);
+  font-size: var(--text-body);
+  line-height: 1.6;
+}
+
+.values {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0 14px;
+  margin: 0;
+  color: var(--ink);
+  font-size: clamp(1.375rem, 1.1rem + 1.2vw, 1.875rem);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.currentBody {
+  margin: 0;
+  max-inline-size: 30em;
+  color: var(--ink-muted);
+  font-size: var(--text-small);
+  line-height: 1.6;
+}
+
+/* ---------- Fechamento ---------- */
+
+.closing {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 0;
+  max-inline-size: 20em;
+  color: var(--ink);
+  font-size: clamp(1.25rem, 1.05rem + 1vw, 1.75rem);
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+}
+
+.closingName {
+  margin: 16px 0 0;
+  padding-top: 20px;
+  max-inline-size: 20em;
+  border-top: 1px solid var(--rule);
+  color: var(--ink-muted);
+  font-size: var(--text-small);
+}
+
+/* ---------- Celular: origem empilha, evolução empilha ---------- */
+
+@media (max-width: 640px) {
+  .origin {
+    grid-template-columns: 1fr;
+  }
+
+  .originPlate {
+    max-inline-size: 200px;
+    margin-inline: auto;
+  }
+
+  .evolutionList {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+}

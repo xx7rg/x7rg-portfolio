@@ -1,0 +1,411 @@
+/*
+ * As composições de imagem das faixas. Cada uma usa a mídia real do projeto e as cores do próprio projeto
+ * (`--acc` e `--acc2`, definidas na faixa). Tudo em porcentagens da caixa da imagem (`.visual`): sempre com a altura
+ * da faixa expandida e a largura que a família dá (project-strip.module.css), recortada pela faixa. Com a faixa fechada
+ * aparece o topo da composição; expandida, ela inteira. As camadas se sobrepõem à vontade, mas nada sai da faixa do
+ * próprio projeto. O ponteiro desloca cada camada um pouco (`--d` é a profundidade).
+ */
+
+.stage {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+/* Cada camada desliza no sentido oposto ao do ponteiro, quanto mais "perto", mais. */
+.stage > * {
+  translate: calc(var(--px, 0) * var(--d, 8) * -0.7px) calc(var(--py, 0) * var(--d, 8) * -0.42px);
+  transition: translate 320ms var(--ease-press);
+}
+
+/* ---------- Neon Blockfall: ciano e magenta sobre o azul-marinho do jogo ---------- */
+
+.neon {
+  background: #050914;
+}
+
+.neonGlow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(70% 80% at 10% 100%, color-mix(in srgb, var(--acc) 22%, transparent), transparent 66%),
+    radial-gradient(60% 70% at 94% 0%, color-mix(in srgb, var(--acc2) 20%, transparent), transparent 62%);
+}
+
+.neonWide,
+.neonPortrait {
+  position: absolute;
+  block-size: auto;
+  border-radius: 9px;
+}
+
+.neonWide {
+  inset-inline-start: 6%;
+  inset-block-start: 12%;
+  inline-size: 70%;
+  border: 1px solid color-mix(in srgb, var(--acc) 28%, transparent);
+  filter: brightness(0.72);
+  box-shadow:
+    0 22px 44px -16px rgb(0 0 0 / 0.8),
+    0 0 34px -14px color-mix(in srgb, var(--acc) 40%, transparent);
+}
+
+.neonPortrait {
+  inset-inline-end: 5%;
+  inset-block-start: 17%;
+  inline-size: 24%;
+  border: 1px solid color-mix(in srgb, var(--acc2) 50%, transparent);
+  box-shadow:
+    -16px 22px 40px -12px rgb(0 0 0 / 0.9),
+    0 0 36px -10px color-mix(in srgb, var(--acc2) 46%, transparent);
+}
+
+/* ---------- AquaControl: o painel e a lista de visitas no palco grafite, com o teal da interface ---------- */
+
+.aqua {
+  background:
+    radial-gradient(90% 80% at 8% 0%, color-mix(in srgb, var(--acc2) 26%, transparent), transparent 60%),
+    linear-gradient(180deg, #181818, #121212);
+}
+
+.aqua .aquaMain,
+.aqua .aquaBack {
+  position: absolute;
+  border-radius: 8px;
+  box-shadow:
+    0 0 0 1px rgb(255 255 255 / 0.14),
+    0 24px 44px -20px rgb(0 0 0 / 0.9);
+}
+
+.aqua .aquaMain {
+  --d: 8;
+
+  inset-inline-start: 7%;
+  inset-block-start: 12%;
+  inline-size: 62%;
+  filter: brightness(0.86);
+}
+
+.aqua .aquaBack {
+  --d: 16;
+
+  inset-inline-end: 4%;
+  inset-block-end: -6%;
+  inline-size: 40%;
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--acc) 40%, transparent),
+    -14px 22px 40px -14px rgb(0 0 0 / 0.9),
+    0 0 34px -12px color-mix(in srgb, var(--acc) 40%, transparent);
+}
+
+/* ---------- Feito Pela Bya: o logo, sozinho, sobre o ameixa, com luz framboesa e o creme do rótulo ---------- */
+
+.bya {
+  background:
+    radial-gradient(56% 64% at 50% 48%, color-mix(in srgb, var(--acc2) 34%, transparent), transparent 72%),
+    #23111f;
+}
+
+.byaLogo {
+  position: absolute;
+  inset-block: 5%;
+  inset-inline: 0;
+  margin-inline: auto;
+  inline-size: auto;
+  block-size: 90%;
+  filter: drop-shadow(0 16px 20px rgb(0 0 0 / 0.42));
+}
+
+/* ---------- Adriano Reformas Vigo: o site entra na faixa, em duas camadas, sobre o degradê quente ---------- */
+
+.adriano {
+  background: linear-gradient(180deg, #161a20, #0e1116);
+}
+
+.adrianoBack {
+  position: absolute;
+  inset-inline-start: 10%;
+  inset-block-start: 0;
+  inline-size: 130%;
+  max-inline-size: none;
+  block-size: auto;
+  filter: brightness(0.4) saturate(0.9) blur(2px);
+}
+
+.adrianoShot {
+  position: absolute;
+  inset-inline-start: 10%;
+  inset-block-start: 14%;
+  inline-size: 104%;
+  max-inline-size: none;
+  block-size: auto;
+  border-radius: 10px 0 0 0;
+  box-shadow: 0 24px 44px -20px rgb(0 0 0 / 0.9);
+}
+
+/* ---------- Login The Moon e Light Login: a cena inteira, de sangria total ---------- */
+
+.cover {
+  position: absolute;
+  inset: -4%;
+  inline-size: 108%;
+  block-size: 108%;
+  object-fit: cover;
+}
+
+.moon {
+  background:
+    radial-gradient(46% 90% at 22% 12%, color-mix(in srgb, var(--acc2) 30%, transparent), transparent 70%),
+    #060a17;
+}
+
+.moon .cover {
+  object-position: 36% 50%;
+}
+
+.light {
+  background: #0d0a07;
+}
+
+.light .cover {
+  object-position: 42% 50%;
+}
+
+/* ---------- Checkout: a visão geral e a confirmação, em camadas com a luz azul da interface ---------- */
+
+.checkout {
+  background:
+    radial-gradient(80% 80% at 90% 0%, color-mix(in srgb, var(--acc2) 26%, transparent), transparent 60%),
+    #0b0e16;
+}
+
+.checkoutMain,
+.checkoutBack {
+  position: absolute;
+  block-size: auto;
+  border-radius: 8px;
+  box-shadow:
+    0 0 0 1px rgb(255 255 255 / 0.12),
+    0 24px 44px -20px rgb(0 0 0 / 0.9);
+}
+
+.checkoutMain {
+  inset-inline-start: 6%;
+  inset-block-start: 12%;
+  inline-size: 66%;
+  filter: brightness(0.84);
+}
+
+.checkoutBack {
+  inset-inline-end: 4%;
+  inset-block-end: -8%;
+  inline-size: 40%;
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--acc) 44%, transparent),
+    -14px 22px 40px -14px rgb(0 0 0 / 0.9),
+    0 0 34px -12px color-mix(in srgb, var(--acc) 42%, transparent);
+}
+
+/* ---------- Recibo Digital ---------- */
+
+/* A folha clara do site é o contraste da lista: um campo claro de propósito, com a impressora no alto e o recibo saindo pela borda de baixo. */
+.recibo {
+  background: #f4f2ec;
+}
+
+.reciboShot {
+  position: absolute;
+  inset-inline-start: -43%;
+  inset-block-start: -90%;
+  inline-size: 180%;
+  max-inline-size: none;
+  block-size: auto;
+}
+
+/* O dourado na borda da folha, onde ela encontra a pilha escura. */
+.recibo::after {
+  content: "";
+  position: absolute;
+  inset-block: 0;
+  inset-inline-end: 0;
+  inline-size: 2px;
+  background: linear-gradient(180deg, transparent, color-mix(in srgb, var(--acc) 70%, transparent) 30%, color-mix(in srgb, var(--acc2) 80%, transparent) 70%, transparent);
+  pointer-events: none;
+}
+
+/* ---------- DiscordCameraLive: a janela do aplicativo, de pé ---------- */
+
+.discord {
+  background:
+    radial-gradient(60% 70% at 50% 50%, color-mix(in srgb, var(--acc2) 22%, transparent), transparent 70%),
+    #120e10;
+}
+
+.discordApp {
+  position: absolute;
+  inset-block: 5%;
+  inset-inline: 0;
+  margin-inline: auto;
+  inline-size: auto;
+  block-size: 90%;
+  border-radius: 10px;
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--acc2) 30%, transparent);
+  filter: drop-shadow(0 18px 24px rgb(0 0 0 / 0.55));
+}
+
+/* ============ A composição de cada projeto, dentro da caixa da imagem da faixa (só o topo aparece com a faixa fechada) ============ */
+
+
+/* Neon Blockfall (divisão): a tela do jogo, grande e mais escura ao fundo; o celular, à frente, sangrando por baixo. */
+.neonGlow {
+  background:
+    radial-gradient(56% 90% at 26% 100%, color-mix(in srgb, var(--acc) 22%, transparent), transparent 66%),
+    radial-gradient(48% 80% at 98% 0%, color-mix(in srgb, var(--acc2) 24%, transparent), transparent 62%);
+}
+
+.neonWide {
+  inset-inline-start: 4%;
+  inset-block-start: 8%;
+  inline-size: 104%;
+  max-inline-size: none;
+  filter: brightness(0.72) saturate(0.95);
+  border-radius: 0 0 0 9px;
+}
+
+.neonPortrait {
+  inset-inline-end: 6%;
+  inset-block-start: 12%;
+  inline-size: 31%;
+}
+
+/* AquaControl (reverso): o painel domina o território horizontal; a lista de visitas, à frente, ancora o lado esquerdo. */
+.aqua {
+  background:
+    radial-gradient(70% 90% at 30% 0%, color-mix(in srgb, var(--acc2) 30%, transparent), transparent 62%),
+    linear-gradient(180deg, #181818, #121212);
+}
+
+.aqua .aquaMain {
+  inset-inline-start: 18%;
+  inset-block-start: 11%;
+  inline-size: 74%;
+}
+
+.aqua .aquaBack {
+  inset-inline: 3% auto;
+  inset-block: 34% auto;
+  inline-size: 46%;
+}
+
+/* Feito Pela Bya (objeto): o logo, inteiro e maior, sozinho no ameixa; luz framboesa e um halo de creme atrás dele. */
+.bya {
+  background:
+    radial-gradient(22% 60% at 79% 50%, rgb(246 214 201 / 0.1), transparent 72%),
+    radial-gradient(38% 90% at 79% 50%, color-mix(in srgb, var(--acc2) 40%, transparent), transparent 72%),
+    radial-gradient(70% 110% at 100% 50%, color-mix(in srgb, var(--acc2) 26%, transparent), transparent 70%),
+    #23111f;
+}
+
+.byaLogo {
+  inset-block: 10% 3%;
+  inset-inline: auto 9%;
+  margin-inline: 0;
+  block-size: 87%;
+}
+
+/* Adriano (sangria): o site entra pela direita, em camadas, sobre um fundo quente; o degradê protege o texto. */
+.adriano {
+  background:
+    radial-gradient(60% 120% at 100% 100%, color-mix(in srgb, var(--acc) 16%, transparent), transparent 66%),
+    #0e1116;
+}
+
+.adrianoBack {
+  inset-inline-start: 22%;
+  inset-block-start: -34%;
+  inline-size: 130%;
+}
+
+.adrianoShot {
+  inset-inline-start: 46%;
+  inset-block-start: 13%;
+  inline-size: 78%;
+  border: 1px solid color-mix(in srgb, var(--acc) 30%, transparent);
+  border-radius: 12px 0 0 0;
+}
+
+/* Login The Moon (reverso): a lua e o cartão ocupam o lado esquerdo, e a noite lunar se estende até o texto. */
+.moon .cover {
+  object-position: 30% 26%;
+}
+
+/* Light Login (sangria): o abajur é o centro da faixa; o cartão do login fica atrás dele, sangrando pela direita. */
+.light .cover {
+  inset: auto;
+  inset-inline-start: 42%;
+  inset-block-start: 3%;
+  inline-size: 72%;
+  block-size: auto;
+  object-fit: fill;
+}
+
+/* Checkout (divisão): a visão geral ao fundo e a confirmação à frente, em camadas que se sobrepõem e sangram pela borda. */
+.checkoutMain {
+  inset-inline-start: 12%;
+  inset-block-start: 10%;
+  inline-size: 78%;
+}
+
+.checkoutBack {
+  inset-inline-end: -3%;
+  inset-block-end: -16%;
+  inline-size: 54%;
+}
+
+.reciboShot {
+  inset-block-start: -82%;
+}
+
+/* DiscordCameraLive (objeto): a janela, do tamanho dela, flutuando no escuro; o resto é espaço negativo. */
+.discord {
+  background:
+    radial-gradient(24% 80% at 71% 50%, color-mix(in srgb, var(--acc2) 30%, transparent), transparent 72%),
+    radial-gradient(44% 96% at 74% 60%, color-mix(in srgb, var(--acc) 14%, transparent), transparent 70%),
+    #100d12;
+}
+
+.discordApp {
+  inset-block: 11% 5%;
+  inset-inline: auto 17%;
+  margin-inline: 0;
+  block-size: 84%;
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--acc2) 34%, transparent),
+    0 0 46px -10px color-mix(in srgb, var(--acc2) 40%, transparent);
+}
+
+/* Celular: a folha do Recibo é estreita, então a impressora ocupa a folha inteira, no alto. */
+@container (max-width: 539px) {
+  .reciboShot {
+    inset-inline-start: -84%;
+    inset-block-start: -45%;
+    inline-size: 260%;
+  }
+}
+
+/* Celular: o app do Discord é menor e fica mais à direita, para não cobrir o nome. */
+@container (max-width: 539px) {
+  .discordApp {
+    inset-block: 14% auto;
+    inset-inline: auto 6%;
+    block-size: 56%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stage > * {
+    translate: none;
+    transition: none;
+  }
+}

@@ -1,0 +1,767 @@
+/*
+ * Folha do Login The Moon: uma noite só. O cartão da folha é o céu do próprio app (quase preto com azul); a cena
+ * lunar REAL sangra até as bordas no topo e se dissolve no fundo; os quadros da descida se emendam como um filme;
+ * a partitura do som usa a mesma escala de segundos para os dois gestos do app. Nada de cartões com capturas.
+ * O acento é o azul-lunar do app (--moon) e o verde do acesso concedido (--arrive) só aparece onde o app fica verde.
+ * A composição responde à largura da COLUNA (container query em projects.module.css):
+ *  - estreita: a cena se fecha no cartão de login, blocos empilhados, o filme em duas fileiras;
+ *  - 620+: a cena inteira com o título sobre o chão lunar, o filme em uma fileira, a linha do tempo em colunas.
+ */
+
+.sheet {
+  --moon: #8090ff;
+  --moon-ink: #b9c1ff;
+  --moon-glow: 107 114 241;
+  --arrive: #3ee0b4;
+  --pad: clamp(20px, 5cqi, 40px);
+  /* O botão de mídia reaproveitado (ClipPlayer) lê esta variável para o ícone. */
+  --ck-ink: var(--moon-ink);
+
+  padding: var(--bezel);
+  border-radius: var(--radius-panel);
+}
+
+.card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  row-gap: clamp(30px, 5.5svh, 48px);
+  padding: 0 var(--pad) var(--pad);
+  border-radius: var(--radius-inner);
+  background:
+    radial-gradient(120% 34% at 18% 0%, rgb(var(--moon-glow) / 0.16), transparent 70%),
+    radial-gradient(90% 40% at 100% 100%, rgb(var(--moon-glow) / 0.1), transparent 70%),
+    #04060e;
+  overflow: hidden;
+}
+
+.caption {
+  margin: 0;
+  color: var(--ink-3);
+  font-size: var(--text-meta);
+  line-height: 1.4;
+  text-wrap: pretty;
+}
+
+/* ---------- Abertura: a cena ---------- */
+
+.stage {
+  display: grid;
+  margin-inline: calc(var(--pad) * -1);
+}
+
+.stageMedia {
+  min-inline-size: 0;
+}
+
+.stageImage {
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
+  aspect-ratio: 1.1 / 1;
+  object-fit: cover;
+  object-position: 74% 55%;
+  /* A cena se dissolve no fundo da folha: sem borda, sem moldura. */
+  mask-image: linear-gradient(to bottom, #000 58%, transparent 100%);
+}
+
+.intro {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  row-gap: 14px;
+  /* O título sobe sobre a base dissolvida da cena, sem cobrir o cartão de login. */
+  margin-top: calc(var(--pad) * -1.2);
+  padding: 0 var(--pad);
+}
+
+.title {
+  margin: 0;
+  font-size: var(--text-project);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.045em;
+  text-shadow: 0 2px 30px rgb(2 4 12 / 0.9);
+}
+
+.statement {
+  margin: 0;
+  max-inline-size: 30em;
+  color: #dbe2ff;
+  font-size: clamp(1.0625rem, 2.5cqi, 1.25rem);
+  line-height: 1.4;
+  letter-spacing: -0.015em;
+  text-wrap: pretty;
+  text-shadow: 0 1px 18px rgb(2 4 12 / 0.9);
+}
+
+.facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 22px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.fact {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--ink-2);
+  font-size: var(--text-meta);
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+.factDot {
+  flex: none;
+  inline-size: 7px;
+  block-size: 7px;
+  border-radius: 50%;
+  background: var(--arrive);
+  box-shadow: 0 0 8px rgb(62 224 180 / 0.8);
+}
+
+.stageCaption {
+  margin-top: calc(var(--pad) * -0.4);
+}
+
+/* ---------- Blocos ---------- */
+
+.block {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  row-gap: 20px;
+  padding-top: 30px;
+  /* O horizonte: uma linha de luz que some nas pontas, no lugar do filete cinza. */
+  background: linear-gradient(90deg, transparent, rgb(var(--moon-glow) / 0.45), transparent) top / 100% 1px no-repeat;
+}
+
+.blockHead {
+  display: grid;
+  row-gap: 6px;
+}
+
+.blockTitle {
+  margin: 0;
+  font-size: clamp(1.25rem, 3.4cqi, 1.5rem);
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+.blockLead {
+  margin: 0;
+  max-inline-size: 60ch;
+  color: var(--ink-2);
+  font-size: var(--text-small);
+  line-height: 1.55;
+  text-wrap: pretty;
+}
+
+/* ---------- A sequência: gravação e linha do tempo ---------- */
+
+.clip {
+  display: grid;
+  row-gap: 10px;
+  margin: 0;
+}
+
+.beats {
+  display: grid;
+  gap: 22px;
+  margin: 0;
+  padding: 0 0 0 20px;
+  list-style: none;
+  border-inline-start: 1px solid rgb(var(--moon-glow) / 0.4);
+}
+
+.beat {
+  position: relative;
+  display: grid;
+  align-content: start;
+  row-gap: 4px;
+}
+
+.beat::before {
+  content: "";
+  position: absolute;
+  inset-block-start: 0.55em;
+  inset-inline-start: -25px;
+  inline-size: 9px;
+  block-size: 9px;
+  border-radius: 50%;
+  background: var(--moon);
+  box-shadow: 0 0 12px rgb(var(--moon-glow) / 0.9);
+}
+
+.beat:last-child::before {
+  background: var(--arrive);
+  box-shadow: 0 0 12px rgb(62 224 180 / 0.8);
+}
+
+.beatTime {
+  margin: 0;
+  color: var(--moon-ink);
+  font-size: var(--text-meta);
+  font-variant-numeric: tabular-nums;
+  line-height: 1.2;
+}
+
+.beat:last-child .beatTime {
+  color: var(--arrive);
+}
+
+.beatLabel {
+  margin: 0;
+  font-size: var(--text-small);
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+.beatBody {
+  margin: 0;
+  color: var(--ink-2);
+  font-size: var(--text-meta);
+  line-height: 1.6;
+  text-wrap: pretty;
+}
+
+/* ---------- A descida: um filme de quatro quadros ---------- */
+
+.film {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.filmItem {
+  display: grid;
+  row-gap: 6px;
+  min-inline-size: 0;
+}
+
+.frameZoom {
+  position: relative;
+  display: block;
+  inline-size: 100%;
+}
+
+.frame {
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
+  aspect-ratio: 720 / 520;
+  object-fit: cover;
+  /* As bordas de cada quadro se dissolvem no vizinho: a sequência lê como um filme contínuo. */
+  mask-image: linear-gradient(90deg, transparent, #000 14%, #000 86%, transparent);
+}
+
+.frameTime {
+  margin: 0;
+  color: var(--moon-ink);
+  font-size: var(--text-meta);
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+}
+
+.layers {
+  display: grid;
+  row-gap: 4px;
+  max-inline-size: 60ch;
+}
+
+.layersTitle {
+  margin: 0;
+  font-size: var(--text-small);
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+.layersBody {
+  margin: 0;
+  color: var(--ink-2);
+  font-size: var(--text-meta);
+  line-height: 1.6;
+  text-wrap: pretty;
+}
+
+/* ---------- O botão ---------- */
+
+.states {
+  display: grid;
+  row-gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.state {
+  display: grid;
+  row-gap: 6px;
+  justify-items: start;
+}
+
+.stateLabel {
+  margin: 0;
+  color: var(--ink-3);
+  font-size: var(--text-meta);
+  line-height: 1.2;
+}
+
+.state[data-state="2"] .stateLabel {
+  color: var(--arrive);
+}
+
+.stateImage {
+  display: block;
+  inline-size: min(100%, 360px);
+  block-size: auto;
+  border-radius: 14px;
+  box-shadow: 0 18px 40px -22px rgb(var(--moon-glow) / 0.7);
+}
+
+.state[data-state="2"] .stateImage {
+  box-shadow: 0 18px 40px -22px rgb(62 224 180 / 0.6);
+}
+
+.homage {
+  margin: 0;
+  max-inline-size: 60ch;
+  color: var(--ink-3);
+  font-size: var(--text-meta);
+  line-height: 1.6;
+  text-wrap: pretty;
+}
+
+/* ---------- O som: a partitura ---------- */
+
+.score {
+  display: grid;
+  row-gap: 22px;
+}
+
+.lane {
+  display: grid;
+  row-gap: 8px;
+}
+
+.laneTitle {
+  margin: 0;
+  font-size: var(--text-small);
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+.scoreRow {
+  display: grid;
+  grid-template-columns: 3.75rem minmax(0, 1fr);
+  column-gap: 10px;
+  align-items: start;
+}
+
+.rowName {
+  margin: 0;
+  padding-block-start: 1px;
+  color: var(--ink-3);
+  font-size: 0.75rem;
+  line-height: 18px;
+}
+
+.plot {
+  position: relative;
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.seg {
+  position: relative;
+  block-size: 22px;
+}
+
+/* Barras longas não têm espaço ao lado: o rótulo vai em cima, no começo da barra. */
+.seg[data-mode="over"] {
+  block-size: 34px;
+}
+
+.seg[data-mode="over"] .bar {
+  inset-block-start: auto;
+  inset-block-end: 5px;
+  transform: none;
+}
+
+.seg[data-mode="over"] .segLabel {
+  inset-block-start: 3px;
+  transform: none;
+}
+
+.bar {
+  position: absolute;
+  inset-block-start: 50%;
+  block-size: 6px;
+  border-radius: 3px;
+  background: linear-gradient(90deg, rgb(var(--moon-glow) / 0.95), rgb(185 193 255 / 0.9));
+  transform: translateY(-50%);
+}
+
+.barImage {
+  background: linear-gradient(90deg, rgb(255 255 255 / 0.28), rgb(255 255 255 / 0.62));
+}
+
+.segLabel {
+  position: absolute;
+  inset-block-start: 50%;
+  color: var(--ink-2);
+  font-size: 0.75rem;
+  line-height: 1;
+  white-space: nowrap;
+  transform: translateY(-50%);
+}
+
+.segLabel[data-side="after"] {
+  padding-inline-start: 8px;
+}
+
+.segLabel[data-side="before"] {
+  padding-inline-end: 8px;
+}
+
+.marker {
+  position: absolute;
+  inset-block: -2px;
+  inline-size: 0;
+  border-inline-start: 1px dashed rgb(62 224 180 / 0.75);
+  pointer-events: none;
+}
+
+.markerLabel {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: 6px;
+  color: var(--arrive);
+  font-size: 0.6875rem;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.axis {
+  display: grid;
+  grid-template-columns: 3.75rem minmax(0, 1fr);
+  column-gap: 10px;
+  align-items: center;
+  border-block-start: 1px solid var(--rule);
+  padding-block-start: 6px;
+}
+
+.axisName {
+  color: var(--ink-3);
+  font-size: 0.6875rem;
+  line-height: 1;
+}
+
+.ticks {
+  position: relative;
+  block-size: 12px;
+}
+
+.tick {
+  position: absolute;
+  color: var(--ink-3);
+  font-size: 0.6875rem;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  transform: translateX(-50%);
+}
+
+.samples {
+  display: grid;
+  row-gap: 10px;
+}
+
+.samplesLabel {
+  margin: 0;
+  color: var(--ink-2);
+  font-size: var(--text-small);
+  font-weight: 500;
+}
+
+.sampleList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.sample {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 16px 8px 8px;
+  border: 1px solid rgb(var(--moon-glow) / 0.5);
+  border-radius: 999px;
+  background: rgb(var(--moon-glow) / 0.1);
+  color: var(--ink);
+  font: inherit;
+  cursor: pointer;
+  transition:
+    background-color var(--dur-fast) var(--ease-press),
+    border-color var(--dur-fast) var(--ease-press);
+}
+
+.sample:hover {
+  background: rgb(var(--moon-glow) / 0.2);
+}
+
+.sample:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 3px;
+}
+
+.samplePlaying {
+  border-color: var(--arrive);
+  background: rgb(62 224 180 / 0.12);
+}
+
+.sampleIcon {
+  display: grid;
+  place-items: center;
+  inline-size: 34px;
+  block-size: 34px;
+  border-radius: 50%;
+  background: rgb(var(--moon-glow) / 0.28);
+  color: var(--moon-ink);
+  font-size: 0.9375rem;
+}
+
+.samplePlaying .sampleIcon {
+  background: rgb(62 224 180 / 0.24);
+  color: var(--arrive);
+}
+
+.sampleText {
+  display: grid;
+  text-align: start;
+  line-height: 1.2;
+}
+
+.sampleAction {
+  color: var(--ink-3);
+  font-size: 0.6875rem;
+}
+
+.sampleName {
+  font-size: var(--text-small);
+  font-weight: 500;
+}
+
+/* ---------- Por dentro ---------- */
+
+.build {
+  display: grid;
+  row-gap: 18px;
+  margin: 0;
+}
+
+.buildItem {
+  display: grid;
+  row-gap: 4px;
+}
+
+.buildLabel {
+  color: var(--moon-ink);
+  font-size: var(--text-small);
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+.buildBody {
+  margin: 0;
+  color: var(--ink-2);
+  font-size: var(--text-meta);
+  line-height: 1.6;
+  text-wrap: pretty;
+}
+
+.stack {
+  margin: 0;
+  max-inline-size: 64ch;
+  color: var(--ink-3);
+  font-size: var(--text-meta);
+  line-height: 1.6;
+  text-wrap: pretty;
+}
+
+/* ---------- No celular ---------- */
+
+.phones {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 240px));
+  gap: 14px;
+  justify-content: center;
+}
+
+.phone {
+  position: relative;
+  inline-size: 100%;
+  border-radius: 18px;
+  box-shadow: 0 24px 60px -28px rgb(var(--moon-glow) / 0.75);
+}
+
+.phoneImage {
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
+  /* Recorte discreto do respiro escuro; o visualizador abre a captura inteira. */
+  aspect-ratio: 390 / 720;
+  object-fit: cover;
+  object-position: 50% 46%;
+  border-radius: 18px;
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.08);
+}
+
+/* ---------- O que isto não é, crédito e links ---------- */
+
+.limits {
+  display: grid;
+  row-gap: 6px;
+  max-inline-size: 72ch;
+  padding-inline-start: 16px;
+  border-inline-start: 2px solid rgb(var(--moon-glow) / 0.6);
+}
+
+.limitsTitle {
+  margin: 0;
+  font-size: var(--text-small);
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+.limitsBody {
+  margin: 0;
+  color: var(--ink-2);
+  font-size: var(--text-meta);
+  line-height: 1.6;
+  text-wrap: pretty;
+}
+
+.credit {
+  display: grid;
+  row-gap: 14px;
+  padding-top: 18px;
+  border-top: 1px solid var(--rule);
+}
+
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Links externos: texto simples, sem botão. Evidência, não chamada para ação. */
+.link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--ink-3);
+  font-size: var(--text-small);
+  font-weight: 500;
+  line-height: 1.3;
+  text-decoration: underline;
+  text-decoration-color: var(--rule-strong);
+  text-underline-offset: 4px;
+  transition:
+    color var(--dur-fast) var(--ease-press),
+    text-decoration-color var(--dur-fast) var(--ease-press);
+}
+
+.link:hover {
+  color: var(--ink);
+  text-decoration-color: var(--moon);
+}
+
+.link:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+.link svg {
+  color: var(--moon-ink);
+  font-size: 0.9375rem;
+}
+
+/* ---------- Coluna larga ---------- */
+
+@container (min-width: 620px) {
+  .stageImage {
+    aspect-ratio: 1.69 / 1;
+    object-position: 50% 50%;
+  }
+
+  .beats {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    column-gap: 28px;
+    padding: 22px 0 0;
+    border-inline-start: 0;
+    background: linear-gradient(90deg, rgb(var(--moon-glow) / 0.5), rgb(62 224 180 / 0.5)) top / 100% 1px no-repeat;
+  }
+
+  .beat::before {
+    inset-block-start: -27px;
+    inset-inline-start: 0;
+  }
+
+  .film {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    column-gap: 0;
+  }
+
+  .states {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    column-gap: 16px;
+  }
+
+  .stateImage {
+    inline-size: 100%;
+  }
+
+  .scoreRow,
+  .axis {
+    grid-template-columns: 4.5rem minmax(0, 1fr);
+  }
+
+  .buildItem {
+    grid-template-columns: 7rem minmax(0, 1fr);
+    column-gap: 16px;
+  }
+}
+
+/*
+ * Paisagem curta (celular deitado): o título encolhe para a cena aparecer logo.
+ */
+@media (max-height: 520px) {
+  .title {
+    font-size: clamp(1.75rem, 5cqi, 2.5rem);
+  }
+
+  .card {
+    row-gap: 22px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .link,
+  .sample {
+    transition: none;
+  }
+}

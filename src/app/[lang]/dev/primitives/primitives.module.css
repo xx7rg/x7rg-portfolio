@@ -1,0 +1,67 @@
+.page {
+  display: grid;
+  gap: 48px;
+  padding: var(--gutter);
+  max-width: 960px;
+}
+
+.title {
+  margin: 0;
+  font-size: var(--text-name);
+  font-stretch: var(--wdth-display);
+  font-weight: 600;
+}
+
+.block {
+  display: grid;
+  gap: 16px;
+  padding: 24px;
+  background: var(--stock);
+  color: var(--ink);
+}
+
+.block h2 {
+  margin: 0;
+  font-size: var(--text-meta);
+  font-stretch: var(--wdth-meta);
+  font-weight: 500;
+  color: var(--ink-muted);
+}
+
+.row {
+  display: flex;
+  gap: 64px;
+}
+
+.figure {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  justify-items: start;
+}
+
+.figure figcaption {
+  font-size: var(--text-meta);
+  font-stretch: var(--wdth-meta);
+  color: var(--ink-muted);
+}
+
+.bigTarget {
+  --target-size: 7rem;
+}
+
+.bigMark {
+  width: 4rem;
+  height: 4rem;
+}
+
+/* Espaço para as marcas de corte, que ficam fora do retângulo. */
+.cropHost {
+  padding: 28px;
+}
+
+.artifact {
+  aspect-ratio: 16 / 10;
+  max-width: 480px;
+  border: 1px solid var(--rule);
+}

@@ -1,0 +1,30 @@
+/*
+ * Grade da home.
+ *  - celular e tablet: o painel pessoal é um cartão no topo e o conteúdo vem abaixo,
+ *    em coluna única;
+ *  - desktop (1100+): o painel fica FIXO à esquerda (cerca de um terço da tela) e o
+ *    conteúdo ocupa o restante, com espaço à direita para o dock de navegação.
+ * O painel é posicionado por profile-panel.module.css; aqui só se reserva o espaço.
+ */
+
+.home {
+  --panel-w: clamp(340px, 32vw, 500px);
+  --gap: clamp(48px, 7vw, 104px);
+
+  padding: 20px var(--edge) 0;
+}
+
+.content {
+  max-inline-size: 760px;
+  margin-inline: auto;
+}
+
+@media (min-width: 1100px) {
+  .home {
+    padding: 0 96px 0 calc(var(--edge) + var(--panel-w) + var(--gap));
+  }
+
+  .content {
+    margin-inline: 0;
+  }
+}

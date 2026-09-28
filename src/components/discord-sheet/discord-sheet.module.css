@@ -1,0 +1,460 @@
+/*
+ * Folha do DiscordCameraLive: compacta, técnica e transparente. O cartão é o mesmo vidro escuro das outras folhas (o
+ * sistema do portfólio); a identidade do projeto é só o rosa do botão do próprio aplicativo (--rose), usado onde há
+ * trabalho de x7rG, contra um cinza-azulado neutro (--base) para o que é herdado do original. Sem o azul do Discord e
+ * sem a marca dele: não é um produto do Discord. Sem galeria: uma janela do aplicativo, uma matriz de procedência e um
+ * detalhe técnico.
+ * A composição responde à largura da COLUNA (container query em projects.module.css):
+ *  - estreita: tudo empilhado, a janela do aplicativo pequena;
+ *  - 620+: título e janela lado a lado, a matriz em três colunas, os dois fluxos lado a lado.
+ */
+
+.sheet {
+  --rose: #f0c8c8;
+  --rose-ink: #f5d9d9;
+  --base: #9aa6bd;
+  --pad: clamp(20px, 5cqi, 36px);
+
+  padding: var(--bezel);
+  border-radius: var(--radius-panel);
+}
+
+.card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  row-gap: clamp(26px, 4.5svh, 40px);
+  padding: var(--pad);
+  border-radius: var(--radius-inner);
+  background: var(--stock);
+}
+
+.caption {
+  margin: 0;
+  color: var(--ink-3);
+  font-size: var(--text-meta);
+  line-height: 1.45;
+  text-wrap: pretty;
+}
+
+/* ---------- Abertura ---------- */
+
+.head {
+  display: grid;
+  row-gap: 16px;
+}
+
+.headBody {
+  display: grid;
+  gap: 22px;
+}
+
+.intro {
+  display: grid;
+  align-content: start;
+  row-gap: 14px;
+}
+
+.title {
+  margin: 0;
+  font-size: var(--text-project);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+
+.statement {
+  margin: 0;
+  max-inline-size: 34em;
+  color: var(--ink);
+  font-size: clamp(1.0625rem, 2.5cqi, 1.1875rem);
+  line-height: 1.42;
+  letter-spacing: -0.012em;
+  text-wrap: pretty;
+}
+
+.facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 28px;
+  margin: 0;
+  padding-block-start: 14px;
+  border-block-start: 1px solid var(--rule);
+}
+
+.fact {
+  display: grid;
+  row-gap: 2px;
+}
+
+.factLabel {
+  color: var(--ink-3);
+  font-size: 0.75rem;
+  line-height: 1.2;
+}
+
+.factValue {
+  margin: 0;
+  color: var(--ink);
+  font-size: var(--text-small);
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+.shot {
+  display: grid;
+  row-gap: 8px;
+  justify-items: start;
+  margin: 0;
+}
+
+.shotZoom {
+  position: relative;
+  inline-size: min(100%, 240px);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 0 0 1px rgb(255 255 255 / 0.1);
+}
+
+.shotImage {
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
+}
+
+/* ---------- Blocos ---------- */
+
+.block {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  row-gap: 16px;
+  padding-top: 24px;
+  border-top: 1px solid var(--rule);
+}
+
+.blockHead {
+  display: grid;
+  row-gap: 6px;
+}
+
+.blockTitle {
+  margin: 0;
+  font-size: clamp(1.1875rem, 3.2cqi, 1.375rem);
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+.blockLead {
+  margin: 0;
+  max-inline-size: 62ch;
+  color: var(--ink-2);
+  font-size: var(--text-small);
+  line-height: 1.55;
+  text-wrap: pretty;
+}
+
+.pairs {
+  display: grid;
+  row-gap: 14px;
+  margin: 0;
+}
+
+.pair {
+  display: grid;
+  row-gap: 3px;
+}
+
+.pairLabel {
+  color: var(--ink);
+  font-size: var(--text-small);
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+.pairBody {
+  margin: 0;
+  color: var(--ink-2);
+  font-size: var(--text-meta);
+  line-height: 1.6;
+  text-wrap: pretty;
+}
+
+/* ---------- A matriz de procedência ---------- */
+
+.matrix {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.row {
+  display: grid;
+  row-gap: 3px;
+  padding: 12px 0 12px 14px;
+  border-block-start: 1px solid var(--rule);
+  border-inline-start: 3px solid var(--base);
+}
+
+.row[data-origin="x7rg"] {
+  border-inline-start-color: var(--rose);
+}
+
+.row[data-origin="both"] {
+  border-inline-start-color: transparent;
+  border-image: linear-gradient(var(--base) 50%, var(--rose) 50%) 1;
+  border-inline-start-width: 3px;
+}
+
+.rowArea {
+  margin: 0;
+  color: var(--ink);
+  font-size: var(--text-small);
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+.rowOrigin {
+  margin: 0;
+  color: var(--base);
+  font-size: 0.75rem;
+  line-height: 1.3;
+}
+
+.row[data-origin="x7rg"] .rowOrigin,
+.row[data-origin="both"] .rowOrigin {
+  color: var(--rose-ink);
+}
+
+.rowBody {
+  margin: 0;
+  color: var(--ink-2);
+  font-size: var(--text-meta);
+  line-height: 1.55;
+  text-wrap: pretty;
+}
+
+/* ---------- Por dentro: dois fluxos e as linhas reais ---------- */
+
+.flows {
+  display: grid;
+  gap: 14px;
+}
+
+.flow {
+  display: grid;
+  row-gap: 8px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: rgb(255 255 255 / 0.04);
+  box-shadow: inset 0 0 0 1px var(--rule);
+}
+
+.flowAfter {
+  box-shadow: inset 0 0 0 1px rgb(240 200 200 / 0.4);
+}
+
+.flowLabel {
+  margin: 0;
+  color: var(--base);
+  font-size: var(--text-small);
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+.flowAfter .flowLabel {
+  color: var(--rose-ink);
+}
+
+.steps {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding-inline-start: 1.5em;
+  list-style: decimal;
+  color: var(--ink-2);
+  font-size: var(--text-meta);
+  line-height: 1.5;
+}
+
+.step::marker {
+  color: var(--ink-3);
+  font-variant-numeric: tabular-nums;
+}
+
+/* No fluxo original, o último passo é o defeito: falha e sem app.asar. */
+.flowBefore .step:last-child {
+  color: #f3b3ac;
+}
+
+.code {
+  display: grid;
+  row-gap: 6px;
+  margin: 0;
+}
+
+.codeLabel {
+  color: var(--ink-3);
+  font-size: var(--text-meta);
+  line-height: 1.4;
+}
+
+.pre {
+  display: grid;
+  margin: 0;
+  padding: 12px 14px;
+  overflow-x: auto;
+  border-radius: 10px;
+  background: rgb(0 0 0 / 0.35);
+  font-family: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, Consolas, monospace;
+  font-size: 0.8125rem;
+  line-height: 1.6;
+}
+
+.codeLine {
+  display: block;
+  white-space: pre;
+}
+
+.sign {
+  display: inline-block;
+  inline-size: 1.4em;
+  user-select: none;
+}
+
+.removed {
+  color: #f3b3ac;
+}
+
+.added {
+  color: var(--rose-ink);
+}
+
+/* ---------- Crédito e links ---------- */
+
+.credit {
+  display: grid;
+  row-gap: 12px;
+  padding-top: 20px;
+  border-top: 1px solid var(--rule);
+}
+
+.creditTitle {
+  margin: 0;
+  color: var(--ink-3);
+  font-size: var(--text-meta);
+  font-weight: 400;
+  line-height: 1.2;
+}
+
+.creditList {
+  display: grid;
+  row-gap: 12px;
+  margin: 0;
+}
+
+.creditItem {
+  display: grid;
+  row-gap: 2px;
+  max-inline-size: 66ch;
+}
+
+.creditLabel {
+  color: var(--ink-3);
+  font-size: 0.75rem;
+  line-height: 1.3;
+}
+
+.creditBody {
+  margin: 0;
+  color: var(--ink);
+  font-size: var(--text-meta);
+  line-height: 1.6;
+  text-wrap: pretty;
+}
+
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Links externos: texto simples, sem botão. Evidência, não chamada para ação. */
+.link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--ink-3);
+  font-size: var(--text-small);
+  font-weight: 500;
+  line-height: 1.3;
+  text-decoration: underline;
+  text-decoration-color: var(--rule-strong);
+  text-underline-offset: 4px;
+  transition:
+    color var(--dur-fast) var(--ease-press),
+    text-decoration-color var(--dur-fast) var(--ease-press);
+}
+
+.link:hover {
+  color: var(--ink);
+  text-decoration-color: var(--rose);
+}
+
+.link:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+.link svg {
+  color: var(--rose-ink);
+  font-size: 0.9375rem;
+}
+
+/* ---------- Coluna larga ---------- */
+
+@container (min-width: 620px) {
+  .headBody {
+    grid-template-columns: minmax(0, 1fr) 240px;
+    column-gap: 32px;
+    align-items: start;
+  }
+
+  .pair {
+    grid-template-columns: 9rem minmax(0, 1fr);
+    column-gap: 16px;
+    align-items: baseline;
+  }
+
+  .row {
+    grid-template-columns: 11rem 8rem minmax(0, 1fr);
+    column-gap: 16px;
+    align-items: baseline;
+    row-gap: 0;
+  }
+
+  .flows {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+  }
+}
+
+@media (max-height: 520px) {
+  .title {
+    font-size: clamp(1.75rem, 5cqi, 2.5rem);
+  }
+
+  .card {
+    row-gap: 20px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .link {
+    transition: none;
+  }
+}

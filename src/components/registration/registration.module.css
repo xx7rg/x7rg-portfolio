@@ -1,0 +1,221 @@
+/*
+ * Primitivas de Registration. Cada uma tem uma razão semântica:
+ *  - alvo de registro: estado "alinhado" ou "desalinhado" (só hero e Proof/Build)
+ *  - marcas de corte: onde termina o artefato e começa o portfólio
+ *  - barra de cores: a paleta real de um projeto
+ *  - linha de slug: metadados como em uma prova impressa
+ */
+
+/* ---------- Alvo de registro ---------- */
+
+.target {
+  display: block;
+  width: var(--target-size, 3rem);
+  height: auto;
+  overflow: visible;
+}
+
+.cross,
+.ring {
+  fill: none;
+  vector-effect: non-scaling-stroke;
+  transition: transform var(--dur-ui) var(--ease-settle);
+}
+
+/* A cruz pertence a uma placa e o anel à outra. Unidades do viewBox (64). */
+.cross {
+  stroke: var(--ink);
+  stroke-width: 1.5;
+}
+
+.ring {
+  stroke: var(--mark);
+  stroke-width: 2;
+}
+
+.target[data-registration="misaligned"] .cross {
+  transform: translate(-4px, 3px);
+}
+
+.target[data-registration="misaligned"] .ring {
+  transform: translate(4px, -3px);
+}
+
+/* ---------- Marca de estado (duas placas quadradas) ---------- */
+
+.plateMark {
+  display: block;
+  flex: none;
+  width: 1rem;
+  height: 1rem;
+  overflow: visible;
+}
+
+.plateA,
+.plateB {
+  fill: none;
+  stroke-width: 1.5;
+  vector-effect: non-scaling-stroke;
+}
+
+.plateA {
+  stroke: var(--ink);
+}
+
+.plateB {
+  stroke: var(--mark);
+}
+
+/* Mesmo deslocamento do alvo desalinhado: uma placa para cada lado. */
+.plateMark[data-registration="misaligned"] .plateA {
+  transform: translate(-1.5px, 1.5px);
+}
+
+.plateMark[data-registration="misaligned"] .plateB {
+  transform: translate(2.5px, -1.5px);
+}
+
+/* ---------- Marcas de corte ---------- */
+
+.crop {
+  --crop-len: 14px;
+  --crop-gap: 10px;
+  --crop-weight: 1px;
+  --crop-color: var(--ink-muted);
+
+  position: relative;
+}
+
+.mark {
+  position: absolute;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+.mark::before,
+.mark::after {
+  content: "";
+  position: absolute;
+  background: var(--crop-color);
+}
+
+/* Cada canto tem dois traços que não se tocam, alinhados às bordas: como em uma prova. */
+.mark[data-corner="tl"] {
+  top: 0;
+  left: 0;
+}
+.mark[data-corner="tl"]::before {
+  width: var(--crop-len);
+  height: var(--crop-weight);
+  top: 0;
+  right: var(--crop-gap);
+}
+.mark[data-corner="tl"]::after {
+  width: var(--crop-weight);
+  height: var(--crop-len);
+  left: 0;
+  bottom: var(--crop-gap);
+}
+
+.mark[data-corner="tr"] {
+  top: 0;
+  right: 0;
+}
+.mark[data-corner="tr"]::before {
+  width: var(--crop-len);
+  height: var(--crop-weight);
+  top: 0;
+  left: var(--crop-gap);
+}
+.mark[data-corner="tr"]::after {
+  width: var(--crop-weight);
+  height: var(--crop-len);
+  right: 0;
+  bottom: var(--crop-gap);
+}
+
+.mark[data-corner="bl"] {
+  bottom: 0;
+  left: 0;
+}
+.mark[data-corner="bl"]::before {
+  width: var(--crop-len);
+  height: var(--crop-weight);
+  bottom: 0;
+  right: var(--crop-gap);
+}
+.mark[data-corner="bl"]::after {
+  width: var(--crop-weight);
+  height: var(--crop-len);
+  left: 0;
+  top: var(--crop-gap);
+}
+
+.mark[data-corner="br"] {
+  bottom: 0;
+  right: 0;
+}
+.mark[data-corner="br"]::before {
+  width: var(--crop-len);
+  height: var(--crop-weight);
+  bottom: 0;
+  left: var(--crop-gap);
+}
+.mark[data-corner="br"]::after {
+  width: var(--crop-weight);
+  height: var(--crop-len);
+  right: 0;
+  top: var(--crop-gap);
+}
+
+/* ---------- Barra de cores ---------- */
+
+.colorBar {
+  display: flex;
+  gap: 2px;
+  block-size: var(--bar-height, 10px);
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  list-style: none;
+  border-radius: 999px;
+}
+
+.swatch {
+  flex: 1 1 0;
+  /* Contorno para que tintas escuras não sumam no grafite. */
+  outline: 1px solid var(--rule-strong);
+  outline-offset: -1px;
+}
+
+/* ---------- Linha de slug ---------- */
+
+.slugLine {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 32px;
+  margin: 0;
+}
+
+.slugItem {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 0;
+}
+
+/* Item de texto corrido (o crédito): ocupa a linha inteira. */
+.slugItemWide {
+  flex-basis: 100%;
+  max-inline-size: 52ch;
+}
+
+.slugLabel {
+  color: var(--ink-muted);
+}
+
+.slugValue {
+  margin: 0;
+  color: var(--ink);
+}

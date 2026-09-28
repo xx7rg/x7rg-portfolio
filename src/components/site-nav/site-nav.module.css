@@ -1,0 +1,373 @@
+/*
+ * Navegação e utilidades. Sem barra de topo:
+ *  - a data/hora e o seletor de idioma são dois elementos SEPARADOS (a data como texto
+ *    solto e o seletor como pílula própria), FIXOS no canto superior direito da viewport:
+ *    acompanham a rolagem e ficam sempre à mão. Respeitam a área segura (entalhe, barra de
+ *    gestos) e têm um fundo com desfoque só para continuarem legíveis sobre o conteúdo;
+ *  - celular/tablet: botões flutuantes (menu e voltar ao topo) no canto inferior direito;
+ *  - desktop (1100+): dock vertical em vidro à direita.
+ */
+
+/* ---------- Utilidades: data/hora + idioma ---------- */
+
+.utility {
+  position: fixed;
+  top: max(20px, env(safe-area-inset-top));
+  right: max(var(--edge), env(safe-area-inset-right));
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.clock {
+  padding: 6px 10px;
+  border-radius: 12px;
+  /* Quase opaco: o conteúdo que passa por baixo (faixas, imagens) não pode atravessar a data. */
+  background: rgb(15 15 15 / 0.92);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-inline-size: 76px;
+  min-block-size: 34px;
+  text-align: right;
+  color: var(--ink-3);
+  font-size: var(--text-meta);
+  line-height: 1.25;
+  font-variant-numeric: tabular-nums;
+}
+
+.lang {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px;
+  border: 1px solid var(--rule-strong);
+  border-radius: 999px;
+  /* Mesmo cinza de --surface sobre o fundo (#1a1a1a), agora quase opaco e com desfoque: legível sobre o conteúdo. */
+  background: rgb(26 26 26 / 0.96);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.langItem {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 13px;
+  border-radius: 999px;
+  color: var(--ink-2);
+  font-size: 0.75rem;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  transition:
+    color var(--dur-fast) var(--ease-press),
+    background-color var(--dur-fast) var(--ease-press);
+}
+
+a.langItem:hover {
+  color: var(--ink);
+  background: rgb(255 255 255 / 0.08);
+}
+
+.langCurrent {
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-weight: 700;
+}
+
+/* ---------- Botão redondo (menu, fechar, topo) ---------- */
+
+.round {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  inline-size: 40px;
+  block-size: 40px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  color: var(--ink-2);
+  font-size: 1rem;
+  cursor: pointer;
+  transition: color var(--dur-fast) var(--ease-press);
+}
+
+.round:hover {
+  color: var(--ink);
+}
+
+/* ---------- Dock (desktop) ---------- */
+
+.dock {
+  position: fixed;
+  top: 50%;
+  right: var(--edge);
+  z-index: 40;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  transform: translateY(-50%);
+}
+
+/* Só existe para o NeonBorder ter uma caixa própria (position: relative) do tamanho exato da
+   lista, sem herdar o "ul só pode ter li" — o NeonBorder fica ao lado do <ul>, não dentro dele. */
+.dockListFrame {
+  position: relative;
+}
+
+.dockList {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 4px;
+  list-style: none;
+  border-radius: 999px;
+}
+
+.dockLink {
+  position: relative;
+  display: grid;
+  place-items: center;
+  inline-size: 32px;
+  block-size: 32px;
+  border-radius: 50%;
+  color: var(--ink-4);
+  font-size: 1rem;
+  transition: color var(--dur-fast) var(--ease-press);
+}
+
+/*
+ * A ampliação por proximidade (DockIcon) anda AQUI, não no .dockLink: o alvo de clique/foco e a
+ * dica (::after, mais abaixo) ficam do tamanho normal sempre. transform não afeta layout, então
+ * ampliar não desloca os vizinhos nem muda a altura do dock — o ícone só cresce por cima deles.
+ */
+.dockIcon {
+  display: grid;
+  place-items: center;
+  inline-size: 100%;
+  block-size: 100%;
+}
+
+.dockLink:hover,
+.dockLink:focus-visible {
+  color: var(--ink);
+}
+
+.dockLink[aria-current="location"] {
+  color: var(--accent);
+}
+
+/* Rótulo em pílula à esquerda do ícone: aparece ao passar o mouse e ao focar pelo teclado. */
+.dockLink::after,
+.dockTop::after {
+  content: attr(data-tip);
+  position: absolute;
+  top: 50%;
+  right: calc(100% + 12px);
+  padding: 6px 12px;
+  border: 1px solid var(--rule-strong);
+  border-radius: 999px;
+  background: rgb(26 26 26 / 0.95);
+  color: var(--ink);
+  font-size: 0.75rem;
+  line-height: 1.2;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(6px, -50%);
+  transition:
+    opacity var(--dur-fast) var(--ease-press),
+    transform var(--dur-fast) var(--ease-press);
+}
+
+.dockLink:hover::after,
+.dockLink:focus-visible::after,
+.dockTop:hover::after,
+.dockTop:focus-visible::after {
+  opacity: 1;
+  transform: translate(0, -50%);
+}
+
+/* ---------- Botões flutuantes (celular e tablet) ---------- */
+
+.floating {
+  position: fixed;
+  right: var(--edge);
+  bottom: var(--edge);
+  z-index: 40;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.floatTop {
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(6px);
+  transition:
+    opacity var(--dur-ui) var(--ease-settle),
+    transform var(--dur-ui) var(--ease-settle),
+    visibility var(--dur-ui),
+    color var(--dur-fast) var(--ease-press);
+}
+
+.floating[data-scrolled] .floatTop {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+}
+
+/* ---------- Menu (diálogo nativo) ---------- */
+
+.dialog {
+  inline-size: 100%;
+  max-inline-size: none;
+  block-size: 100vh;
+  block-size: 100dvh;
+  max-block-size: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: var(--stock);
+  color: var(--ink);
+}
+
+.dialog::backdrop {
+  background: rgb(0 0 0 / 0.6);
+}
+
+.dialogInner {
+  display: flex;
+  flex-direction: column;
+  min-block-size: 100%;
+  padding: 20px var(--edge) var(--edge);
+}
+
+.dialogTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.dialogNav {
+  display: flex;
+  flex-direction: column;
+  margin-top: clamp(32px, 12svh, 96px);
+}
+
+/* No menu os destinos viram a tipografia principal, como o manifesto da home. */
+.dialogLink {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-block-size: 64px;
+  padding-block: 8px;
+  border-bottom: 1px solid var(--rule);
+  color: var(--ink-2);
+  font-size: clamp(2rem, 9vw, 2.75rem);
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+}
+
+.dialogLink svg {
+  flex: none;
+  font-size: 0.6em;
+  color: var(--ink-4);
+}
+
+.dialogLink[aria-current="location"] {
+  color: var(--ink);
+}
+
+.dialogLink[aria-current="location"] svg {
+  color: var(--accent);
+}
+
+html:has(dialog[open]) {
+  overflow: hidden;
+}
+
+/* ---------- Desktop ---------- */
+
+@media (min-width: 1100px) {
+  .utility {
+    right: max(32px, env(safe-area-inset-right));
+  }
+
+  .dock {
+    display: flex;
+  }
+
+  .floating {
+    display: none;
+  }
+
+  /*
+   * A pílula PT/EN/ES sai do fluxo de .utility (que fica só com o relógio), vira vertical
+   * (mesma família visual do dock: empilhada, mesmo padding, mesmo raio) e se ancora no
+   * mesmo eixo do dock: left: calc(100% - edge - metade da largura do dock, 20px) +
+   * transform: translateX(-50%) centraliza a pílula EXATAMENTE no centro-x do dock e do
+   * botão de subir, não importa a largura real da pílula. Na vertical, deslocada para cima
+   * por um valor medido: 180px = metade da altura da pílula (48px de 96px) + metade da
+   * altura do dock inteiro, lista de 6 ícones + botão de subir (124px de 248px) + 8px de
+   * respiro — o MESMO respiro que .dock já usa entre a lista e o botão de subir
+   * (.dock { gap: 8px }), medido, não escolhido à toa. O dock cresce (mais itens) sem que
+   * ninguém precise reajustar isto à mão: como .dock fica centralizado no eixo Y da viewport
+   * (top: 50% + translateY(-50%)), seu centro nunca muda de lugar — só a MEIA altura muda,
+   * e é ela que entra nesta conta. Nada no dock foi tocado; só esta pílula (a de dentro de
+   * .utility, não a do menu) ganha a regra.
+   */
+  /*
+   * Mesma superfície do dock, com os MESMOS tokens (não uma cor parecida): --glass no
+   * lugar do fundo próprio da pílula, --glass-shadow no lugar de sombra nenhuma, o mesmo
+   * desfoque (12px) e sem borda (o dock não tem). Mesma largura externa, 40px (com
+   * box-sizing: border-box, já que a pílula usava borda e o dock não).
+   */
+  .langMain {
+    position: fixed;
+    top: 50%;
+    left: calc(100% - var(--edge) - 20px);
+    z-index: 40;
+    flex-direction: column;
+    gap: 0;
+    padding: 4px;
+    box-sizing: border-box;
+    inline-size: 40px;
+    background-color: transparent;
+    background-image: var(--glass);
+    border: 0;
+    box-shadow: var(--glass-shadow);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+    transform: translate(-50%, calc(-50% - 180px));
+  }
+
+  /*
+   * Mesmo ritmo vertical do dock: cada rótulo ocupa uma linha de 32px, sem vão entre elas
+   * (como os ícones). EN/ES ficam só texto centralizado, sem forma nenhuma por baixo.
+   */
+  .langMain .langItem {
+    display: grid;
+    place-items: center;
+    block-size: 32px;
+    padding-inline: 4px;
+    border-radius: 0;
+    font-size: 0.6875rem;
+  }
+
+  /*
+   * O PT ativo é o único com uma forma: um círculo dourado menor que o ícone do dock
+   * (24px, não 32px) para ficar mais delicado, com a mesma folga lateral que os ícones
+   * têm dentro da coluna de 40px (--align-items:center já centraliza).
+   */
+  .langMain .langCurrent {
+    inline-size: 24px;
+    block-size: 24px;
+    border-radius: 50%;
+    font-size: 0.625rem;
+  }
+}

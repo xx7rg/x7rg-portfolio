@@ -1,0 +1,192 @@
+/*
+ * Contato: o fechamento editorial do portfólio. Mesma folga generosa entre blocos da seção
+ * Sobre (about.module.css) — não uma grade de cartões, não um rodapé pequeno. A frase principal
+ * é o elemento dominante; o e-mail é a ação primária; os canais e a assinatura final são quietos.
+ */
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(40px, 9svh, 88px);
+  padding-block: clamp(56px, 10svh, 112px) clamp(64px, 12svh, 128px);
+}
+
+/* ---------- Revelar ao rolar (uma vez, se ainda estiver fora da tela) ---------- */
+
+.reveal[data-reveal="armed"] {
+  opacity: 0;
+  transform: translateY(16px);
+}
+
+.reveal[data-reveal="shown"] {
+  transition:
+    opacity 640ms var(--ease-settle),
+    transform 640ms var(--ease-settle);
+}
+
+/* ---------- Marca + frase de fechamento ---------- */
+
+.eyebrow {
+  margin: 0 0 16px;
+  color: var(--ink-4);
+  font-family: var(--font-mono);
+  font-size: var(--text-meta);
+  letter-spacing: 0.08em;
+}
+
+.statement {
+  max-inline-size: 13em;
+  margin: 0;
+  color: var(--ink);
+  font-size: clamp(2rem, 1.3rem + 3vw, 3.5rem);
+  font-weight: 500;
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  text-wrap: pretty;
+}
+
+.lead {
+  max-inline-size: 30em;
+  margin: 20px 0 0;
+  color: var(--ink-2);
+  font-size: var(--text-body);
+  line-height: 1.6;
+}
+
+/* ---------- E-mail: a ação principal ---------- */
+
+.email {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.emailCta {
+  color: var(--ink-muted);
+  font-size: var(--text-small);
+}
+
+.emailAddress {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--ink);
+  font-size: clamp(1.25rem, 1.05rem + 1vw, 1.75rem);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  background-image: linear-gradient(var(--accent), var(--accent));
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  background-size: 0% 1.5px;
+  transition: background-size var(--dur-ui) var(--ease-settle);
+}
+
+.emailAddress svg {
+  flex: none;
+  font-size: 0.7em;
+  color: var(--ink-4);
+  transition:
+    color var(--dur-fast) var(--ease-press),
+    transform var(--dur-fast) var(--ease-press);
+}
+
+.email:hover .emailAddress,
+.email:focus-visible .emailAddress {
+  background-size: 100% 1.5px;
+}
+
+.email:hover .emailAddress svg,
+.email:focus-visible .emailAddress svg {
+  color: var(--accent);
+  transform: translate(2px, -2px);
+}
+
+/* ---------- Canais secundários ---------- */
+
+.social {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.socialLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border-radius: 999px;
+  color: var(--ink-2);
+  font-size: var(--text-small);
+  transition:
+    color var(--dur-fast) var(--ease-press),
+    background-color var(--dur-fast) var(--ease-press);
+}
+
+.socialLink svg {
+  font-size: 1rem;
+  color: var(--ink-4);
+  transition: color var(--dur-fast) var(--ease-press);
+}
+
+.socialLink:hover,
+.socialLink:focus-visible {
+  color: var(--ink);
+  background: rgb(255 255 255 / 0.06);
+}
+
+.socialLink:hover svg,
+.socialLink:focus-visible svg {
+  color: var(--ink);
+}
+
+/* ---------- Assinatura final ---------- */
+
+.closing {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 0;
+  padding-top: 32px;
+  border-top: 1px solid var(--rule);
+  max-inline-size: 24em;
+}
+
+/* Selo discreto ao lado da assinatura: o mesmo escudo isolado da Identidade, só decorativo aqui —
+   o nome e o cargo ao lado já identificam a marca, então a imagem não carrega alt. Sem o brilho/zoom
+   da Identidade e sem o comportamento interativo do BadgeShield: aqui é só uma marca de assinatura. */
+.closingShield {
+  inline-size: 40px;
+  block-size: auto;
+  flex: none;
+}
+
+.closingText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 0;
+}
+
+.closingName {
+  color: var(--ink);
+  font-size: var(--text-body);
+  font-weight: 500;
+}
+
+.closingRole {
+  color: var(--ink-muted);
+  font-size: var(--text-small);
+}
+
+@media (max-width: 480px) {
+  .closingShield {
+    inline-size: 34px;
+  }
+
+  .closing {
+    gap: 12px;
+  }
+}

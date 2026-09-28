@@ -1,0 +1,456 @@
+/*
+ * Folha do AquaControl: o mesmo cartão de vidro escuro das outras folhas, com o PRODUTO REAL
+ * (interface clara de tablet, sem recolorir nem filtrar) emoldurado dentro dele. A separação vem de
+ * moldura, respiro e sombra; o único acento de projeto é o azul-petróleo do próprio app (#0a7ea4,
+ * medido nas capturas), usado só em detalhes. Nada de azul na página inteira.
+ * A composição responde à largura da COLUNA (container query em projects.module.css):
+ *  - estreita: uma captura por vez, recortes que mantêm o texto legível, blocos empilhados;
+ *  - larga (560+): abertura em duas telas sobrepostas, perfis em três colunas, decisões em duas.
+ */
+
+.sheet {
+  --aq: #0a7ea4;
+
+  padding: var(--bezel);
+  border-radius: var(--radius-panel);
+}
+
+.card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  row-gap: clamp(28px, 5svh, 44px);
+  padding: clamp(20px, 5cqi, 40px);
+  border-radius: var(--radius-inner);
+  background: var(--stock);
+}
+
+/* ---------- Identidade ---------- */
+
+.head {
+  display: grid;
+  justify-items: start;
+  row-gap: 14px;
+}
+
+.title {
+  margin: 0;
+  font-size: var(--text-project);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+
+.facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.fact {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 14px;
+  border: 1px solid var(--rule-strong);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--ink-2);
+  font-size: var(--text-meta);
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+.factDot {
+  flex: none;
+  inline-size: 7px;
+  block-size: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+/* ---------- Abertura: o produto real ---------- */
+
+.hero {
+  display: grid;
+  row-gap: 10px;
+  margin: 0;
+}
+
+.stage {
+  position: relative;
+  /* O palco avança um pouco sobre o respiro do cartão: o produto é o protagonista da folha. */
+  margin-inline: calc(clamp(8px, 2.6cqi, 20px) * -1);
+  padding: clamp(10px, 2.4cqi, 18px);
+  border-radius: 20px;
+  background:
+    radial-gradient(90% 80% at 8% 0%, rgb(10 126 164 / 0.12), transparent 60%),
+    linear-gradient(180deg, #181818, #121212);
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.07);
+}
+
+.heroInner {
+  position: relative;
+}
+
+/* Moldura das capturas: a interface clara do app, sem filtro, com borda fina e sombra funda. */
+.frame {
+  overflow: hidden;
+  border-radius: 10px;
+  box-shadow:
+    0 0 0 1px rgb(255 255 255 / 0.12),
+    0 22px 40px -20px rgb(0 0 0 / 0.85);
+}
+
+/* Em coluna estreita só a tela dominante aparece, num recorte que mantém o texto legível. */
+.heroInner .layerBack {
+  display: none;
+}
+
+.heroCaption {
+  margin: 0;
+  color: var(--ink-3);
+  font-size: var(--text-meta);
+  line-height: 1.4;
+}
+
+.story {
+  margin: 0;
+  max-inline-size: 30em;
+  color: var(--ink);
+  font-size: clamp(1.0625rem, 2.6cqi, 1.3125rem);
+  line-height: 1.4;
+  letter-spacing: -0.015em;
+  text-wrap: pretty;
+}
+
+/* ---------- Revelar a abertura: uma vez, só abaixo da dobra e com movimento permitido ---------- */
+
+.stage[data-reveal="armed"] .layerMain {
+  opacity: 0;
+  transform: translateY(16px);
+}
+
+.stage[data-reveal="armed"] .layerBack {
+  opacity: 0;
+  transform: translate(24px, 14px);
+}
+
+.stage[data-reveal="shown"] .layerMain,
+.stage[data-reveal="shown"] .layerBack {
+  transition:
+    opacity 640ms var(--ease-settle),
+    transform 640ms var(--ease-settle);
+}
+
+.stage[data-reveal="shown"] .layerBack {
+  transition-delay: 200ms;
+}
+
+/* ---------- Blocos ---------- */
+
+.block {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  row-gap: 16px;
+  padding-top: 28px;
+  border-top: 1px solid var(--rule);
+}
+
+.blockHead {
+  display: grid;
+  row-gap: 6px;
+}
+
+.blockTitle {
+  margin: 0;
+  font-size: clamp(1.25rem, 3.4cqi, 1.5rem);
+  font-weight: 500;
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+}
+
+.blockLead {
+  margin: 0;
+  max-inline-size: 52ch;
+  color: var(--ink-2);
+  font-size: var(--text-small);
+  line-height: 1.5;
+  text-wrap: pretty;
+}
+
+/* ---------- Perfis ---------- */
+
+.roles {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 18px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Coluna estreita: a captura à esquerda e o texto à direita, para o bloco não crescer demais. */
+.role {
+  display: grid;
+  grid-template-columns: 42% minmax(0, 1fr);
+  column-gap: 14px;
+  row-gap: 2px;
+  align-content: start;
+  align-items: start;
+}
+
+.role > :first-child {
+  grid-row: 1 / span 2;
+}
+
+.roleName {
+  margin: 0;
+  align-self: end;
+  font-size: 1rem;
+  font-weight: 500;
+  line-height: 1.25;
+  letter-spacing: -0.015em;
+}
+
+.roleLine {
+  margin: 0;
+  color: var(--ink-muted);
+  font-size: var(--text-small);
+  line-height: 1.45;
+}
+
+.usage {
+  margin: 0;
+  max-inline-size: 68ch;
+  padding: 12px 16px;
+  border-radius: 12px;
+  background: var(--surface);
+  color: var(--ink-2);
+  font-size: var(--text-meta);
+  line-height: 1.55;
+  text-wrap: pretty;
+}
+
+/* ---------- Coordenação ---------- */
+
+.management {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 14px;
+}
+
+.mgmtItem {
+  display: grid;
+  row-gap: 8px;
+  margin: 0;
+}
+
+.mgmtLabel {
+  color: var(--ink-3);
+  font-size: var(--text-meta);
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+.mgmtLine {
+  margin: 0;
+  max-inline-size: 62ch;
+  color: var(--ink-muted);
+  font-size: var(--text-small);
+  line-height: 1.5;
+  text-wrap: pretty;
+}
+
+/* ---------- Decisões, construção e contexto ---------- */
+
+.decisions {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.decision {
+  display: grid;
+  align-content: start;
+  row-gap: 8px;
+  padding-block: 18px 6px;
+  border-top: 1px solid var(--rule);
+}
+
+.decisionTitle {
+  margin: 0;
+  font-size: 1.0625rem;
+  font-weight: 500;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+}
+
+.decisionBody {
+  margin: 0;
+  max-inline-size: 46ch;
+  color: var(--ink-muted);
+  font-size: var(--text-small);
+  line-height: 1.5;
+}
+
+.buildBlock {
+  display: grid;
+  row-gap: 10px;
+  padding-top: 18px;
+  border-top: 1px solid var(--rule);
+}
+
+.buildTitle {
+  margin: 0;
+  font-size: 1.0625rem;
+  font-weight: 500;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+}
+
+.build {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 10px;
+  margin: 0;
+}
+
+.buildItem {
+  display: grid;
+  align-content: start;
+  row-gap: 2px;
+}
+
+.buildLabel {
+  color: var(--ink);
+  font-size: var(--text-small);
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+.buildBody {
+  margin: 0;
+  color: var(--ink-muted);
+  font-size: var(--text-meta);
+  line-height: 1.5;
+}
+
+/* O limite de armazenamento é contexto operacional: uma linha discreta, sem caixa nem manchete. */
+.context {
+  margin: 0;
+  max-inline-size: 66ch;
+  color: var(--ink-3);
+  font-size: var(--text-meta);
+  line-height: 1.55;
+  text-wrap: pretty;
+}
+
+/* ---------- Crédito ---------- */
+
+.credit {
+  padding-top: 18px;
+  border-top: 1px solid var(--rule);
+}
+
+.disclaimer {
+  margin: 10px 0 0;
+  color: var(--ink-3);
+  font-size: var(--text-meta);
+  line-height: 1.45;
+}
+
+/* ---------- Coluna larga ---------- */
+
+@container (min-width: 560px) {
+  /* Abertura: a tela dominante à esquerda e a lista de visitas sobreposta, no canto de baixo. */
+  .heroInner {
+    aspect-ratio: 1000 / 582;
+  }
+
+  .heroInner .layerMain {
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline-start: 0;
+    inline-size: 88%;
+  }
+
+  .heroInner .layerBack {
+    display: block;
+    position: absolute;
+    inset-block-end: 0;
+    inset-inline-end: 0;
+    inline-size: 52%;
+    box-shadow:
+      0 0 0 1px rgb(255 255 255 / 0.16),
+      0 30px 50px -18px rgb(0 0 0 / 0.9);
+  }
+
+  .roles {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    column-gap: 16px;
+  }
+
+  .role {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: 10px;
+  }
+
+  .role > :first-child {
+    grid-row: auto;
+  }
+
+  .roleName {
+    align-self: auto;
+  }
+
+  .management {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 16px;
+  }
+
+  .mgmtMain {
+    grid-column: 1 / -1;
+  }
+
+  .decisions {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 32px;
+  }
+}
+
+@container (min-width: 700px) {
+  .build {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    column-gap: 24px;
+  }
+}
+
+/*
+ * Paisagem curta (celular deitado): o cabeçalho e os espaços encolhem para o produto aparecer
+ * logo, sem antes uma faixa de título e metadados.
+ */
+@media (max-height: 520px) {
+  .head {
+    row-gap: 10px;
+  }
+
+  .title {
+    font-size: clamp(1.75rem, 5cqi, 2.5rem);
+  }
+
+  .card {
+    row-gap: 22px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stage[data-reveal] .layerMain,
+  .stage[data-reveal] .layerBack {
+    transition: none;
+  }
+}

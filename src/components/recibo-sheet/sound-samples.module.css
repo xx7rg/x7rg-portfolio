@@ -1,0 +1,65 @@
+.root {
+  display: grid;
+  row-gap: 8px;
+}
+
+.buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-block-size: 40px;
+  padding: 0 16px 0 13px;
+  border: 1px solid var(--rule-strong);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--ink-2);
+  font: inherit;
+  font-size: var(--text-small);
+  font-weight: 500;
+  line-height: 1;
+  cursor: pointer;
+  transition:
+    background-color var(--dur-fast) var(--ease-press),
+    border-color var(--dur-fast) var(--ease-press),
+    color var(--dur-fast) var(--ease-press);
+}
+
+.button svg {
+  font-size: 1.125rem;
+  color: var(--rc, var(--accent));
+}
+
+.button:hover {
+  color: var(--ink);
+  border-color: color-mix(in srgb, var(--rc, var(--accent)) 60%, var(--rule-strong));
+}
+
+.button[data-playing] {
+  color: var(--ink);
+  border-color: var(--rc, var(--accent));
+  background: color-mix(in srgb, var(--rc, var(--accent)) 14%, transparent);
+}
+
+.button:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 3px;
+}
+
+.note {
+  margin: 0;
+  color: var(--ink-3);
+  font-size: var(--text-meta);
+  line-height: 1.4;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .button {
+    transition: none;
+  }
+}

@@ -1,0 +1,89 @@
+/*
+ * O arrasto real do cordão com o desenho da geometria por cima. O SVG usa o mesmo sistema de coordenadas da
+ * captura (1080×1200, em pixels da imagem), então o pivô, a vertical e o ângulo caem onde o app os tinha.
+ * Contornos escuros por trás do texto e das linhas mantêm a leitura sobre a cúpula clara e sobre a parede.
+ */
+
+.figure {
+  inline-size: min(100%, 340px);
+  justify-self: center;
+  overflow: hidden;
+  border-radius: 14px;
+  background: #050607;
+  box-shadow:
+    0 0 0 1px rgb(255 255 255 / 0.12),
+    0 22px 40px -20px rgb(0 0 0 / 0.85);
+}
+
+.photo {
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
+}
+
+.svg {
+  position: absolute;
+  inset: 0;
+  inline-size: 100%;
+  block-size: 100%;
+  pointer-events: none;
+}
+
+.guide {
+  stroke: var(--lamp-ink);
+  stroke-width: 3;
+  stroke-dasharray: 14 12;
+}
+
+.ghost {
+  fill: none;
+  stroke: var(--lamp-ink);
+  stroke-width: 3;
+  stroke-dasharray: 8 8;
+}
+
+.arc {
+  fill: none;
+  stroke: var(--lamp);
+  stroke-width: 6;
+  stroke-linecap: round;
+}
+
+.pivot {
+  fill: var(--lamp);
+  stroke: #0b0906;
+  stroke-width: 4;
+}
+
+.tip {
+  fill: var(--lamp-ink);
+}
+
+.value,
+.tag,
+.code {
+  paint-order: stroke;
+  stroke: rgb(8 6 4 / 0.92);
+  stroke-linejoin: round;
+}
+
+.value {
+  fill: #fff3d8;
+  font-size: 66px;
+  font-weight: 600;
+  stroke-width: 12;
+}
+
+.tag {
+  fill: var(--lamp-ink);
+  font-size: 42px;
+  font-weight: 500;
+  stroke-width: 10;
+}
+
+.code {
+  fill: #f6e7c6;
+  font-family: var(--font-mono);
+  font-size: 38px;
+  stroke-width: 10;
+}

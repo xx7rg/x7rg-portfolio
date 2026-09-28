@@ -1,0 +1,182 @@
+/*
+ * O fluxo de visita: abas com uma linha de progresso e uma captura grande por vez, sobre o
+ * mesmo palco escuro da abertura. A cor do app (azul-petróleo #0a7ea4, medida nas capturas) só
+ * aparece na linha de progresso e no ponto ativo.
+ */
+
+.story {
+  --aq: #0a7ea4;
+
+  display: grid;
+  row-gap: 12px;
+}
+
+/* ---------- Abas ---------- */
+
+.tabs {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  column-gap: 6px;
+}
+
+.tab {
+  position: relative;
+  display: grid;
+  row-gap: 2px;
+  justify-items: start;
+  padding: 14px 2px 8px;
+  border: 0;
+  background: none;
+  color: var(--ink-3);
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+  transition: color var(--dur-fast) var(--ease-press);
+}
+
+/* Segmento de progresso no topo: preenchido até o momento ativo. */
+.tab::before {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  inset-block-start: 0;
+  block-size: 2px;
+  border-radius: 2px;
+  background: var(--rule-strong);
+  transition: background-color var(--dur-ui) var(--ease-settle);
+}
+
+.tab[data-done]::before {
+  background: var(--aq);
+}
+
+.tab:hover,
+.tab[data-active] {
+  color: var(--ink);
+}
+
+.tab:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+.tabLabel {
+  font-size: 0.75rem;
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+/* Quais dos nove passos cada momento cobre: só em coluna larga, para caber. */
+.tabSteps {
+  display: none;
+  color: var(--ink-4);
+  font-size: 0.6875rem;
+  line-height: 1.2;
+}
+
+.tab[data-active] .tabSteps {
+  color: var(--ink-3);
+}
+
+/* ---------- Palco e capturas ---------- */
+
+.stage {
+  padding: clamp(10px, 2.6cqi, 18px);
+  border-radius: 18px;
+  background:
+    radial-gradient(90% 80% at 8% 0%, rgb(10 126 164 / 0.11), transparent 60%),
+    linear-gradient(180deg, #181818, #121212);
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.07);
+}
+
+.view {
+  position: relative;
+  aspect-ratio: var(--ar-n);
+}
+
+.panel {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity var(--dur-ui) var(--ease-settle),
+    visibility 0s linear var(--dur-ui);
+}
+
+.panel[data-active] {
+  opacity: 1;
+  visibility: visible;
+  transition:
+    opacity var(--dur-ui) var(--ease-settle),
+    visibility 0s;
+}
+
+.frame {
+  overflow: hidden;
+  border-radius: 10px;
+  box-shadow:
+    0 0 0 1px rgb(255 255 255 / 0.12),
+    0 22px 40px -20px rgb(0 0 0 / 0.85);
+}
+
+/* O diálogo de segurança fica sobre o canto inferior direito da tela de tarefas. */
+.panel .inset {
+  position: absolute;
+  inset-inline-end: 3.5%;
+  inset-block-end: 5%;
+  inline-size: 66%;
+  border-radius: 8px;
+  box-shadow:
+    0 0 0 1px rgb(255 255 255 / 0.18),
+    0 26px 44px -14px rgb(0 0 0 / 0.9);
+}
+
+/* ---------- Legenda ---------- */
+
+.caption {
+  margin: 0;
+  max-inline-size: 60ch;
+  color: var(--ink-2);
+  font-size: var(--text-small);
+  line-height: 1.5;
+  text-wrap: pretty;
+}
+
+.captionSteps {
+  margin-inline-end: 8px;
+  color: var(--ink);
+  font-weight: 500;
+}
+
+/* ---------- Coluna larga ---------- */
+
+@container (min-width: 560px) {
+  .tabLabel {
+    font-size: 0.875rem;
+  }
+
+  .tabSteps {
+    display: block;
+  }
+
+  .view {
+    aspect-ratio: var(--ar);
+  }
+
+  .panel .inset {
+    inset-inline-end: 3%;
+    inset-block-end: 4.5%;
+    inline-size: 46%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .panel,
+  .panel[data-active],
+  .tab,
+  .tab::before {
+    transition: none;
+  }
+}

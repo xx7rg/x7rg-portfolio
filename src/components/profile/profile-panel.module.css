@@ -1,0 +1,315 @@
+/*
+ * Painel pessoal. Moldura de vidro de 6 px em volta de uma imagem interna de cantos
+ * menores; a fotografia preenche o painel e o conteúdo fica sobre ela.
+ *  - celular e tablet: cartão centralizado, até 400 px de largura;
+ *  - desktop (1100+): fixo à esquerda, da borda superior à inferior da tela, com a
+ *    largura definida em home.module.css (--panel-w, cerca de um terço da tela).
+ */
+
+.panel {
+  position: relative;
+  inline-size: min(100%, 400px);
+  block-size: clamp(540px, 80svh, 722px);
+  margin-inline: auto;
+}
+
+.frame {
+  block-size: 100%;
+  padding: var(--bezel);
+  border-radius: var(--radius-panel);
+}
+
+.inner {
+  position: relative;
+  isolation: isolate;
+  block-size: 100%;
+  overflow: hidden;
+  border-radius: var(--radius-inner);
+  background: var(--photo-bg);
+}
+
+/*
+ * A imagem é 46% maior que o painel e fica presa ao topo: o painel mostra da cabeça
+ * até o peito (cerca de 68% da fotografia), com o rosto grande e sem os tênis, que
+ * ficariam atrás do texto. É só um recorte de apresentação; o arquivo não é editado.
+ */
+.photo {
+  position: absolute;
+  inset: 0 0 auto;
+  block-size: 146%;
+}
+
+.image {
+  object-fit: cover;
+  object-position: 54% 0%;
+}
+
+/* Gradiente escuro embaixo (leitura do texto) e uma sombra leve no topo (ícones). */
+.shade {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(to top, rgb(6 7 11 / 0.94) 0%, rgb(6 7 11 / 0.78) 30%, rgb(6 7 11 / 0) 62%),
+    linear-gradient(to bottom, rgb(6 7 11 / 0.4) 0%, rgb(6 7 11 / 0) 22%);
+}
+
+/* Assinatura vertical na borda esquerda, no lugar do "Available" de outros portfólios. */
+.signature {
+  position: absolute;
+  top: 44%;
+  left: 12px;
+  color: var(--ink-2);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg) translateY(50%);
+}
+
+.social {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.socialLink {
+  display: grid;
+  place-items: center;
+  inline-size: 40px;
+  block-size: 40px;
+  border-radius: 50%;
+  color: var(--ink);
+  font-size: 1rem;
+  transition:
+    color var(--dur-fast) var(--ease-press),
+    transform var(--dur-fast) var(--ease-press);
+}
+
+.socialLink:hover {
+  color: var(--accent);
+  transform: translateY(-1px);
+}
+
+/* ---------- Conteúdo sobre a fotografia ---------- */
+
+.info {
+  position: absolute;
+  inset: auto 0 0;
+  padding: 0 clamp(20px, 6.5%, 32px) clamp(20px, 5svh, 32px);
+}
+
+/* Estado factual e atual; leva ao projeto. O ponto pulsa devagar. */
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  max-inline-size: 100%;
+  padding: 7px 14px 7px 12px;
+  border: 1px solid var(--rule-strong);
+  border-radius: 999px;
+  background: rgb(255 255 255 / 0.08);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  color: var(--ink);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  line-height: 1.2;
+  transition: background-color var(--dur-fast) var(--ease-press);
+}
+
+.status:hover {
+  background: rgb(255 255 255 / 0.14);
+}
+
+.dot {
+  position: relative;
+  flex: none;
+  inline-size: 8px;
+  block-size: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.dot::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: var(--accent);
+  animation: ripple 1.8s ease-out infinite;
+}
+
+@keyframes ripple {
+  from {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(3);
+  }
+}
+
+.greeting {
+  margin: clamp(12px, 2.4svh, 18px) 0 8px;
+  color: var(--ink);
+  font-size: clamp(1.5rem, 1.1rem + 1.1vw, 2rem);
+  font-weight: 500;
+  line-height: 1.12;
+  letter-spacing: -0.03em;
+}
+
+.intro {
+  margin: 0;
+  max-inline-size: 26em;
+  color: var(--ink-muted);
+  font-size: var(--text-small);
+  line-height: 1.45;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 20px;
+  margin-top: clamp(16px, 3svh, 24px);
+  padding-top: clamp(16px, 3svh, 24px);
+  border-top: 1px solid var(--rule);
+}
+
+/* Ação principal: círculo com seta + pílula, um só link. */
+.cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.ctaCircle,
+.ctaLabel {
+  background: var(--accent);
+  color: var(--accent-ink);
+  transition: background-color var(--dur-fast) var(--ease-press);
+}
+
+.ctaCircle {
+  display: grid;
+  place-items: center;
+  inline-size: 44px;
+  block-size: 44px;
+  border-radius: 50%;
+  font-size: 1.0625rem;
+}
+
+.ctaCircle svg {
+  transition: transform var(--dur-ui) var(--ease-settle);
+}
+
+.ctaLabel {
+  display: inline-flex;
+  align-items: center;
+  block-size: 44px;
+  padding: 0 22px;
+  border-radius: 999px;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.cta:hover .ctaCircle,
+.cta:hover .ctaLabel {
+  background: #ecc25a;
+}
+
+/* A seta gira de ↗ para → ao passar o mouse. */
+.cta:hover .ctaCircle svg {
+  transform: rotate(45deg);
+}
+
+.more {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  min-block-size: 44px;
+  color: var(--ink-2);
+  font-size: 0.9375rem;
+  transition: color var(--dur-fast) var(--ease-press);
+}
+
+.more:hover {
+  color: var(--ink);
+}
+
+.more svg {
+  font-size: 1rem;
+}
+
+/* ---------- Desktop: fixo à esquerda ---------- */
+
+@media (min-width: 1100px) {
+  .panel {
+    position: fixed;
+    inset: 24px auto 24px var(--edge);
+    inline-size: var(--panel-w);
+    block-size: auto;
+    margin: 0;
+    z-index: 20;
+  }
+}
+
+/*
+ * Paisagem curta (celular deitado): o cartão vira horizontal, com a foto à esquerda e
+ * o conteúdo à direita, para que saudação, apresentação e ações caibam na altura da tela.
+ */
+@media (max-height: 520px) and (min-width: 600px) and (max-width: 1099px) {
+  .panel {
+    inline-size: min(100%, 720px);
+    /* 340px (era 300px): a folga extra vira o espaço reservado abaixo, para o status
+       (ver .info) não precisar do centro vertical para ficar livre do relógio/idioma fixos. */
+    block-size: max(340px, calc(100svh - 96px));
+  }
+
+  .photo {
+    inset: 0 auto 0 0;
+    inline-size: 40%;
+    block-size: 100%;
+  }
+
+  .shade {
+    display: none;
+  }
+
+  .signature {
+    display: none;
+  }
+
+  /*
+   * O relógio/idioma fixo (site-nav .utility) ocupa top:20px a ~64px, canto superior
+   * direito, independente da largura aqui (600-1099px). Nesta faixa, o cartão do painel
+   * fica largo o bastante para o status entrar por baixo dele. Em vez de continuar
+   * centralizado (o que deixava o status perto demais do topo), o conteúdo agora começa
+   * num recuo fixo que garante a folga: 54px de padding-top afasta o status do relógio
+   * (comparado a top:26px do .info + ~64px de altura do .utility, com folga real).
+   */
+  .info {
+    inset: 0 0 0 40%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    padding: 54px 72px 16px 28px;
+  }
+
+  .greeting {
+    margin-top: 10px;
+  }
+
+  .actions {
+    margin-top: 14px;
+    padding-top: 14px;
+  }
+}

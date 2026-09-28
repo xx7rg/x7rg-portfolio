@@ -1,0 +1,236 @@
+/*
+ * Trajetória: um letreiro atmosférico, não um carrossel e não uma grade de cartões SaaS. A trilha
+ * usa duas cópias da lista lado a lado (100% + 100% = 200% de largura) e anima de translateX(0) a
+ * translateX(-50%) — sem costura, contanto que as duas cópias tenham a mesma largura (por isso a
+ * segunda cópia é idêntica à primeira, só aria-hidden). Cada item é um "palco" de logo de tamanho
+ * fixo + o nome da empresa por baixo; as cores originais de cada marca ficam sempre visíveis (sem
+ * dessaturação global). O ajuste .logoWide/.logoTall normaliza o PESO ÓPTICO de cada logo, não o
+ * tamanho matemático — um wordmark largo e um brasão compacto nunca teriam a mesma altura percebida
+ * com um único max-height para todos.
+ */
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(32px, 6svh, 56px);
+  padding-block: clamp(56px, 10svh, 112px);
+}
+
+.intro {
+  display: grid;
+  gap: 12px;
+  max-inline-size: 34em;
+}
+
+.title {
+  margin: 0;
+  color: var(--ink);
+  font-size: clamp(1.5rem, 1.1rem + 1.6vw, 2.25rem);
+  font-weight: 500;
+  line-height: 1.28;
+  letter-spacing: -0.01em;
+  text-wrap: pretty;
+}
+
+.lead {
+  margin: 0;
+  color: var(--ink-2);
+  font-size: var(--text-body);
+  line-height: 1.6;
+}
+
+/* ---------- Letreiro ---------- */
+
+.viewport {
+  position: relative;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 10%, #000 90%, transparent);
+  mask-image: linear-gradient(to right, transparent, #000 10%, #000 90%, transparent);
+}
+
+.track {
+  display: flex;
+  align-items: flex-start;
+  inline-size: max-content;
+  animation: journey-marquee 72s linear infinite;
+}
+
+@keyframes journey-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.set {
+  display: flex;
+  align-items: flex-start;
+  gap: clamp(48px, 5vw, 64px);
+  margin: 0;
+  padding-inline: clamp(24px, 3vw, 40px);
+  list-style: none;
+}
+
+/* ---------- Item: palco de logo (tamanho fixo) + nome ---------- */
+
+.item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: none;
+  inline-size: 180px;
+  gap: 14px;
+}
+
+.stage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 100%;
+  block-size: 96px;
+}
+
+.logo {
+  --logo-max-w: 158px;
+  --logo-max-h: 70px;
+
+  inline-size: auto;
+  block-size: auto;
+  max-inline-size: var(--logo-max-w);
+  max-block-size: var(--logo-max-h);
+  object-fit: contain;
+  opacity: 0.96;
+}
+
+/* Wordmarks largos e simples (Atento, Altera & Ocyan, Nexa, EQS): mais largura, presença de traço. */
+.logoWide {
+  --logo-max-w: 190px;
+  --logo-max-h: 56px;
+}
+
+/* Brasões/insígnias compactos e detalhados (20º B Log Pqdt, BFE, Exército): mais altura, senão
+   ficam pequenos demais para o detalhe se ler ao lado de um wordmark plano. */
+.logoTall {
+  --logo-max-w: 128px;
+  --logo-max-h: 84px;
+}
+
+/* Logos quadradas/compactas de composição densa (Petrobras): a caixa padrão as deixa pequenas
+   demais — mais altura E largura para ganharem o mesmo peso visual dos vizinhos. */
+.logoSquare {
+  --logo-max-w: 108px;
+  --logo-max-h: 92px;
+}
+
+.name {
+  position: relative;
+  max-inline-size: 172px;
+  padding-bottom: 12px;
+  color: var(--ink-2);
+  font-size: var(--text-small);
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  line-height: 1.3;
+  text-align: center;
+  text-wrap: balance;
+}
+
+/* Traço dourado discreto: a assinatura x7rG do sistema, não uma decoração nova. */
+.name::after {
+  content: "";
+  position: absolute;
+  inset-block-end: 0;
+  inset-inline-start: 50%;
+  inline-size: 18px;
+  block-size: 2px;
+  background: var(--accent);
+  opacity: 0.45;
+  translate: -50% 0;
+}
+
+/* Só onde o hover é de verdade (mouse fino) e sem prefers-reduced-motion: o item sob o ponteiro
+   ganha refinamento (não "resgate") — logo, nome e traço reagem juntos; passar o mouse pela trilha
+   pausa o movimento sem reiniciar a posição. */
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .logo,
+  .name,
+  .name::after {
+    transition: all 500ms var(--ease-settle);
+  }
+
+  .item:hover .logo {
+    opacity: 1;
+    filter: brightness(1.03);
+    transform: scale(1.05);
+  }
+
+  .item:hover .name {
+    color: var(--ink);
+  }
+
+  .item:hover .name::after {
+    inline-size: 28px;
+    opacity: 0.9;
+  }
+
+  .viewport:hover .track {
+    animation-play-state: paused;
+  }
+}
+
+/* prefers-reduced-motion desliga a animação por conta própria (regra global em globals.css); aqui só
+   se troca o layout de trilha-infinita para uma fileira estável, e a cópia duplicada (aria-hidden)
+   some para não mostrar cada empresa duas vezes parada. */
+@media (prefers-reduced-motion: reduce) {
+  .track {
+    flex-wrap: wrap;
+    justify-content: center;
+    inline-size: 100%;
+  }
+
+  .set[aria-hidden="true"] {
+    display: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .item {
+    inline-size: 148px;
+    gap: 10px;
+  }
+
+  .stage {
+    block-size: 80px;
+  }
+
+  .logo {
+    --logo-max-w: 134px;
+    --logo-max-h: 56px;
+  }
+
+  .logoWide {
+    --logo-max-w: 150px;
+    --logo-max-h: 46px;
+  }
+
+  .logoTall {
+    --logo-max-w: 104px;
+    --logo-max-h: 68px;
+  }
+
+  .logoSquare {
+    --logo-max-w: 86px;
+    --logo-max-h: 76px;
+  }
+
+  .name {
+    max-inline-size: 146px;
+    font-size: var(--text-meta);
+  }
+
+  .set {
+    gap: 32px;
+  }
+}

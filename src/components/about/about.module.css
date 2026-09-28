@@ -1,0 +1,296 @@
+/*
+ * Sobre. Editorial e espaçoso: um bloco por ideia (tese, identidade, processo, IA, formação, fechamento),
+ * cada um com folga generosa entre si — não uma grade de cartões. A tese é o elemento dominante ao entrar
+ * na seção; o resto mantém o corpo do texto do portfólio (--ink-2), reservando --ink cheio para o que
+ * precisa de mais peso (o nome, as palavras do processo, o fechamento).
+ */
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(40px, 9svh, 88px);
+  padding-block: clamp(56px, 10svh, 112px) clamp(48px, 8svh, 96px);
+}
+
+/* ---------- Revelar ao rolar (uma vez, se ainda estiver fora da tela) ---------- */
+
+.reveal[data-reveal="armed"] {
+  opacity: 0;
+  transform: translateY(16px);
+}
+
+.reveal[data-reveal="shown"] {
+  transition:
+    opacity 640ms var(--ease-settle),
+    transform 640ms var(--ease-settle);
+}
+
+/* ---------- Tese: o elemento dominante ao entrar na seção ---------- */
+
+.thesis {
+  max-inline-size: 15em;
+  margin: 0;
+  color: var(--ink);
+  font-size: clamp(1.75rem, 1.25rem + 2vw, 2.75rem);
+  font-weight: 500;
+  line-height: 1.22;
+  letter-spacing: -0.02em;
+  text-wrap: pretty;
+}
+
+/* ---------- Identidade ---------- */
+
+.identity {
+  display: grid;
+  gap: 16px;
+  max-inline-size: 34em;
+}
+
+.identityName {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 0;
+  color: var(--ink);
+  font-size: var(--text-section);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+.identityRole {
+  color: var(--ink-muted);
+  font-size: var(--text-small);
+  font-weight: 400;
+}
+
+.identityBody {
+  margin: 0;
+  color: var(--ink-2);
+  font-size: var(--text-body);
+  line-height: 1.6;
+}
+
+/* ---------- Processo: sequência tipográfica, não sete cartões ---------- */
+
+.process {
+  display: grid;
+  gap: 20px;
+}
+
+.processTitle {
+  margin: 0;
+  color: var(--ink);
+  font-size: var(--text-section);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+.processLead {
+  margin: 0;
+  max-inline-size: 34em;
+  color: var(--ink-muted);
+  font-size: var(--text-small);
+}
+
+.processSteps {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 0;
+  margin: 4px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.processStep {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.processIndex {
+  color: var(--ink-4);
+  font-family: var(--font-mono);
+  font-size: var(--text-meta);
+  font-variant-numeric: tabular-nums;
+}
+
+.processWord {
+  color: var(--ink);
+  font-size: clamp(1.0625rem, 1rem + 0.5vw, 1.375rem);
+  font-weight: 500;
+}
+
+.processArrow {
+  margin-inline: 14px;
+  color: var(--ink-4);
+  font-size: 1rem;
+}
+
+.processStep:last-child .processArrow {
+  display: none;
+}
+
+.processNote {
+  margin: 12px 0 0;
+  padding-top: 20px;
+  max-inline-size: 34em;
+  border-top: 1px solid var(--rule);
+  color: var(--ink-2);
+  font-size: var(--text-body);
+  line-height: 1.6;
+}
+
+/* ---------- IA: parágrafo contínuo, sem rótulo de destaque ---------- */
+
+.ai {
+  margin: 0;
+  max-inline-size: 34em;
+  color: var(--ink-2);
+  font-size: var(--text-body);
+  line-height: 1.6;
+}
+
+/* ---------- Formação: prosa compacta, não currículo ---------- */
+
+.foundation {
+  display: grid;
+  gap: 20px;
+  max-inline-size: 34em;
+}
+
+.foundationLead {
+  margin: 0;
+  color: var(--ink-2);
+  font-size: var(--text-body);
+  line-height: 1.6;
+}
+
+.foundationList {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--rule);
+}
+
+.foundationItem {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  column-gap: 24px;
+  padding-block: 14px;
+  border-bottom: 1px solid var(--rule);
+}
+
+.foundationArea {
+  color: var(--ink-2);
+  font-size: var(--text-small);
+}
+
+.foundationPlace {
+  color: var(--ink-4);
+  font-size: var(--text-meta);
+  text-align: right;
+}
+
+/* ---------- IA como força transformadora: manifesto com Block Text Reveal (Originkit) ---------- */
+
+/*
+ * position: relative só para a aspa decorativa se ancorar nele. padding-top abre um respiro
+ * PRÓPRIO para a aspa acima da primeira linha — ela nunca fica por cima do texto, mesmo em
+ * telas estreitas (o requisito é "não pode atrapalhar a leitura").
+ */
+.aiImpact {
+  position: relative;
+  max-inline-size: 34em;
+  padding-top: clamp(26px, 4vw, 42px);
+}
+
+.aiQuote {
+  position: absolute;
+  top: -0.08em;
+  left: -0.04em;
+  color: var(--accent);
+  font-size: clamp(3.75rem, 3rem + 3vw, 6rem);
+  font-weight: 700;
+  line-height: 1;
+  opacity: 0.16;
+  pointer-events: none;
+  user-select: none;
+}
+
+/*
+ * Estado de repouso: depois que a revelação primária do BlockTextReveal termina (fase "rest" do
+ * ciclo, ou sempre em prefers-reduced-motion) — texto comum, sem animação, com os quatro trechos
+ * importantes na MESMA marca-texto do manifesto do Hero (hero.module.css .highlightA/.highlightB):
+ * uma faixa de ouro no terço inferior da linha, nunca uma caixa cheia atrás da palavra. Valores
+ * idênticos aos do Hero (mesmos tokens --hl-1/--hl-2, mesma proporção de faixa,
+ * box-decoration-break: clone para cada linha de uma frase que quebra ganhar sua própria faixa) —
+ * o Hero não foi tocado, isto só reproduz a receita dele para este parágrafo.
+ */
+.aiImpactStatic {
+  margin: 0;
+  color: var(--ink-2);
+  font-size: clamp(1.0625rem, 1rem + 0.3vw, 1.1875rem);
+  line-height: 1.6;
+}
+
+.aiImpactMarkA,
+.aiImpactMarkB {
+  padding-inline: 0.04em;
+  border-radius: 999px;
+  color: var(--ink);
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+
+.aiImpactMarkA {
+  background-image: linear-gradient(transparent 0 66%, var(--hl-1) 66% 100%);
+}
+
+.aiImpactMarkB {
+  background-image: linear-gradient(transparent 0 70%, var(--hl-2) 70% 100%);
+}
+
+.aiImpactMarkA.grown,
+.aiImpactMarkB.grown {
+  background-size: 100% 100%;
+}
+
+/* ---------- Fechamento ---------- */
+
+.closing {
+  max-inline-size: 20em;
+  margin: 0;
+  color: var(--ink);
+  font-size: clamp(1.125rem, 1rem + 0.6vw, 1.375rem);
+  font-weight: 500;
+  line-height: 1.4;
+  letter-spacing: -0.01em;
+}
+
+/* ---------- Celular: a sequência de processo empilha, sem seta pendurada ---------- */
+
+@media (max-width: 480px) {
+  .processSteps {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .processArrow {
+    display: none;
+  }
+
+  .foundationItem {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  .foundationPlace {
+    text-align: left;
+  }
+}
