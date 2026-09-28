@@ -1,7 +1,9 @@
 {
   "$schema": "./node_modules/wrangler/config-schema.json",
   "name": "x7rg-portfolio",
-  // Site 100% estático (output: "export" no next.config.ts); sem Worker/servidor.
-  "pages_build_output_dir": "./out",
-  "compatibility_date": "2026-09-28"
+  "compatibility_date": "2026-09-28",
+  // Site 100% estático (output: "export" no next.config.ts); sem Worker/servidor, só assets.
+  "assets": {
+    "directory": "./out"
+  }
 }
