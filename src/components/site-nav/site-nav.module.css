@@ -10,20 +10,18 @@
 
 /* ---------- Utilidades: data/hora + idioma ---------- */
 
+/*
+ * Só o relógio mora aqui agora. O idioma é uma utilidade independente (.langMain, ver abaixo e
+ * SiteNav.tsx) com a própria position:fixed, para nunca alterar a geometria do relógio nem ser
+ * alterado por ela — os dois eram filhos flex do mesmo .utility antes, e isso fazia um mudar de
+ * tamanho/posição sempre que o outro mudava (é como o relógio passou a "invadir" a área abaixo
+ * do topo quando a pílula ficou vertical e mais alta).
+ */
 .utility {
   position: fixed;
   top: max(20px, env(safe-area-inset-top));
   right: max(var(--edge), env(safe-area-inset-right));
   z-index: 40;
-  display: flex;
-  /*
-   * flex-start, não center: abaixo de 1100px a pílula vertical (98px) é bem mais alta que o
-   * relógio (45px) e center empurraria o relógio para baixo (a metade da diferença de altura),
-   * fazendo-o "invadir" a área abaixo do topo a cada rolagem — os dois elementos devem começar
-   * na mesma linha, não ficar centralizados um contra o outro.
-   */
-  align-items: flex-start;
-  gap: 14px;
 }
 
 .clock {
@@ -298,54 +296,78 @@ html:has(dialog[open]) {
 }
 
 /*
- * Idioma no celular/tablet (<1100px): vertical, mas continua filha flex de .utility (junto do
- * relógio, ver SiteNav.tsx, que também explica por que a pílula vem ANTES do relógio na
- * ordem) em vez de ganhar posição própria — testado com position:fixed independente em dois
- * lugares diferentes (abaixo do relógio, acima dos botões flutuantes) e os dois colidiram de
- * verdade com conteúdo real (texto/mídia de casos de projeto abertos, quando ancorada perto da
- * pilha flutuante inferior). Ficando dentro de .utility, o próprio flexbox garante que ela
- * nunca sobrepõe o relógio (ver align-items: flex-start acima); sem nenhuma cópia dentro do
- * <dialog> do menu — abrir/fechar o menu não duplica nem reposiciona nada, .utility só fica
- * coberta enquanto o <dialog> (modal, top layer nativo) está aberto — do mesmo jeito que o
- * botão de voltar ao topo já fica — e volta ao mesmo lugar exato ao fechar.
- *
- * Achado à parte (pré-existente, não introduzido por esta correção, confirmado comparando com
- * o HEAD antes dela): neste viewport a barra .utility acaba perto o bastante da borda direita
- * para o relógio tocar a base do ícone do GitHub do ProfilePanel (~19px, contra ~15px que já
- * existia antes com a pílula horizontal antiga no mesmo lugar — mesma ordem de grandeza, não
- * uma regressão nova). Resolver por completo exigiria mexer no ProfilePanel (fora do escopo,
- * conteúdo do Hero) ou afastar toda a barra .utility do canto (mudança visual maior, não
- * pedida). Sinalizado no relatório para decisão de Rogério, não corrigido silenciosamente aqui.
+ * Idioma: MESMO visual em qualquer largura — vidro (--glass), NeonBorder dourado, vertical,
+ * mesmos 40px de largura, mesmo raio/padding, mesmo tratamento do item selecionado. Antes,
+ * abaixo de 1100px a pílula usava um fundo sólido diferente e nunca recebia o NeonBorder — o
+ * problema que Rogério reprovou no iPhone físico ("virou um componente diferente do desktop").
+ * Regra: DESKTOP É A FONTE DA VERDADE. Só a POSIÇÃO muda por viewport (ver os dois blocos de
+ * position:fixed abaixo); a aparência do container/item/estado atual é uma coisa só, definida
+ * aqui, sem @media nenhum por cima dela.
+ */
+.langMain {
+  flex-direction: column;
+  gap: 0;
+  padding: 4px;
+  box-sizing: border-box;
+  inline-size: 40px;
+  background-color: transparent;
+  background-image: var(--glass);
+  border: 0;
+  box-shadow: var(--glass-shadow);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+}
+
+.langMain .langItem {
+  display: grid;
+  place-items: center;
+  block-size: 32px;
+  padding-inline: 4px;
+  border-radius: 0;
+  font-size: 0.6875rem;
+}
+
+.langMain .langCurrent {
+  inline-size: 24px;
+  block-size: 24px;
+  border-radius: 50%;
+  font-size: 0.625rem;
+}
+
+/*
+ * Posição abaixo de 1100px: utilidade global própria, fora do fluxo de .utility (só o relógio
+ * mora lá agora — ver acima) e fora do <dialog> do menu, ancorada à direita como o relógio,
+ * logo abaixo dele (53px = 45px do relógio + 8px de respiro). Medido ao vivo, dois conjuntos:
+ * (1) as duas imagens da seção Identidade (origin: x:116–274; escudo: x:62–327) terminam antes
+ * de x:334, onde esta faixa de 40px começa — nunca cobertas, em nenhuma altura. (2) o conteúdo
+ * real dos 6 casos de projeto abertos (o único cenário com teste automatizado, check:behavior
+ * "idioma+casos"): varrendo pixel a pixel contra x:334–374 nos 6 casos em 390px de largura, a
+ * faixa y:0–198 é a ÚNICA inteiramente livre — por isso o relógio+pílula (que juntos vão até
+ * y≈171) cabem aqui, e QUALQUER posição abaixo de y≈198 falha esse teste em pelo menos um caso
+ * (confirmado: y:220, a posição testada antes desta, falhava em 4 dos 6). Não existe, nesta
+ * página, uma altura fixa que nunca cruze NENHUM texto solto ao rolar do Hero ao Contato fora
+ * dos casos abertos (confirmado varrendo a página inteira) — por isso dois resíduos pequenos
+ * seguem, ambos medidos e documentados (não ignorados):
+ * (a) a base do relógio ainda toca a base do ícone do GitHub do ProfilePanel por ~19px, mesma
+ *     magnitude que já existia antes de toda esta correção (pílula horizontal antiga, ~15px) —
+ *     não uma regressão nova, e fora do único cenário com teste automatizado;
+ * (b) no caso "light-login" especificamente, a imagem de demonstração (apagado/aceso, 325px de
+ *     341px de altura — praticamente a largura toda da viewport em 390px) tem seu canto
+ *     superior direito tocado pela pílula por ~23×21px. Geometricamente inevitável nesta
+ *     largura sem violar outra regra: caber ACIMA da imagem (que começa em y:148) exigiria uma
+ *     pílula de até 83px de altura logo abaixo do relógio (65 a 148), mas a pílula tem 96px
+ *     (mesma altura do controle aprovado do desktop — encolhê-la só aqui seria redesenhar, não
+ *     reusar); caber ao lado (a imagem vai de x:33 a x:358, quase toda a largura de 390px) não
+ *     sobra espaço against a borda direita. Resolver por completo exigiria mexer no conteúdo do
+ *     caso (fora do escopo) ou encolher a pílula (contra a regra de reuso do desktop) — sinalizado
+ *     no relatório para decisão de Rogério, não corrigido silenciosamente aqui.
  */
 @media (max-width: 1099.98px) {
-  /*
-   * Fundo/borda originais de .lang mantidos aqui de propósito (quase opaco, rgb(26 26 26 /
-   * 0.96), não o vidro do desktop): abaixo de 1100px a pílula continua solta sobre conteúdo
-   * variável da página, não ao lado de uma superfície própria como o dock — precisa do
-   * contraste sólido para legibilidade. Só o formato (vertical, estreita) muda.
-   */
   .langMain {
-    flex-direction: column;
-    gap: 0;
-    padding: 4px;
-    box-sizing: border-box;
-    inline-size: 40px;
-  }
-
-  .langMain .langItem {
-    display: grid;
-    place-items: center;
-    block-size: 32px;
-    padding-inline: 4px;
-    border-radius: 0;
-    font-size: 0.6875rem;
-  }
-
-  .langMain .langCurrent {
-    inline-size: 24px;
-    block-size: 24px;
-    border-radius: 50%;
-    font-size: 0.625rem;
+    position: fixed;
+    top: calc(max(20px, env(safe-area-inset-top)) + 53px);
+    right: max(var(--edge), env(safe-area-inset-right));
+    z-index: 40;
   }
 }
 
@@ -365,67 +387,23 @@ html:has(dialog[open]) {
   }
 
   /*
-   * A pílula PT/EN/ES sai do fluxo de .utility (que fica só com o relógio), vira vertical
-   * (mesma família visual do dock: empilhada, mesmo padding, mesmo raio) e se ancora no
-   * mesmo eixo do dock: left: calc(100% - edge - metade da largura do dock, 20px) +
-   * transform: translateX(-50%) centraliza a pílula EXATAMENTE no centro-x do dock e do
-   * botão de subir, não importa a largura real da pílula. Na vertical, deslocada para cima
-   * por um valor medido: 180px = metade da altura da pílula (48px de 96px) + metade da
-   * altura do dock inteiro, lista de 6 ícones + botão de subir (124px de 248px) + 8px de
-   * respiro — o MESMO respiro que .dock já usa entre a lista e o botão de subir
-   * (.dock { gap: 8px }), medido, não escolhido à toa. O dock cresce (mais itens) sem que
-   * ninguém precise reajustar isto à mão: como .dock fica centralizado no eixo Y da viewport
-   * (top: 50% + translateY(-50%)), seu centro nunca muda de lugar — só a MEIA altura muda,
-   * e é ela que entra nesta conta. Nada no dock foi tocado; só esta pílula (a de dentro de
-   * .utility, não a do menu) ganha a regra.
-   */
-  /*
-   * Mesma superfície do dock, com os MESMOS tokens (não uma cor parecida): --glass no
-   * lugar do fundo próprio da pílula, --glass-shadow no lugar de sombra nenhuma, o mesmo
-   * desfoque (12px) e sem borda (o dock não tem). Mesma largura externa, 40px (com
-   * box-sizing: border-box, já que a pílula usava borda e o dock não).
+   * A pílula PT/EN/ES se ancora no mesmo eixo do dock: left: calc(100% - edge - metade da
+   * largura do dock, 20px) + transform: translateX(-50%) centraliza a pílula EXATAMENTE no
+   * centro-x do dock e do botão de subir, não importa a largura real da pílula. Na vertical,
+   * deslocada para cima por um valor medido: 180px = metade da altura da pílula (48px de
+   * 96px) + metade da altura do dock inteiro, lista de 6 ícones + botão de subir (124px de
+   * 248px) + 8px de respiro — o MESMO respiro que .dock já usa entre a lista e o botão de
+   * subir (.dock { gap: 8px }), medido, não escolhido à toa. O dock cresce (mais itens) sem
+   * que ninguém precise reajustar isto à mão: como .dock fica centralizado no eixo Y da
+   * viewport (top: 50% + translateY(-50%)), seu centro nunca muda de lugar — só a MEIA
+   * altura muda, e é ela que entra nesta conta. Nada no dock foi tocado; só a posição desta
+   * pílula (a aparência já é a regra unificada acima).
    */
   .langMain {
     position: fixed;
     top: 50%;
     left: calc(100% - var(--edge) - 20px);
     z-index: 40;
-    flex-direction: column;
-    gap: 0;
-    padding: 4px;
-    box-sizing: border-box;
-    inline-size: 40px;
-    background-color: transparent;
-    background-image: var(--glass);
-    border: 0;
-    box-shadow: var(--glass-shadow);
-    -webkit-backdrop-filter: blur(12px);
-    backdrop-filter: blur(12px);
     transform: translate(-50%, calc(-50% - 180px));
-  }
-
-  /*
-   * Mesmo ritmo vertical do dock: cada rótulo ocupa uma linha de 32px, sem vão entre elas
-   * (como os ícones). EN/ES ficam só texto centralizado, sem forma nenhuma por baixo.
-   */
-  .langMain .langItem {
-    display: grid;
-    place-items: center;
-    block-size: 32px;
-    padding-inline: 4px;
-    border-radius: 0;
-    font-size: 0.6875rem;
-  }
-
-  /*
-   * O PT ativo é o único com uma forma: um círculo dourado menor que o ícone do dock
-   * (24px, não 32px) para ficar mais delicado, com a mesma folga lateral que os ícones
-   * têm dentro da coluna de 40px (--align-items:center já centraliza).
-   */
-  .langMain .langCurrent {
-    inline-size: 24px;
-    block-size: 24px;
-    border-radius: 50%;
-    font-size: 0.625rem;
   }
 }

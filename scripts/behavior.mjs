@@ -88,25 +88,44 @@ async function languageControl() {
     await open("/pt", 2200);
     const r = await ev(`(() => {
       const u = ${UTILITY}; const cs = getComputedStyle(u); const rect = u.getBoundingClientRect();
-      const bad = []; for (let e = u.parentElement; e && e !== document.documentElement; e = e.parentElement) { const c = getComputedStyle(e); if (c.transform !== 'none' || c.filter !== 'none' || c.perspective !== 'none' || (c.contain && c.contain !== 'none') || c.willChange.includes('transform') || c.backdropFilter !== 'none') bad.push(e.tagName + '.' + String(e.className).slice(-24)); }
+      const pillEl = document.querySelector('[class*=langMain]');
+      const pillCs = getComputedStyle(pillEl); const pillRect = pillEl.getBoundingClientRect();
+      const bad = [];
+      for (const root of [u, pillEl]) {
+        for (let e = root.parentElement; e && e !== document.documentElement; e = e.parentElement) {
+          const c = getComputedStyle(e);
+          if (c.transform !== 'none' || c.filter !== 'none' || c.perspective !== 'none' || (c.contain && c.contain !== 'none') || c.willChange.includes('transform') || c.backdropFilter !== 'none') bad.push(e.tagName + '.' + String(e.className).slice(-24));
+        }
+      }
       const alpha = (el) => { const m = /rgba?\\(([^)]+)\\)/.exec(getComputedStyle(el).backgroundColor); if (!m) return 0; const p = m[1].split(/[ ,\\/]+/).filter(Boolean); return p.length > 3 ? +p[3] : 1; };
-      const pillEl = u.querySelector('nav');
-      const pillCs = getComputedStyle(pillEl);
       const clockEl = u.querySelector('[data-clock]');
-      return { pos: cs.position, z: cs.zIndex, top: rect.top, right: cs.right, bad, clockA: alpha(clockEl), pillA: alpha(pillEl), pillBlur: pillCs.backdropFilter !== 'none', pillShadow: pillCs.boxShadow !== 'none' };
+      // Fingerprint do NeonBorder (Originkit): suas camadas de brilho usam mix-blend-mode
+      // plus-lighter, um valor que nada mais no projeto usa — presença = componente montado.
+      const neonPresent = [...pillEl.querySelectorAll('*')].some((e) => getComputedStyle(e).mixBlendMode === 'plus-lighter');
+      return {
+        pos: cs.position, z: cs.zIndex, top: rect.top, right: cs.right, bad,
+        clockA: alpha(clockEl),
+        pillPos: pillCs.position, pillZ: pillCs.zIndex, pillTop: Math.round(pillRect.top), pillRight: pillCs.right,
+        pillBlur: pillCs.backdropFilter !== 'none', pillShadow: pillCs.boxShadow !== 'none', neonPresent,
+      };
     })()`);
     const wantRight = w >= 1100 ? 32 : 16;
-    check("idioma", `${w}x${h} fixo, z 40, canto superior direito`, r.pos === "fixed" && r.z === "40" && r.top >= 19.5 && r.right === `${wantRight}px`, `pos=${r.pos} z=${r.z} top=${r.top} right=${r.right} (esperado ${wantRight}px)`);
+    check("idioma", `${w}x${h} relógio: fixo, z 40, canto superior direito`, r.pos === "fixed" && r.z === "40" && r.top >= 19.5 && r.right === `${wantRight}px`, `pos=${r.pos} z=${r.z} top=${r.top} right=${r.right} (esperado ${wantRight}px)`);
+    // No desktop a pílula usa left+transform (eixo do dock), não right — só abaixo de 1100px
+    // ela é ancorada por right, igual ao relógio.
+    const pillPosOk = w >= 1100 ? r.pillPos === "fixed" && r.pillZ === "40" : r.pillPos === "fixed" && r.pillZ === "40" && r.pillRight === `${wantRight}px`;
+    check("idioma", `${w}x${h} pílula: fixa, z 40${w >= 1100 ? "" : ", mesma borda direita"}`, pillPosOk, `pos=${r.pillPos} z=${r.pillZ} right=${r.pillRight}${w >= 1100 ? " (desktop usa left, não right)" : ` (esperado ${wantRight}px)`}`);
     check("idioma", `${w}x${h} nenhum ancestral quebra o fixed`, r.bad.length === 0, r.bad.join(", "));
-    // Abaixo de 1100px a pílula usa o fundo sólido quase opaco original. A partir de 1100px ela
-    // vira o dock vertical de vidro (fundo transparente + --glass), legível pelo mesmo desfoque
-    // e sombra que o dock de navegação já usa, não por opacidade de cor — aprovado por Rogério.
-    const pillLegible = w >= 1100 ? (r.pillBlur && r.pillShadow) : r.pillA >= 0.9;
-    check("idioma", `${w}x${h} fundo quase opaco (legível sobre conteúdo)`, r.clockA >= 0.9 && pillLegible, `relógio=${r.clockA} pílula=${w >= 1100 ? `vidro(blur=${r.pillBlur},shadow=${r.pillShadow})` : r.pillA}`);
-    const before = await ev(`(() => { const r = ${UTILITY}.getBoundingClientRect(); return [r.left, r.top, r.width, r.height].map(Math.round).join(','); })()`);
+    // Reuso do controle aprovado do desktop em qualquer largura: vidro (--glass) + NeonBorder
+    // sempre presentes, não só a partir de 1100px — trocado por instrução explícita de
+    // Rogério após reprovar no iPhone físico uma pílula sólida/cinza sem o efeito dourado.
+    check("idioma", `${w}x${h} pílula: vidro (legível sobre conteúdo)`, r.pillBlur && r.pillShadow, `blur=${r.pillBlur} shadow=${r.pillShadow}`);
+    check("idioma", `${w}x${h} relógio: fundo quase opaco (legível sobre conteúdo)`, r.clockA >= 0.9, `relógio=${r.clockA}`);
+    check("idioma", `${w}x${h} NeonBorder dourado presente na pílula`, r.neonPresent, `neonPresent=${r.neonPresent}`);
+    const before = await ev(`(() => { const u = ${UTILITY}.getBoundingClientRect(); const p = document.querySelector('[class*=langMain]').getBoundingClientRect(); return [u,p].map((r) => [r.left, r.top, r.width, r.height].map(Math.round).join(',')).join(' | '); })()`);
     await ev(`window.scrollTo(0, 1200)`); await sleep(300);
-    const after = await ev(`(() => { const r = ${UTILITY}.getBoundingClientRect(); return [r.left, r.top, r.width, r.height].map(Math.round).join(','); })()`);
-    check("idioma", `${w}x${h} não anda com a rolagem`, before === after, `${before} -> ${after}`);
+    const after = await ev(`(() => { const u = ${UTILITY}.getBoundingClientRect(); const p = document.querySelector('[class*=langMain]').getBoundingClientRect(); return [u,p].map((r) => [r.left, r.top, r.width, r.height].map(Math.round).join(',')).join(' | '); })()`);
+    check("idioma", `${w}x${h} relógio e pílula não andam com a rolagem`, before === after, `${before} -> ${after}`);
   }
   // Com cada caso aberto (topo do caso, como após o clique), o controle não cobre texto nem mídia do caso.
   const csizes = QUICK ? [[1440, 900], [390, 844]] : [[1440, 900], [1366, 768], [390, 844], [844, 390]];
@@ -117,7 +136,8 @@ async function languageControl() {
       await open(`/pt#${s}`, 2200);
       const r = await ev(`(() => {
         const cs = document.getElementById('${s}-case'); if (!cs || cs.hidden) return { aberto: false };
-        const parts = [...${UTILITY}.children].map((e) => e.getBoundingClientRect()); const hit = [];
+        const langEl = document.querySelector('[class*=langMain]');
+        const parts = [...${UTILITY}.children, ...(langEl ? [langEl] : [])].map((e) => e.getBoundingClientRect()); const hit = [];
         for (const el of cs.querySelectorAll('h1,h2,h3,h4,p,li,dt,dd,button,a,img,video,figure,svg,input,label,[role=group]')) {
           const r = el.getBoundingClientRect(); if (r.width < 4 || r.height < 4) continue; const st = getComputedStyle(el); if (st.visibility === 'hidden' || +st.opacity === 0) continue;
           for (const p of parts) { if (Math.min(r.right, p.right) - Math.max(r.left, p.left) > 2 && Math.min(r.bottom, p.bottom) - Math.max(r.top, p.top) > 2) { hit.push(el.tagName.toLowerCase() + ':' + (el.innerText || el.alt || '').trim().slice(0, 24)); break; } }
