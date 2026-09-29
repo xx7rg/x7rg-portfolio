@@ -259,7 +259,28 @@ export function SiteNav({ lang, locale, nav, labels }: SiteNavProps) {
   return (
     <>
       <div className={styles.utility}>
-        <Clock locale={locale} className={styles.clock} />
+        {/*
+         * Idioma antes do relógio (importa, testado com medição real de retângulos): abaixo
+         * de 1100px a pílula vertical (40px de largura, 98px de altura) fica mais à esquerda
+         * dentro de .utility, e o relógio (98px de largura, 45px de altura) fica mais perto da
+         * borda direita. Com o relógio nessa posição, seu retângulo NUNCA alcança a coluna de
+         * ícones sociais do ProfilePanel (que fica a poucos px da borda direita) — só a base do
+         * relógio toca a base do ícone do GitHub por ~19px, magnitude comparável à que já
+         * existia antes desta correção (a pílula horizontal antiga tocava o mesmo ícone por
+         * ~15px). Testada a ordem invertida (relógio antes do idioma): nesse caso a pílula, bem
+         * mais alta que a horizontal antiga, também alcança o ícone do LinkedIn — pior que o
+         * estado anterior. Por isso a ordem aqui NÃO é arbitrária.
+         *
+         * Continua filha flex de .utility (não position:fixed própria): testada de forma
+         * independente em dois lugares (abaixo do relógio, acima dos botões flutuantes) e
+         * colidiu de verdade com conteúdo real nos dois (ícones sociais do ProfilePanel no
+         * primeiro caso, texto/mídia de casos de projeto abertos no segundo). Ficando dentro de
+         * .utility, o próprio flexbox garante que ela nunca sobrepõe o relógio (ver
+         * align-items: flex-start em site-nav.module.css). Sem nenhuma cópia dentro do
+         * <dialog> do menu — abrir/fechar o menu não duplica nem reposiciona nada, .utility só
+         * fica coberta enquanto o <dialog> (modal, top layer nativo) está aberto — do mesmo
+         * jeito que o botão de voltar ao topo já fica — e volta ao mesmo lugar exato ao fechar.
+         */}
         <LanguagePill
           lang={lang}
           pathname={pathname}
@@ -268,6 +289,7 @@ export function SiteNav({ lang, locale, nav, labels }: SiteNavProps) {
           className={styles.langMain}
           neon={neonReady.desktop && <NeonEdge speed={3} reducedMotion={neonReady.reducedMotion} />}
         />
+        <Clock locale={locale} className={styles.clock} />
       </div>
 
       <nav className={styles.dock} aria-label={labels.primaryNav}>
@@ -342,13 +364,6 @@ export function SiteNav({ lang, locale, nav, labels }: SiteNavProps) {
       >
         <div className={styles.dialogInner}>
           <div className={styles.dialogTop}>
-            <LanguagePill
-              lang={lang}
-              pathname={pathname}
-              hash={hash}
-              label={labels.languageNav}
-              onNavigate={closeMenu}
-            />
             <button
               type="button"
               className={cx(styles.round, "glass")}

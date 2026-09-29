@@ -79,6 +79,21 @@
   }
 }
 
+/* Equivalente por toque: mesmo zoom, mesma duração, só onde não há hover de verdade (telas de
+   toque) e sem prefers-reduced-motion. Sem estado persistente: aparece ao tocar, desfaz ao soltar. */
+@media (hover: none) and (prefers-reduced-motion: no-preference) {
+  .originImage {
+    transition:
+      transform 520ms var(--ease-settle),
+      opacity 520ms var(--ease-settle);
+  }
+
+  .originPlate:active .originImage {
+    transform: scale(1.05);
+    opacity: 1;
+  }
+}
+
 .originText {
   display: grid;
   gap: 14px;
@@ -258,6 +273,21 @@
   }
 
   .shieldStage:hover .shieldImage {
+    transform: scale(1.05);
+    filter: drop-shadow(0 8px 32px rgb(224 177 58 / 0.22)) brightness(1.04);
+  }
+}
+
+/* Equivalente por toque: mesmo zoom, mesma duração, só onde não há hover de verdade (telas de
+   toque) e sem prefers-reduced-motion. */
+@media (hover: none) and (prefers-reduced-motion: no-preference) {
+  .shieldImage {
+    transition:
+      transform 520ms var(--ease-settle),
+      filter 520ms var(--ease-settle);
+  }
+
+  .shieldStage:active .shieldImage {
     transform: scale(1.05);
     filter: drop-shadow(0 8px 32px rgb(224 177 58 / 0.22)) brightness(1.04);
   }

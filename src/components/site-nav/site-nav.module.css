@@ -16,7 +16,13 @@
   right: max(var(--edge), env(safe-area-inset-right));
   z-index: 40;
   display: flex;
-  align-items: center;
+  /*
+   * flex-start, não center: abaixo de 1100px a pílula vertical (98px) é bem mais alta que o
+   * relógio (45px) e center empurraria o relógio para baixo (a metade da diferença de altura),
+   * fazendo-o "invadir" a área abaixo do topo a cada rolagem — os dois elementos devem começar
+   * na mesma linha, não ficar centralizados um contra o outro.
+   */
+  align-items: flex-start;
   gap: 14px;
 }
 
@@ -249,7 +255,7 @@ a.langItem:hover {
 .dialogTop {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
 }
 
 .dialogNav {
@@ -289,6 +295,58 @@ a.langItem:hover {
 
 html:has(dialog[open]) {
   overflow: hidden;
+}
+
+/*
+ * Idioma no celular/tablet (<1100px): vertical, mas continua filha flex de .utility (junto do
+ * relógio, ver SiteNav.tsx, que também explica por que a pílula vem ANTES do relógio na
+ * ordem) em vez de ganhar posição própria — testado com position:fixed independente em dois
+ * lugares diferentes (abaixo do relógio, acima dos botões flutuantes) e os dois colidiram de
+ * verdade com conteúdo real (texto/mídia de casos de projeto abertos, quando ancorada perto da
+ * pilha flutuante inferior). Ficando dentro de .utility, o próprio flexbox garante que ela
+ * nunca sobrepõe o relógio (ver align-items: flex-start acima); sem nenhuma cópia dentro do
+ * <dialog> do menu — abrir/fechar o menu não duplica nem reposiciona nada, .utility só fica
+ * coberta enquanto o <dialog> (modal, top layer nativo) está aberto — do mesmo jeito que o
+ * botão de voltar ao topo já fica — e volta ao mesmo lugar exato ao fechar.
+ *
+ * Achado à parte (pré-existente, não introduzido por esta correção, confirmado comparando com
+ * o HEAD antes dela): neste viewport a barra .utility acaba perto o bastante da borda direita
+ * para o relógio tocar a base do ícone do GitHub do ProfilePanel (~19px, contra ~15px que já
+ * existia antes com a pílula horizontal antiga no mesmo lugar — mesma ordem de grandeza, não
+ * uma regressão nova). Resolver por completo exigiria mexer no ProfilePanel (fora do escopo,
+ * conteúdo do Hero) ou afastar toda a barra .utility do canto (mudança visual maior, não
+ * pedida). Sinalizado no relatório para decisão de Rogério, não corrigido silenciosamente aqui.
+ */
+@media (max-width: 1099.98px) {
+  /*
+   * Fundo/borda originais de .lang mantidos aqui de propósito (quase opaco, rgb(26 26 26 /
+   * 0.96), não o vidro do desktop): abaixo de 1100px a pílula continua solta sobre conteúdo
+   * variável da página, não ao lado de uma superfície própria como o dock — precisa do
+   * contraste sólido para legibilidade. Só o formato (vertical, estreita) muda.
+   */
+  .langMain {
+    flex-direction: column;
+    gap: 0;
+    padding: 4px;
+    box-sizing: border-box;
+    inline-size: 40px;
+  }
+
+  .langMain .langItem {
+    display: grid;
+    place-items: center;
+    block-size: 32px;
+    padding-inline: 4px;
+    border-radius: 0;
+    font-size: 0.6875rem;
+  }
+
+  .langMain .langCurrent {
+    inline-size: 24px;
+    block-size: 24px;
+    border-radius: 50%;
+    font-size: 0.625rem;
+  }
 }
 
 /* ---------- Desktop ---------- */

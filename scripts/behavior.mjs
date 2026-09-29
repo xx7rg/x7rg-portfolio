@@ -92,7 +92,8 @@ async function languageControl() {
       const alpha = (el) => { const m = /rgba?\\(([^)]+)\\)/.exec(getComputedStyle(el).backgroundColor); if (!m) return 0; const p = m[1].split(/[ ,\\/]+/).filter(Boolean); return p.length > 3 ? +p[3] : 1; };
       const pillEl = u.querySelector('nav');
       const pillCs = getComputedStyle(pillEl);
-      return { pos: cs.position, z: cs.zIndex, top: rect.top, right: cs.right, bad, clockA: alpha(u.children[0]), pillA: alpha(pillEl), pillBlur: pillCs.backdropFilter !== 'none', pillShadow: pillCs.boxShadow !== 'none' };
+      const clockEl = u.querySelector('[data-clock]');
+      return { pos: cs.position, z: cs.zIndex, top: rect.top, right: cs.right, bad, clockA: alpha(clockEl), pillA: alpha(pillEl), pillBlur: pillCs.backdropFilter !== 'none', pillShadow: pillCs.boxShadow !== 'none' };
     })()`);
     const wantRight = w >= 1100 ? 32 : 16;
     check("idioma", `${w}x${h} fixo, z 40, canto superior direito`, r.pos === "fixed" && r.z === "40" && r.top >= 19.5 && r.right === `${wantRight}px`, `pos=${r.pos} z=${r.z} top=${r.top} right=${r.right} (esperado ${wantRight}px)`);

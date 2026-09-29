@@ -69,7 +69,9 @@ export function BrandStorySection({ dict }: { dict: Dictionary }) {
 
       <Reveal className={styles.reveal}>
         <div className={styles.origin}>
-          <div className={styles.originPlate}>
+          {/* onTouchStart vazio: sem isso, o Safari iOS não aplica :active a um <div> sem
+              manipulador de toque próprio, e o zoom por toque (brand-story.module.css) não acende. */}
+          <div className={styles.originPlate} onTouchStart={() => {}}>
             <Image className={styles.originImage} src={rgOriginal} alt={origin.markAlt} sizes="(max-width: 640px) 200px, 260px" quality={90} />
           </div>
           <div className={styles.originText}>
@@ -121,7 +123,8 @@ export function BrandStorySection({ dict }: { dict: Dictionary }) {
       <Reveal className={styles.reveal}>
         <div className={styles.current}>
           <p className={styles.currentTurn}>{current.turn}</p>
-          <div className={styles.shieldStage}>
+          {/* onTouchStart vazio: mesmo motivo do originPlate acima. */}
+          <div className={styles.shieldStage} onTouchStart={() => {}}>
             <Image className={styles.shieldImage} src={x7rgShield} alt={current.shieldAlt} sizes="(max-width: 640px) 220px, 340px" quality={90} priority={false} />
           </div>
           <p className={styles.currentLead}>{current.lead}</p>
