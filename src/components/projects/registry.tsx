@@ -7,6 +7,7 @@ import { playfair } from "@/components/bya-sheet/playfair";
 import { ProjectSheet } from "@/components/project-sheet/ProjectSheet";
 import { CheckoutSheet } from "@/components/checkout-sheet/CheckoutSheet";
 import { LightSheet } from "@/components/light-sheet/LightSheet";
+import { LucianeSheet } from "@/components/luciane-sheet/LucianeSheet";
 import { MoonSheet } from "@/components/moon-sheet/MoonSheet";
 import { ReciboSheet } from "@/components/recibo-sheet/ReciboSheet";
 import { compact } from "@/content/compact";
@@ -17,6 +18,7 @@ import { checkout } from "@/content/sheets/checkout";
 import { discordCameraLive } from "@/content/sheets/discord-camera-live";
 import { feitoPelaBya } from "@/content/sheets/feito-pela-bya";
 import { lightLogin } from "@/content/sheets/light-login";
+import { lucianeCorreaServicios } from "@/content/sheets/luciane-correa-servicios";
 import { loginTheMoon } from "@/content/sheets/login-the-moon";
 import { neonBlockfall } from "@/content/sheets/neon-blockfall";
 import { reciboDigital } from "@/content/sheets/recibo-digital";
@@ -77,6 +79,16 @@ export function renderProject(slug: ProjectSlug, dict: Dictionary): ReactNode {
           newTab={dict.a11y.newTab}
         />
       );
+    case "luciane-correa-servicios":
+      return (
+        <LucianeSheet
+          data={lucianeCorreaServicios}
+          copy={dict.projects["luciane-correa-servicios"]}
+          shared={dict.sheet}
+          viewSource={dict.work.viewSource}
+          newTab={dict.a11y.newTab}
+        />
+      );
     case "login-the-moon":
       return (
         <MoonSheet
@@ -127,6 +139,8 @@ export function stripAccent(slug: ProjectSlug): string {
       return "#5090ff";
     case "light-login":
       return "#f0b070";
+    case "luciane-correa-servicios":
+      return "#b89b65";
     default:
       return compact[slug as CompactSlug].accent;
   }
@@ -165,6 +179,8 @@ export function stripAccent2(slug: ProjectSlug): string {
       return "#daaf66";
     case "discord-camera-live":
       return "#4d57cc";
+    case "luciane-correa-servicios":
+      return "#1e414b";
   }
 }
 
@@ -187,6 +203,7 @@ export function stripComposition(slug: ProjectSlug): { family: StripFamily; side
       return { family: "reverse", side: "end" };
     case "adriano-reformas-vigo":
     case "light-login":
+    case "luciane-correa-servicios":
       return { family: "bleed", side: "start" };
     case "recibo-digital":
       return { family: "object", side: "end" };

@@ -69,6 +69,18 @@ export const captionKeys = [
   "bya.coco",
   "bya.site",
   "bya.share",
+  // Luciane Correa Servicios
+  "luciane.hero",
+  "luciane.about",
+  "luciane.services",
+  "luciane.packages",
+  "luciane.process",
+  "luciane.testimonials",
+  "luciane.quote",
+  "luciane.footer",
+  "luciane.mobile.hero",
+  "luciane.mobile.content",
+  "luciane.mobile.menu",
 ] as const;
 
 export type CaptionKey = (typeof captionKeys)[number];

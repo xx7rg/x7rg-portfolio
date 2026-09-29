@@ -5,6 +5,7 @@ import { compact } from "@/content/compact";
 import byaLogoStrip from "@/assets/feito-pela-bya/logo-strip.webp";
 import { checkout } from "@/content/sheets/checkout";
 import { lightLogin } from "@/content/sheets/light-login";
+import { lucianeCorreaServicios } from "@/content/sheets/luciane-correa-servicios";
 import { appRegion, aquacontrol } from "@/content/sheets/aquacontrol";
 import { neonBlockfall } from "@/content/sheets/neon-blockfall";
 import { reciboDigital } from "@/content/sheets/recibo-digital";
@@ -75,6 +76,16 @@ export function StripVisual({ slug }: { slug: ProjectSlug }) {
       return (
         <div className={`${styles.stage} ${styles.light}`}>
           <Image className={styles.cover} style={layer(8)} src={lightLogin.media.strip} alt="" sizes="(min-width: 1100px) 620px, 100vw" quality={75} />
+        </div>
+      );
+    case "luciane-correa-servicios":
+      // Reusa a mídia aprovada do caso aberto (a captura "sobre mí"), não um retrato isolado: a
+      // janela mostra o retrato de Luciane junto com a interface editorial ao redor dele — é o
+      // site, não um cartão de perfil. `object-position` enquadra o retrato+rótulo; o degradê
+      // escurece a base para o título da faixa continuar legível sobre um fundo majoritariamente claro.
+      return (
+        <div className={`${styles.stage} ${styles.luciane}`}>
+          <Image className={styles.lucianeShot} style={layer(8)} src={lucianeCorreaServicios.media.about} alt="" sizes="(min-width: 1100px) 620px, 100vw" quality={85} />
         </div>
       );
     case "checkout":

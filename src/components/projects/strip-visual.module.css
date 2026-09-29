@@ -172,6 +172,39 @@
   object-position: 42% 50%;
 }
 
+/* ---------- Luciane Correa Servicios: a própria captura "sobre mí", não um retrato isolado ---------- */
+
+.luciane {
+  background: #122b35;
+}
+
+/* A captura de origem (1440×1000, quase quadrada) é bem mais alta que a caixa rasa da faixa, então
+   um object-fit:cover comum (como moon/light usam, pensado para screenshots bem mais largas que
+   altas) reduziria a região visível a uma fatia praticamente vazia. Em vez disso a imagem mantém a
+   proporção original (largura fixa, altura automática) e é deslocada para cima o suficiente para a
+   janela da faixa mostrar o retrato emoldurado de Luciane ao lado do início do texto "02 — Sobre
+   mí" — o mesmo espírito do recorte que o Recibo Digital já usa para a própria captura. O deslocamento
+   foi calculado a partir das dimensões reais da captura (1440×1000) e da caixa da faixa, não por tentativa visual. */
+.luciane .lucianeShot {
+  position: absolute;
+  inset-inline-start: 4%;
+  inset-block-start: -58%;
+  inline-size: 96%;
+  max-inline-size: none;
+  block-size: auto;
+}
+
+/* Escurece a base da captura (majoritariamente clara) para o título da faixa continuar legível,
+   sem esconder o retrato nem a tipografia editorial que aparecem no topo da janela. */
+.luciane::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgb(18 43 53 / 0.08) 0%, rgb(18 43 53 / 0.5) 58%, rgb(18 43 53 / 0.86) 100%);
+  pointer-events: none;
+}
+
+
 /* ---------- Checkout: a visão geral e a confirmação, em camadas com a luz azul da interface ---------- */
 
 .checkout {

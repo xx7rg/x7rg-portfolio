@@ -9,6 +9,12 @@ import { spawn } from "node:child_process";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
+
+const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+// Conta as entradas reais do catálogo (não a declaração `slug: string` do tipo), para a
+// checagem de faixas acompanhar o catálogo em vez de travar num número de projetos desatualizado.
+const PROJECT_COUNT = (fs.readFileSync(path.join(ROOT, "src/content/projects.ts"), "utf8").match(/slug: "/g) || []).length;
 
 const BASE = process.env.BASE || "http://localhost:3000";
 const QUICK = process.argv.includes("--quick");
@@ -208,7 +214,7 @@ async function strips() {
     const s = await ev(`[...document.querySelectorAll('[data-strip-list] > [data-project]')].map((e) => { const r = e.getBoundingClientRect(); return [r.top + scrollY, r.height]; })`);
     const hs = s.map((x) => x[1]);
     let overlap = 0; for (let i = 1; i < s.length; i++) if (s[i][0] < s[i - 1][0] + s[i - 1][1] - 0.5) overlap++;
-    check("faixas", `${w}x${h} nove faixas de 92px, sem sobreposição`, s.length === 9 && hs.every((x) => Math.abs(x - 92) <= 0.6) && overlap === 0, `n=${s.length} alturas=${[...new Set(hs.map((x) => Math.round(x)))].join('/')} sobrepostas=${overlap}`);
+    check("faixas", `${w}x${h} ${PROJECT_COUNT} faixas de 92px, sem sobreposição`, s.length === PROJECT_COUNT && hs.every((x) => Math.abs(x - 92) <= 0.6) && overlap === 0, `n=${s.length} alturas=${[...new Set(hs.map((x) => Math.round(x)))].join('/')} sobrepostas=${overlap}`);
   }
   await view(1440, 900);
   await open("/pt", 2400);

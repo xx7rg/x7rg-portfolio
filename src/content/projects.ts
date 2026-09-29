@@ -49,6 +49,14 @@ export const projects = [
     live: "https://adrianoreformas.com/",
   },
   {
+    slug: "luciane-correa-servicios",
+    name: "Luciane Correa Servicios",
+    kind: "case",
+    year: "2026",
+    repo: `${GITHUB}/luciane-correa-servicios`,
+    live: "https://luciane-correa-servicios.pages.dev/",
+  },
+  {
     slug: "login-the-moon",
     name: "Login The Moon",
     kind: "case",

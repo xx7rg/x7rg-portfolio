@@ -448,6 +448,34 @@ export type ReciboSheetCopy = {
 };
 
 /**
+ * Texto da folha do Luciane Correa Servicios: um site REAL de cliente, para um negócio de limpeza
+ * e cuidados do lar em Linares, Espanha, com backend próprio na Cloudflare (Functions + KV) para
+ * depoimentos moderados e contagem de visitas por país. O caso descreve a estrutura e a
+ * implementação e NÃO afirma resultados de negócio: não há métricas de conversão, leads, vendas
+ * ou SEO documentadas. A produção capturada não tinha depoimentos públicos ainda; a seção de
+ * depoimentos descreve o sistema real sem fingir prova social que não existe. A interface
+ * capturada está em espanhol.
+ */
+export type LucianeSheetCopy = {
+  type: string;
+  status: string;
+  statement: string;
+  opening: { alt: string; caption: string };
+  context: { title: string; lead: string; heroAlt: string; heroCaption: string };
+  visual: { title: string; lead: string; points: Triple<{ label: string; body: string }> };
+  services: { title: string; lead: string; servicesAlt: string; servicesCaption: string; packagesAlt: string; packagesCaption: string };
+  conversion: { title: string; lead: string; points: Triple<{ label: string; body: string }>; quoteAlt: string; quoteCaption: string };
+  process: { title: string; lead: string; processAlt: string; processCaption: string };
+  testimonials: { title: string; lead: string; testimonialsAlt: string; testimonialsCaption: string; note: string };
+  build: { title: string; items: Four<{ label: string; body: string }>; stack: string; footerAlt: string; footerCaption: string };
+  responsive: { title: string; lead: string; heroAlt: string; contentAlt: string; menuAlt: string; caption: string };
+  limits: { title: string; body: string };
+  credit: string;
+  /** Rótulo do link para o site publicado. */
+  demo: string;
+};
+
+/**
  * Contrato de todo o texto do site. Cada idioma implementa este tipo, então o
  * compilador acusa qualquer chave ausente em PT, EN ou ES.
  */
@@ -697,5 +725,6 @@ export type Dictionary = {
     "login-the-moon": MoonSheetCopy;
     "adriano-reformas-vigo": AdrianoSheetCopy;
     "discord-camera-live": DiscordSheetCopy;
+    "luciane-correa-servicios": LucianeSheetCopy;
   };
 };
