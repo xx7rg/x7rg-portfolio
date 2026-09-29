@@ -2,10 +2,10 @@ import Image from "next/image";
 import { ByaCrop } from "@/components/bya-sheet/ByaCrop";
 import type { ProjectSlug } from "@/content/projects";
 import { compact } from "@/content/compact";
+import byaLogoStrip from "@/assets/feito-pela-bya/logo-strip.webp";
 import { checkout } from "@/content/sheets/checkout";
 import { lightLogin } from "@/content/sheets/light-login";
 import { appRegion, aquacontrol } from "@/content/sheets/aquacontrol";
-import { feitoPelaBya } from "@/content/sheets/feito-pela-bya";
 import { neonBlockfall } from "@/content/sheets/neon-blockfall";
 import { reciboDigital } from "@/content/sheets/recibo-digital";
 import styles from "./strip-visual.module.css";
@@ -48,9 +48,14 @@ export function StripVisual({ slug }: { slug: ProjectSlug }) {
         </div>
       );
     case "feito-pela-bya":
+      // Variante própria (420x420, ~34KB) em vez de feitoPelaBya.media.logo (1254x1254,
+      // ~309KB, usado no caso aberto): aqui a imagem nunca passa de 210px/46vw, e a
+      // exportação estática serve o arquivo original sem redimensionar (images.unoptimized
+      // no next.config.ts) — sem essa variante, o índice fechado baixava 9x mais bytes do
+      // que o exibido precisa.
       return (
         <div className={`${styles.stage} ${styles.bya}`}>
-          <Image className={styles.byaLogo} style={layer(10)} src={feitoPelaBya.media.logo} alt="" sizes="(min-width: 1100px) 210px, 46vw" quality={75} />
+          <Image className={styles.byaLogo} style={layer(10)} src={byaLogoStrip} alt="" sizes="(min-width: 1100px) 210px, 46vw" quality={75} />
         </div>
       );
     case "adriano-reformas-vigo":
