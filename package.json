@@ -5,10 +5,11 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
     "lint": "eslint",
     "check:approved": "node scripts/approved.mjs",
-    "check:behavior": "node scripts/behavior.mjs"
+    "check:behavior": "node scripts/behavior.mjs",
+    "preview": "node scripts/preview.mjs",
+    "typecheck": "next typegen && tsc --noEmit"
   },
   "dependencies": {
     "motion": "^13.4.1",

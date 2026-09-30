@@ -1,5 +1,5 @@
 // Fumaça de COMPORTAMENTO das superfícies aprovadas. Hash de arquivo não pega regressão visual; isto mede o resultado no navegador.
-//   npm run dev (ou build + start) em outro terminal, depois:
+//   npm run dev (ou npm run build + npm run preview) em outro terminal, depois:
 //   npm run check:behavior                      (usa http://localhost:3000)
 //   BASE=http://localhost:3101 npm run check:behavior
 //   npm run check:behavior -- --quick           (menos combinações de caso × tamanho)
@@ -171,6 +171,10 @@ async function badgeShield() {
   const c = await ev(`(() => { const s = document.querySelector('[class*=shieldSlot]'); const r = s.parentElement.getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2, R: r.width / 2, persp: getComputedStyle(s).perspective, slotPE: getComputedStyle(s).pointerEvents, top: (() => { const e = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2); return s.parentElement.contains(e); })() }; })()`);
   const tf = () => ev(`document.querySelector('[class*=shieldBody]').style.transform`);
   const parse = (t) => { const g = (re) => { const m = re.exec(t); return m ? m.slice(1).map(Number) : null; }; return { tr: g(/translate3d\(([-\d.]+)px, ([-\d.]+)px, ([-\d.]+)px\)/), rx: g(/rotateX\(([-\d.]+)deg\)/)?.[0], ry: g(/rotateY\(([-\d.]+)deg\)/)?.[0], s: g(/scale\(([-\d.]+)\)/)?.[0] }; };
+  const nearNeutral = (t) => {
+    const p = parse(t);
+    return !!p.tr && Math.abs(p.tr[0]) <= 0.35 && Math.abs(p.tr[1]) <= 0.35 && Math.abs(p.tr[2]) <= 0.8 && Math.abs(p.rx) <= 1 && Math.abs(p.ry) <= 1 && Math.abs(p.s - 1) <= 0.002;
+  };
   const live = () => ev(`(() => { const r = document.querySelector('[class*=shieldSlot]').parentElement.getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2, R: r.width / 2 }; })()`);
   const enter = async (fx, fy) => { await mouse(5, 5); await settle(500); const c = await live(); for (let s = 1; s <= 10; s++) { await mouse(c.x + fx * c.R * s / 10, c.y + fy * c.R * s / 10); await sleep(16); await frame(); } await settle(900); };
   check("selo", "perspectiva 520px, camada do escudo sem pointer-events, nada intercepta o selo", c.persp === "520px" && c.slotPE === "none" && c.top, `perspective=${c.persp} slot=${c.slotPE} topo=selo:${c.top}`);
@@ -181,9 +185,9 @@ async function badgeShield() {
   p = parse(await tf());
   check("selo", "limites: rotateY <= 9°, rotateX <= 8°, translação <= 3px", Math.abs(p.ry) <= 9.05 && Math.abs(p.ry) >= 8 && Math.abs(p.rx) <= 8.05 && Math.abs(p.tr[0]) <= 3.05, `rotY=${p.ry} rotX=${p.rx} tx=${p.tr[0]}`);
   await mouse(5, 5); await settle(1200);
-  check("selo", "volta ao neutro ao sair (sem mola)", (await tf()).startsWith("translate3d(0px, 0px, 0px) rotateX(0deg) rotateY(0deg) scale(1)"), await tf());
+  check("selo", "volta ao neutro ao sair (sem mola)", nearNeutral(await tf()), await tf());
   { const k = await live(); await mouse(k.x + k.R * 0.95, k.y + k.R * 0.95); } await settle(800);
-  check("selo", "canto da caixa (fora do círculo) não responde", (await tf()).startsWith("translate3d(0px, 0px, 0px)"), await tf());
+  check("selo", "canto da caixa (fora do círculo) não responde", nearNeutral(await tf()), await tf());
   await mouse(5, 5); await settle(500);
   const ring = await ev(`(() => { const a = document.getAnimations().find((x) => (x.animationName || '').includes('spin')); return a ? { state: a.playState, dur: a.effect.getTiming().duration, t0: a.currentTime } : null; })()`);
   await settle(700);

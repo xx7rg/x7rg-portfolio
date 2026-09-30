@@ -27,8 +27,9 @@
   min-inline-size: 0;
   /* O vão vem de BAIXO do bloco e da fase dele: o topo de um bloco não depende da fase do próprio bloco, então abrir, fechar e o alinhamento por link direto não mexem nele. */
   margin-block-end: var(--gap);
-  /* Abaixo de 1100 px o controle fixo de data e idioma ocupa o topo: o projeto aberto se alinha logo abaixo dele. */
-  scroll-margin-top: 52px;
+  /* Abaixo de 1100 px o controle fixo de data e idioma ocupa o canto superior até cerca de 170 px.
+     O projeto aberto se alinha abaixo dessa área para não cobrir a primeira mídia dos casos. */
+  scroll-margin-top: 180px;
 }
 
 .block:last-child {

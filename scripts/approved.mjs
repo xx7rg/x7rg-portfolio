@@ -16,6 +16,11 @@ const args = process.argv.slice(2);
 const flag = (name) => args.includes(name);
 const value = (name) => { const i = args.indexOf(name); return i >= 0 ? args[i + 1] : undefined; };
 
+if (!fs.existsSync(MANIFEST)) {
+  console.log("SKIP  manifesto interno docs/portfolio-approved-baseline.json não está incluído no repositório público.");
+  process.exit(0);
+}
+
 const manifest = JSON.parse(fs.readFileSync(MANIFEST, "utf8"));
 const isExcluded = (f) => f.startsWith("src/i18n/dictionaries/") || f === "src/i18n/types.ts";
 
