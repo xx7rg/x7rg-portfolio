@@ -204,6 +204,25 @@
   pointer-events: none;
 }
 
+/* ---------- Matteo (objeto): o pequeno cartão ilustrado noturno — lua, estrelas, príncipe e
+   raposa —, isolado no espaço negativo, sem o cartão creme com a data ao lado. Paleta própria
+   (azul quase preto + dourado quente), distinta do navy+dourado da Luciane. ---------- */
+
+.matteo {
+  background:
+    radial-gradient(46% 70% at 78% 42%, color-mix(in srgb, var(--acc) 20%, transparent), transparent 70%),
+    #0a1220;
+}
+
+.matteoShot {
+  position: absolute;
+  inset-inline-start: -178%;
+  inset-block-start: -300%;
+  inline-size: 396%;
+  max-inline-size: none;
+  block-size: auto;
+  box-shadow: 0 20px 40px -22px rgb(0 0 0 / 0.85);
+}
 
 /* ---------- Checkout: a visão geral e a confirmação, em camadas com a luz azul da interface ---------- */
 
@@ -416,6 +435,15 @@
   box-shadow:
     0 0 0 1px color-mix(in srgb, var(--acc2) 34%, transparent),
     0 0 46px -10px color-mix(in srgb, var(--acc2) 40%, transparent);
+}
+
+/* Celular: a faixa fica bem mais estreita, mas a altura do palco não muda — sem recalcular a
+   posição/escala aqui, o recorte da lua sairia dos limites da imagem e a faixa ficaria vazia. */
+@container (max-width: 539px) {
+  .matteoShot {
+    inset-inline-start: -604%;
+    inline-size: 1345%;
+  }
 }
 
 /* Celular: a folha do Recibo é estreita, então a impressora ocupa a folha inteira, no alto. */

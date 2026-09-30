@@ -56,6 +56,10 @@ export const projects = [
     repo: `${GITHUB}/luciane-correa-servicios`,
     live: "https://luciane-correa-servicios.pages.dev/",
   },
+  // Sem `repo` nem `live`: projeto autoral, repositório privado (o código-fonte guarda uma chave
+  // Pix e um nome reais), e a produção é uma página de evento real, compartilhada só com quem foi
+  // convidado — não um endereço para divulgação pública. O mesmo tratamento do Neon Blockfall.
+  { slug: "matteo", name: "Matteo", kind: "case", year: "2026" },
   {
     slug: "login-the-moon",
     name: "Login The Moon",

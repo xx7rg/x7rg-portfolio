@@ -8,6 +8,7 @@ import { ProjectSheet } from "@/components/project-sheet/ProjectSheet";
 import { CheckoutSheet } from "@/components/checkout-sheet/CheckoutSheet";
 import { LightSheet } from "@/components/light-sheet/LightSheet";
 import { LucianeSheet } from "@/components/luciane-sheet/LucianeSheet";
+import { MatteoSheet } from "@/components/matteo-sheet/MatteoSheet";
 import { MoonSheet } from "@/components/moon-sheet/MoonSheet";
 import { ReciboSheet } from "@/components/recibo-sheet/ReciboSheet";
 import { compact } from "@/content/compact";
@@ -19,6 +20,7 @@ import { discordCameraLive } from "@/content/sheets/discord-camera-live";
 import { feitoPelaBya } from "@/content/sheets/feito-pela-bya";
 import { lightLogin } from "@/content/sheets/light-login";
 import { lucianeCorreaServicios } from "@/content/sheets/luciane-correa-servicios";
+import { matteo } from "@/content/sheets/matteo";
 import { loginTheMoon } from "@/content/sheets/login-the-moon";
 import { neonBlockfall } from "@/content/sheets/neon-blockfall";
 import { reciboDigital } from "@/content/sheets/recibo-digital";
@@ -89,6 +91,8 @@ export function renderProject(slug: ProjectSlug, dict: Dictionary): ReactNode {
           newTab={dict.a11y.newTab}
         />
       );
+    case "matteo":
+      return <MatteoSheet data={matteo} copy={dict.projects.matteo} shared={dict.sheet} />;
     case "login-the-moon":
       return (
         <MoonSheet
@@ -141,6 +145,8 @@ export function stripAccent(slug: ProjectSlug): string {
       return "#f0b070";
     case "luciane-correa-servicios":
       return "#b89b65";
+    case "matteo":
+      return "#d4af6a";
     default:
       return compact[slug as CompactSlug].accent;
   }
@@ -181,6 +187,8 @@ export function stripAccent2(slug: ProjectSlug): string {
       return "#4d57cc";
     case "luciane-correa-servicios":
       return "#1e414b";
+    case "matteo":
+      return "#0f1c2e";
   }
 }
 
@@ -206,6 +214,7 @@ export function stripComposition(slug: ProjectSlug): { family: StripFamily; side
     case "luciane-correa-servicios":
       return { family: "bleed", side: "start" };
     case "recibo-digital":
+    case "matteo":
       return { family: "object", side: "end" };
     default:
       return { family: "object", side: "start" };

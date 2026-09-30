@@ -476,6 +476,45 @@ export type LucianeSheetCopy = {
 };
 
 /**
+ * Matteo: projeto autoral (não de cliente), sem link de código-fonte ou demonstração ao vivo —
+ * o repositório é privado e a produção é uma página de evento real, compartilhada só com
+ * convidados. Sem campo `demo`: a folha não renderiza nenhum link externo.
+ */
+export type MatteoSheetCopy = {
+  type: string;
+  status: string;
+  statement: string;
+  opening: { alt: string; caption: string };
+  fromInvitation: { title: string; lead: string; alt: string; caption: string };
+  atmosphere: {
+    title: string;
+    lead: string;
+    dayAlt: string;
+    dayCaption: string;
+    duskAlt: string;
+    duskCaption: string;
+    nightAlt: string;
+    nightCaption: string;
+  };
+  experience: { title: string; lead: string; countdownAlt: string; countdownCaption: string; storyAlt: string; storyCaption: string };
+  visual: { title: string; lead: string; galleryAlt: string; galleryCaption: string; note: string };
+  beyond: {
+    title: string;
+    lead: string;
+    confirmationAlt: string;
+    confirmationCaption: string;
+    directionsAlt: string;
+    directionsCaption: string;
+    giftsAlt: string;
+    giftsCaption: string;
+  };
+  build: { title: string; items: Four<{ label: string; body: string }>; stack: string };
+  responsive: { title: string; lead: string; heroAlt: string; navigationAlt: string; functionalAlt: string; caption: string };
+  limits: { title: string; body: string };
+  credit: string;
+};
+
+/**
  * Contrato de todo o texto do site. Cada idioma implementa este tipo, então o
  * compilador acusa qualquer chave ausente em PT, EN ou ES.
  */
@@ -726,5 +765,6 @@ export type Dictionary = {
     "adriano-reformas-vigo": AdrianoSheetCopy;
     "discord-camera-live": DiscordSheetCopy;
     "luciane-correa-servicios": LucianeSheetCopy;
+    matteo: MatteoSheetCopy;
   };
 };

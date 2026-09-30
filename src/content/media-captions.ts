@@ -81,6 +81,21 @@ export const captionKeys = [
   "luciane.mobile.hero",
   "luciane.mobile.content",
   "luciane.mobile.menu",
+  // Matteo
+  "matteo.night",
+  "matteo.day",
+  "matteo.atmosphereDay",
+  "matteo.atmosphereDusk",
+  "matteo.atmosphereNight",
+  "matteo.countdown",
+  "matteo.story",
+  "matteo.gallery",
+  "matteo.confirmation",
+  "matteo.directions",
+  "matteo.gifts",
+  "matteo.mobile.hero",
+  "matteo.mobile.navigation",
+  "matteo.mobile.functional",
 ] as const;
 
 export type CaptionKey = (typeof captionKeys)[number];

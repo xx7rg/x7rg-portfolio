@@ -6,6 +6,7 @@ import byaLogoStrip from "@/assets/feito-pela-bya/logo-strip.webp";
 import { checkout } from "@/content/sheets/checkout";
 import { lightLogin } from "@/content/sheets/light-login";
 import { lucianeCorreaServicios } from "@/content/sheets/luciane-correa-servicios";
+import { matteo } from "@/content/sheets/matteo";
 import { appRegion, aquacontrol } from "@/content/sheets/aquacontrol";
 import { neonBlockfall } from "@/content/sheets/neon-blockfall";
 import { reciboDigital } from "@/content/sheets/recibo-digital";
@@ -99,6 +100,16 @@ export function StripVisual({ slug }: { slug: ProjectSlug }) {
       return (
         <div className={`${styles.stage} ${styles.recibo}`}>
           <Image className={styles.reciboShot} style={layer(9)} src={reciboDigital.media.states[2].shot.image} alt="" sizes="(min-width: 1100px) 520px, 150vw" quality={75} />
+        </div>
+      );
+    case "matteo":
+      // Reusa a captura noturna aprovada do caso aberto: isola só o pequeno cartão ilustrado (a
+      // lua, as estrelas, o príncipe e a raposa), sem o cartão creme com a data ao lado — nada de
+      // texto do convite aparece na faixa, só a cena. O mesmo princípio de recorte que a Bya usa
+      // para isolar o logo de uma captura maior.
+      return (
+        <div className={`${styles.stage} ${styles.matteo}`}>
+          <Image className={styles.matteoShot} style={layer(9)} src={matteo.media.night} alt="" sizes="(min-width: 1100px) 300px, 60vw" quality={85} />
         </div>
       );
     case "discord-camera-live":
