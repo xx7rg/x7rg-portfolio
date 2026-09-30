@@ -12,6 +12,8 @@
   ![Projetos](https://img.shields.io/badge/projetos-10-6f4cff)
 
   **Publicado por x7rG ENTERPRISE™**
+
+  [Ver portfólio online](https://x7rg-portfolio.contato-rgsantos.workers.dev)
 </div>
 
 ---
@@ -161,7 +163,7 @@ scripts/
 
 ## Publicação
 
-O `next.config.ts` usa `output: "export"`; por isso o artefato de produção é a pasta `out`. O repositório inclui configuração de ativos para Cloudflare e também recebe implantações automáticas da Vercel a partir do GitHub.
+O `next.config.ts` usa `output: "export"`; por isso o artefato de produção é a pasta `out`. O site é publicado automaticamente pelo GitHub na Cloudflare: **[abrir o portfólio](https://x7rg-portfolio.contato-rgsantos.workers.dev)**. O repositório também mantém integrações de implantação com a Vercel.
 
 As fontes do Google são resolvidas durante o build. O ambiente de compilação precisa ter acesso à internet para baixá-las.
 
