@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useEffect, useRef } from "react";
-import escudo from "@/assets/brand/escudo.png";
+import escudo from "@/assets/brand/x7rg-shield-display.png";
 import styles from "./hero.module.css";
 
 /*

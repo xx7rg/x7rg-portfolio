@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useEffect, useRef, type ReactNode } from "react";
 import rgOriginal from "@/assets/brand/history/rg-original.png";
-import x7rgShield from "@/assets/brand/history/x7rg-shield.png";
+import x7rgShield from "@/assets/brand/x7rg-shield-display.png";
 import { ShieldIcon } from "@/components/ui/icons";
 import { SectionLabel } from "@/components/ui/SectionLabel";
 import type { Dictionary } from "@/i18n/types";

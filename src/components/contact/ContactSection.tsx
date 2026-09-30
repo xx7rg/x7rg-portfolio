@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useEffect, useRef, type ReactNode } from "react";
-import x7rgShield from "@/assets/brand/history/x7rg-shield.png";
+import x7rgShield from "@/assets/brand/x7rg-shield-display.png";
 import { ArrowUpRightIcon, GithubIcon, InstagramIcon, LinkedinIcon, SendIcon } from "@/components/ui/icons";
 import { SectionLabel } from "@/components/ui/SectionLabel";
 import { contact } from "@/content/contact";
