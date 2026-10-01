@@ -542,6 +542,7 @@ export type Dictionary = {
     about: string;
     identity: string;
     journey: string;
+    education: string;
     contact: string;
   };
   hero: {
@@ -719,6 +720,57 @@ export type Dictionary = {
       spread: string;
       foresea: string;
       eqs: string;
+    };
+  };
+  /**
+   * Seção Formação & Credenciais: arquivo profissional documentado (estudos, especializações e
+   * credenciais), apresentado como evidência dentro do portfólio editorial — não um currículo, não
+   * uma vitrine de certificados. Ainda sem entradas reais (content/credentials.ts começa vazio):
+   * `filters` nomeia os três tipos de credencial (mais "todos"), agora como filtro interativo de
+   * verdade, não só legenda estrutural; `intro` e `preparing` precisam continuar factualmente
+   * válidos até os documentos reais chegarem (fase E2), por isso não citam números, anos ou
+   * instituições. `emptyCategory`/`evidenceUnavailable` cobrem estados vazios mais específicos
+   * (um filtro sem itens; uma credencial selecionada sem documento) que só passam a acontecer de
+   * verdade quando o inventário real (E2) trouxer algumas credenciais mas não todas com evidência.
+   */
+  education: {
+    /** Rótulo da seção, na pílula do título, como em Identidade e Trajetória. */
+    label: string;
+    title: string;
+    intro: string;
+    /** Os três tipos de credencial (content/credentials.ts: CredentialType) + "todos". */
+    filters: {
+      all: string;
+      academic: string;
+      training: string;
+      credential: string;
+    };
+    /** Aviso editorial enquanto o acervo inteiro está em organização (zero itens reais ainda). */
+    preparing: string;
+    /** Um filtro específico não tem nenhum item (diferente de `preparing`: o acervo já existe). */
+    emptyCategory: string;
+    /** A credencial selecionada ainda não tem nenhum documento de evidência. */
+    evidenceUnavailable: string;
+    /** Ação sobre uma credencial com evidência (documento PDF, aberto em nova aba). */
+    viewCredential: string;
+    /** Ação futura (fase E2) para abrir o acervo completo, com destaques + arquivo. */
+    viewAll: string;
+    /** Rótulo acessível do controle "documento anterior" do visualizador. */
+    documentPrevious: string;
+    /** Rótulo acessível do controle "próximo documento" do visualizador. */
+    documentNext: string;
+    /** Aviso editorial discreto, só quando a credencial selecionada tem `sanitized: true`. */
+    privacyNotice: string;
+    /**
+     * Aviso editorial fixo da seção (fase E2.3.2), antes da lista/filtros: comunica que o acervo
+     * exibido é uma seleção atual, em expansão — não a lista completa de formação de Rogério.
+     * Evita que a chegada futura de mais documentos (fase E2.x) pareça uma correção de algo que
+     * faltava, já que isso foi comunicado desde já.
+     */
+    archiveNotice: {
+      /** Rótulo curto, no mesmo estilo do "eyebrow" de Contato. */
+      label: string;
+      body: string;
     };
   };
   /**

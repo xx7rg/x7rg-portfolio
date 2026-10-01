@@ -390,20 +390,23 @@ html:has(dialog[open]) {
    * A pílula PT/EN/ES se ancora no mesmo eixo do dock: left: calc(100% - edge - metade da
    * largura do dock, 20px) + transform: translateX(-50%) centraliza a pílula EXATAMENTE no
    * centro-x do dock e do botão de subir, não importa a largura real da pílula. Na vertical,
-   * deslocada para cima por um valor medido: 180px = metade da altura da pílula (48px de
-   * 96px) + metade da altura do dock inteiro, lista de 6 ícones + botão de subir (124px de
-   * 248px) + 8px de respiro — o MESMO respiro que .dock já usa entre a lista e o botão de
-   * subir (.dock { gap: 8px }), medido, não escolhido à toa. O dock cresce (mais itens) sem
-   * que ninguém precise reajustar isto à mão: como .dock fica centralizado no eixo Y da
-   * viewport (top: 50% + translateY(-50%)), seu centro nunca muda de lugar — só a MEIA
-   * altura muda, e é ela que entra nesta conta. Nada no dock foi tocado; só a posição desta
-   * pílula (a aparência já é a regra unificada acima).
+   * deslocada para cima por um valor medido: 196px = metade da altura da pílula (48px de
+   * 96px) + metade da altura do dock inteiro, lista de 7 ícones + botão de subir (140px de
+   * 280px) + 8px de respiro — o MESMO respiro que .dock já usa entre a lista e o botão de
+   * subir (.dock { gap: 8px }), medido, não escolhido à toa. Recalculado ao entrar Formação
+   * (7º ícone): a lista passou de 6×32px+8px padding=200px para 7×32px+8px padding=232px, o
+   * dock inteiro de 200+8+40=248px para 232+8+40=280px, metade 124px→140px. Como .dock fica
+   * centralizado no eixo Y da viewport (top: 50% + translateY(-50%)), seu centro nunca muda
+   * de lugar — só a MEIA altura muda, e é ela que entra nesta conta; se o dock ganhar mais
+   * itens no futuro, este valor precisa ser recalculado de novo à mão (não há como o CSS ler
+   * a altura de outro elemento sem JS). Nada no dock foi tocado; só a posição desta pílula (a
+   * aparência já é a regra unificada acima).
    */
   .langMain {
     position: fixed;
     top: 50%;
     left: calc(100% - var(--edge) - 20px);
     z-index: 40;
-    transform: translate(-50%, calc(-50% - 180px));
+    transform: translate(-50%, calc(-50% - 196px));
   }
 }

@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { AboutSection } from "@/components/about/AboutSection";
 import { BrandStorySection } from "@/components/brand-story/BrandStorySection";
 import { ContactSection } from "@/components/contact/ContactSection";
+import { EducationSection } from "@/components/education/EducationSection";
 import { Hero } from "@/components/hero/Hero";
 import { JourneySection } from "@/components/journey/JourneySection";
 import { ProfilePanel } from "@/components/profile/ProfilePanel";
@@ -25,6 +26,7 @@ export default async function HomePage({ params }: PageProps<"/[lang]">) {
         <AboutSection dict={dict} />
         <BrandStorySection dict={dict} />
         <JourneySection dict={dict} />
+        <EducationSection dict={dict} />
         <ContactSection dict={dict} />
       </div>
     </div>

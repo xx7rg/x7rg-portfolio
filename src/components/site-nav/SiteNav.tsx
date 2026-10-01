@@ -19,6 +19,7 @@ import {
   ArrowUpIcon,
   CloseIcon,
   FolderIcon,
+  GraduationIcon,
   HomeIcon,
   MenuIcon,
   RouteIcon,
@@ -33,7 +34,7 @@ import { Clock } from "./Clock";
 import { DockIcon } from "./DockIcon";
 import styles from "./site-nav.module.css";
 
-export type NavId = "top" | "projects" | "about" | "identity" | "journey" | "contact";
+export type NavId = "top" | "projects" | "about" | "identity" | "journey" | "education" | "contact";
 
 const icons: Record<NavId, ComponentType<SVGProps<SVGSVGElement>>> = {
   top: HomeIcon,
@@ -41,6 +42,7 @@ const icons: Record<NavId, ComponentType<SVGProps<SVGSVGElement>>> = {
   about: UserIcon,
   identity: ShieldIcon,
   journey: RouteIcon,
+  education: GraduationIcon,
   contact: SendIcon,
 };
 

@@ -96,6 +96,20 @@ export const captionKeys = [
   "matteo.mobile.hero",
   "matteo.mobile.navigation",
   "matteo.mobile.functional",
+  // Formação & Credenciais (fase E2.2): os dois diplomas são derivados SANITIZADOS (sem RG/CPF/data
+  // de nascimento/assinaturas do original) — os certificados de curso são páginas planas do PDF
+  // original (esses nunca continham dado sensível).
+  "credential.fam",
+  "credential.universo",
+  "credential.cft",
+  "credential.enapPowerBi1",
+  "credential.enapPowerBi2",
+  "credential.enapSei1",
+  "credential.enapSei2",
+  "credential.enapNr121",
+  "credential.enapNr122",
+  "credential.kasolutionLogica",
+  "credential.fgvTi",
 ] as const;
 
 export type CaptionKey = (typeof captionKeys)[number];

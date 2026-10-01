@@ -1,0 +1,347 @@
+/*
+ * Formação & Credenciais: arquivo profissional, não currículo nem vitrine de certificados. Mesma
+ * folga editorial de Trajetória/Identidade. Duas colunas no desktop (filtros + lista à esquerda,
+ * painel de evidência/visualizador de documento à direita — a mesma relação índice+detalhe de um
+ * acervo), uma coluna só no celular. Com content/credentials.ts vazio (fase E1/E1.1), os filtros já
+ * são reais (clicáveis), mas a lista e o painel mostram só os avisos de organização — nunca uma
+ * credencial ou documento inventado.
+ */
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(32px, 6svh, 56px);
+  padding-block: clamp(56px, 10svh, 112px);
+}
+
+/* ---------- Revelar ao rolar (uma vez, se ainda estiver fora da tela) ---------- */
+
+.reveal[data-reveal="armed"] {
+  opacity: 0;
+  transform: translateY(16px);
+}
+
+.reveal[data-reveal="shown"] {
+  transition:
+    opacity 640ms var(--ease-settle),
+    transform 640ms var(--ease-settle);
+}
+
+.intro {
+  max-inline-size: 34em;
+  margin: 0;
+  color: var(--ink-2);
+  font-size: var(--text-body);
+  line-height: 1.6;
+}
+
+/* Aviso editorial (fase E2.3.2): mesma linguagem discreta do "eyebrow" de Contato — nunca um
+   alerta. Comunica que o acervo é uma seleção atual, não a lista completa. */
+.archiveNotice {
+  max-inline-size: 34em;
+  margin: 20px 0 0;
+}
+
+.archiveLabel {
+  margin: 0 0 6px;
+  color: var(--ink-4);
+  font-family: var(--font-mono);
+  font-size: var(--text-meta);
+  letter-spacing: 0.08em;
+}
+
+.archiveBody {
+  margin: 0;
+  color: var(--ink-3);
+  font-size: var(--text-small);
+  line-height: 1.6;
+}
+
+/* ---------- Índice + evidência ---------- */
+
+.frame {
+  display: grid;
+  gap: clamp(32px, 5vw, 56px);
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 900px) {
+  .frame {
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    align-items: start;
+  }
+}
+
+.index {
+  display: grid;
+  gap: 20px;
+}
+
+/* ---------- Filtros (Todos / Acadêmica / Especializações / Credenciais) ---------- */
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.filter {
+  padding: 8px 16px;
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  background: none;
+  color: var(--ink-3);
+  font-size: var(--text-small);
+  cursor: pointer;
+  transition:
+    border-color var(--dur-fast) var(--ease-press),
+    color var(--dur-fast) var(--ease-press),
+    background-color var(--dur-fast) var(--ease-press);
+}
+
+.filter:hover,
+.filter:focus-visible {
+  color: var(--ink);
+}
+
+.filter[aria-pressed="true"] {
+  border-color: var(--accent);
+  background: rgb(255 255 255 / 0.06);
+  color: var(--accent);
+}
+
+.groupEmpty {
+  margin: 0;
+  padding-top: 10px;
+  color: var(--ink-4);
+  font-size: var(--text-small);
+  line-height: 1.6;
+}
+
+.groupList {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.entry {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: 12px;
+  inline-size: 100%;
+  padding: 12px 2px;
+  border: none;
+  border-bottom: 1px solid var(--rule);
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: color var(--dur-fast) var(--ease-press);
+}
+
+.entryIcon {
+  flex: none;
+  align-self: center;
+  font-size: 1rem;
+  color: var(--ink-4);
+}
+
+.entryTitle {
+  color: var(--ink-2);
+  font-size: var(--text-small);
+  transition: color var(--dur-fast) var(--ease-press);
+}
+
+.entry:hover .entryTitle,
+.entry:focus-visible .entryTitle,
+.entry[aria-current="true"] .entryTitle {
+  color: var(--accent);
+}
+
+.entryInstitution {
+  color: var(--ink-4);
+  font-size: var(--text-meta);
+}
+
+.entryPeriod {
+  margin-inline-start: auto;
+  color: var(--ink-4);
+  font-size: var(--text-meta);
+}
+
+/* ---------- Painel de evidência ---------- */
+
+.evidence {
+  display: grid;
+  align-content: center;
+  min-block-size: 200px;
+  padding: clamp(28px, 4vw, 40px);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  background: rgb(255 255 255 / 0.02);
+}
+
+.evidenceEmpty {
+  margin: 0;
+  max-inline-size: 28em;
+  color: var(--ink-4);
+  font-size: var(--text-small);
+  line-height: 1.6;
+}
+
+.detail {
+  display: grid;
+  gap: 10px;
+}
+
+.detailInstitution {
+  margin: 0;
+  color: var(--ink-4);
+  font-size: var(--text-meta);
+  letter-spacing: 0.02em;
+}
+
+.detailTitle {
+  margin: 0;
+  color: var(--ink);
+  font-size: clamp(1.15rem, 1rem + 0.6vw, 1.5rem);
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+.detailArea {
+  margin: 0;
+  color: var(--ink-2);
+  font-size: var(--text-small);
+}
+
+.detailPeriod {
+  margin: 0;
+  color: var(--ink-4);
+  font-size: var(--text-meta);
+}
+
+.detailDescription {
+  margin: 4px 0 0;
+  color: var(--ink-2);
+  font-size: var(--text-small);
+  line-height: 1.6;
+}
+
+.skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 8px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.skill {
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgb(255 255 255 / 0.06);
+  color: var(--ink-2);
+  font-size: var(--text-meta);
+}
+
+/* ---------- Visualizador de documento ---------- */
+
+.viewer {
+  display: grid;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+/* Dissuasão de cópia casual, escopada só à imagem da evidência (o resto do portfólio continua
+   com seleção de texto e menu de contexto normais). Isto não é proteção técnica real — qualquer
+   imagem que chega ao navegador pode ser capturada por print-screen/DevTools; a proteção de
+   verdade é nunca publicar o original, só o derivado saneado (ver credentials.ts). */
+.evidenceGuard {
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* Imagem: proporção original preservada, sem corte (object-fit: contain, não cover). Fundo claro
+   fixo: os documentos são digitalizações/certificados claros sobre um tema escuro, sem isso a
+   moldura pisca escura antes da imagem carregar. */
+.documentFrame {
+  display: block;
+  max-inline-size: 100%;
+  border-radius: 8px;
+  background: #fff;
+}
+
+.documentImage {
+  inline-size: 100%;
+  block-size: auto;
+  max-block-size: 460px;
+  object-fit: contain;
+  border-radius: 8px;
+}
+
+/* Impressão: a página do portfólio pode ser impressa normalmente, mas a evidência de credencial
+   nunca — "Imprimir página -> Salvar como PDF" não deve reproduzir o documento. */
+@media print {
+  .viewer {
+    display: none;
+  }
+}
+
+/* Anterior/próximo: sob controle da pessoa, nunca um carrossel automático. */
+.docNav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+
+.docNavButton {
+  display: inline-grid;
+  place-items: center;
+  inline-size: 36px;
+  block-size: 36px;
+  border: 1px solid var(--rule);
+  border-radius: 50%;
+  background: none;
+  color: var(--ink-2);
+  cursor: pointer;
+  transition:
+    border-color var(--dur-fast) var(--ease-press),
+    color var(--dur-fast) var(--ease-press);
+}
+
+.docNavButton:hover:not(:disabled),
+.docNavButton:focus-visible {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.docNavButton:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.docCounter {
+  min-inline-size: 4.5em;
+  color: var(--ink-4);
+  font-size: var(--text-meta);
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Aviso de privacidade: editorial e discreto, não um alerta — mesma escala e cor silenciosa de
+   .evidenceEmpty/.entryInstitution, nunca vermelho/amarelo, sem ícone de alerta. Só aparece quando
+   `selected.sanitized` é verdadeiro (ver EducationSection.tsx), nunca nos certificados de curso
+   sem informação pessoal removida. */
+.privacyNotice {
+  margin: 4px 0 0;
+  padding-top: 10px;
+  border-top: 1px solid var(--rule);
+  color: var(--ink-4);
+  font-size: var(--text-meta);
+  line-height: 1.5;
+}
