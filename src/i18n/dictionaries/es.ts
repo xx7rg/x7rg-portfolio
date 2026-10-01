@@ -174,7 +174,6 @@ export const es: Dictionary = {
     title: "Formación & Credenciales",
     intro: "La formación es un proceso continuo. Aquí reúno los estudios, las especializaciones y las credenciales que sostienen el trabajo técnico y creativo de este portafolio — la documentación como evidencia, no como vitrina.",
     filters: {
-      all: "Todas",
       academic: "Académica",
       training: "Especializaciones",
       credential: "Credenciales",
@@ -183,7 +182,8 @@ export const es: Dictionary = {
     emptyCategory: "Todavía no hay elementos en esta categoría.",
     evidenceUnavailable: "Esta credencial todavía no tiene evidencia documentada.",
     viewCredential: "Ver credencial",
-    viewAll: "Ver todas las credenciales",
+    viewAll: "Ver todas",
+    viewLess: "Mostrar menos",
     documentPrevious: "Documento anterior",
     documentNext: "Documento siguiente",
     privacyNotice: "Algunos datos personales se han difuminado en esta copia pública para proteger la privacidad del titular.",
@@ -1350,6 +1350,10 @@ export const es: Dictionary = {
       "credential.enapNr122": "Certificado de Seguridad en Máquinas y Equipos NR12 — Enap, página 2 de 2",
       "credential.kasolutionLogica": "Certificado de Lógica de Programación — Centro Educacional Ka Solution",
       "credential.fgvTi": "Declaración de Fundamentos de la Gestión de TI — FGV Online",
+      "credential.facuminasInteligenciaArtificial": "Certificado de posgrado en Inteligencia Artificial, Faculdade Facuminas de Pós-Graduação (datos personales difuminados)",
+      "credential.facuminasBusinessIntelligence": "Certificado de posgrado en Business Intelligence, Faculdade Facuminas de Pós-Graduação (datos personales difuminados)",
+      "credential.facuminasPericiaForense": "Certificado de posgrado en Pericia Forense Computacional, Faculdade Facuminas de Pós-Graduação (datos personales difuminados)",
+      "credential.facuminasGovernancaTi": "Certificado de posgrado en Gobernanza y Gestión de TI, Faculdade Facuminas de Pós-Graduação (datos personales difuminados)",
     },
   },
 };

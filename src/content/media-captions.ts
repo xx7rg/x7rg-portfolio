@@ -110,6 +110,12 @@ export const captionKeys = [
   "credential.enapNr122",
   "credential.kasolutionLogica",
   "credential.fgvTi",
+  // Pós-graduações FACUMINAS (incremento pós-E2.3.2): mesmo tratamento SANITIZADO de RG/CPF/
+  // assinatura pessoal borrados no pixel; a foto não se aplica (documento não traz foto).
+  "credential.facuminasInteligenciaArtificial",
+  "credential.facuminasBusinessIntelligence",
+  "credential.facuminasPericiaForense",
+  "credential.facuminasGovernancaTi",
 ] as const;
 
 export type CaptionKey = (typeof captionKeys)[number];

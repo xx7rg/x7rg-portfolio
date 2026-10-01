@@ -174,7 +174,6 @@ export const pt: Dictionary = {
     title: "Formação & Credenciais",
     intro: "Formação é um processo contínuo. Aqui reúno os estudos, as especializações e as credenciais que sustentam o trabalho técnico e criativo deste portfólio — a documentação como evidência, não como vitrine.",
     filters: {
-      all: "Todos",
       academic: "Acadêmica",
       training: "Especializações",
       credential: "Credenciais",
@@ -183,7 +182,8 @@ export const pt: Dictionary = {
     emptyCategory: "Nenhum item nesta categoria por enquanto.",
     evidenceUnavailable: "Esta credencial ainda não tem evidência documentada.",
     viewCredential: "Ver credencial",
-    viewAll: "Ver todas as credenciais",
+    viewAll: "Ver todas",
+    viewLess: "Mostrar menos",
     documentPrevious: "Documento anterior",
     documentNext: "Próximo documento",
     privacyNotice: "Algumas informações pessoais foram borradas nesta cópia pública para preservar a privacidade do titular.",
@@ -1347,6 +1347,10 @@ export const pt: Dictionary = {
       "credential.enapNr122": "Certificado de Segurança em Máquinas e Equipamentos NR12 — Enap, página 2 de 2",
       "credential.kasolutionLogica": "Certificado de Lógica de Programação — Centro Educacional Ka Solution",
       "credential.fgvTi": "Declaração de Fundamentos da Gestão de TI — FGV Online",
+      "credential.facuminasInteligenciaArtificial": "Certificado de Pós-Graduação em Inteligência Artificial, Faculdade Facuminas de Pós-Graduação (dados pessoais borrados)",
+      "credential.facuminasBusinessIntelligence": "Certificado de Pós-Graduação em Business Intelligence, Faculdade Facuminas de Pós-Graduação (dados pessoais borrados)",
+      "credential.facuminasPericiaForense": "Certificado de Pós-Graduação em Perícia Forense Computacional, Faculdade Facuminas de Pós-Graduação (dados pessoais borrados)",
+      "credential.facuminasGovernancaTi": "Certificado de Pós-Graduação em Governança e Gestão de TI, Faculdade Facuminas de Pós-Graduação (dados pessoais borrados)",
     },
   },
 };

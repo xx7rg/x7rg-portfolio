@@ -11,6 +11,10 @@ import enapSei1 from "@/assets/credentials/enap-sei-p1.webp";
 import enapSei2 from "@/assets/credentials/enap-sei-p2.webp";
 import enapNr121 from "@/assets/credentials/enap-nr12-p1.webp";
 import enapNr122 from "@/assets/credentials/enap-nr12-p2.webp";
+import facuminasInteligenciaArtificial from "@/assets/credentials/facuminas-inteligencia-artificial.webp";
+import facuminasBusinessIntelligence from "@/assets/credentials/facuminas-business-intelligence.webp";
+import facuminasPericiaForense from "@/assets/credentials/facuminas-pericia-forense.webp";
+import facuminasGovernancaTi from "@/assets/credentials/facuminas-governanca-ti.webp";
 
 /**
  * Arquivo de Formação & Credenciais: fase E2.3 (borrão localizado, não mais tarja preta). Toda
@@ -20,9 +24,9 @@ import enapNr122 from "@/assets/credentials/enap-nr12-p2.webp";
  * RG/CPF/identidade, filiação, foto, assinaturas manuscritas, QR de verificação) borrados de forma
  * destrutiva no próprio pixel (Gaussian blur assado no raster, nunca uma caixa de CSS por cima) —
  * o resto do documento (instituição, título, texto público, moldura, cores) permanece visualmente
- * igual ao original. Os PDFs originais permanecem exclusivamente em D:\HD MEC\certficadoss\, nunca
- * entram no repositório. `sanitized: true` identifica as credenciais cujo documento publicado teve
- * informação pessoal removida — a seção usa essa marca (nunca o nome do arquivo) para decidir
+ * igual ao original. Os documentos originais são mantidos fora do repositório. `sanitized: true`
+ * identifica as credenciais cujo documento publicado teve informação pessoal removida — a seção
+ * usa essa marca (nunca o nome do arquivo) para decidir
  * quando mostrar o aviso de privacidade. Os cinco certificados de curso, sempre PUBLIC-SAFE, viraram
  * páginas planas do PDF original sem nenhum borrão (nunca continham dado sensível).
  */
@@ -52,6 +56,10 @@ export type Credential = {
   type: CredentialType;
   institution?: string;
   title: string;
+  /** Nível/modalidade acadêmica (ex.: "Pós-graduação Lato Sensu · Especialista"), quando o
+   * documento o declara explicitamente — distingue pós-graduação de graduação dentro do mesmo
+   * filtro "academic", sem precisar de uma categoria/filtro novo. */
+  level?: string;
   area?: string;
   startYear?: number;
   endYear?: number;
@@ -67,10 +75,6 @@ export type Credential = {
   supportingDocuments?: readonly CredentialDocument[];
   /** Link externo de verificação da credencial (ex.: emissor com validação online). */
   credentialUrl?: string;
-  /** Qualificação principal do perfil publicado — não é ranking de prestígio entre instituições. */
-  featured?: boolean;
-  /** Ordem editorial explícita (hierarquia deliberada, não a ordem da pasta-fonte). */
-  order?: number;
   /** O documento publicado teve informação pessoal borrada (fase E2.3). Aciona o aviso de privacidade. */
   sanitized?: boolean;
 };
@@ -86,13 +90,100 @@ export function credentialDocuments(entry: Credential): readonly CredentialDocum
 }
 
 /**
- * Hierarquia deliberada (fase E2.2): as duas formações principais primeiro (FAM, UNIVERSO — a
- * dupla identidade "Developer × Graphic Designer" do próprio portfólio), depois a credencial
- * profissional do CFT, depois os cursos complementares — ordenados por proximidade temática ao
- * perfil técnico/criativo publicado (programação e dados primeiro, depois gestão de TI, depois
- * processos administrativos e segurança do trabalho). Não é um ranking de prestígio institucional.
+ * Chave cronológica (mais antigo → mais recente), calculada só a partir de datas reais do
+ * documento — nunca da posição no array (que neste arquivo não carrega mais significado
+ * editorial nenhum). Prioriza `issueDate` (dia exato, formato DD/MM/AAAA); sem `issueDate`, usa
+ * `endYear`/`startYear` (ano de conclusão de um curso plurianual, como FAM/UNIVERSO) — o mês/dia
+ * usado nesses casos é só um desempate interno (fim do ano para `endYear`, início para
+ * `startYear`), nunca um valor inventado e exibido na tela: a UI continua mostrando apenas o ano
+ * verdadeiro (`period()`, em EducationSection.tsx). Entre datas idênticas (ex.: as quatro
+ * pós-graduações FACUMINAS, todas 2025 — mesma data de emissão, 07/04/2025, não documentada em
+ * detalhe maior que o ano em `endYear`), o desempate é a ordem de declaração abaixo (a mesma do
+ * texto de Trajetória: Inteligência Artificial, Business Intelligence, Perícia Forense,
+ * Governança) — o sort do JavaScript é estável (ECMA2019+), então isso é determinístico, não
+ * arbitrário.
+ */
+export function credentialSortKey(entry: Credential): number {
+  if (entry.issueDate) {
+    const [day, month, year] = entry.issueDate.split("/").map(Number);
+    return year * 10000 + month * 100 + day;
+  }
+  if (entry.endYear) return entry.endYear * 10000 + 1231;
+  if (entry.startYear) return entry.startYear * 10000 + 101;
+  return 0;
+}
+
+/**
+ * Nenhuma hierarquia editorial aqui: a ordem de exibição é sempre cronológica (mais antigo →
+ * mais recente, por `credentialSortKey`), independente do tipo — uma pós-graduação não entra
+ * antes de uma graduação só por ter nível acadêmico mais alto. A ordem de declaração abaixo só
+ * importa como desempate estável entre datas idênticas (ver `credentialSortKey`).
  */
 export const credentials: readonly Credential[] = [
+  {
+    id: "facuminas-inteligencia-artificial",
+    type: "academic",
+    institution: "Faculdade Facuminas de Pós-Graduação",
+    title: "Inteligência Artificial",
+    level: "Pós-graduação Lato Sensu · Especialista",
+    startYear: 2024,
+    endYear: 2025,
+    sanitized: true,
+    document: {
+      kind: "webp",
+      image: facuminasInteligenciaArtificial,
+      captionId: "credential.facuminasInteligenciaArtificial",
+      alt: "Certificado de Pós-Graduação em Inteligência Artificial, Faculdade Facuminas de Pós-Graduação, com dados pessoais borrados",
+    },
+  },
+  {
+    id: "facuminas-business-intelligence",
+    type: "academic",
+    institution: "Faculdade Facuminas de Pós-Graduação",
+    title: "Business Intelligence",
+    level: "Pós-graduação Lato Sensu · Especialista",
+    startYear: 2024,
+    endYear: 2025,
+    sanitized: true,
+    document: {
+      kind: "webp",
+      image: facuminasBusinessIntelligence,
+      captionId: "credential.facuminasBusinessIntelligence",
+      alt: "Certificado de Pós-Graduação em Business Intelligence, Faculdade Facuminas de Pós-Graduação, com dados pessoais borrados",
+    },
+  },
+  {
+    id: "facuminas-pericia-forense-computacional",
+    type: "academic",
+    institution: "Faculdade Facuminas de Pós-Graduação",
+    title: "Perícia Forense Computacional",
+    level: "Pós-graduação Lato Sensu · Especialista",
+    startYear: 2024,
+    endYear: 2025,
+    sanitized: true,
+    document: {
+      kind: "webp",
+      image: facuminasPericiaForense,
+      captionId: "credential.facuminasPericiaForense",
+      alt: "Certificado de Pós-Graduação em Perícia Forense Computacional, Faculdade Facuminas de Pós-Graduação, com dados pessoais borrados",
+    },
+  },
+  {
+    id: "facuminas-governanca-gestao-ti",
+    type: "academic",
+    institution: "Faculdade Facuminas de Pós-Graduação",
+    title: "Governança e Gestão de TI",
+    level: "Pós-graduação Lato Sensu · Especialista",
+    startYear: 2024,
+    endYear: 2025,
+    sanitized: true,
+    document: {
+      kind: "webp",
+      image: facuminasGovernancaTi,
+      captionId: "credential.facuminasGovernancaTi",
+      alt: "Certificado de Pós-Graduação em Governança e Gestão de TI, Faculdade Facuminas de Pós-Graduação, com dados pessoais borrados",
+    },
+  },
   {
     id: "fam-analise-desenvolvimento-sistemas",
     type: "academic",
@@ -100,8 +191,6 @@ export const credentials: readonly Credential[] = [
     title: "Análise e Desenvolvimento de Sistemas",
     area: "Tecnologia da Informação",
     endYear: 2024,
-    featured: true,
-    order: 1,
     sanitized: true,
     document: {
       kind: "webp",
@@ -117,8 +206,6 @@ export const credentials: readonly Credential[] = [
     title: "Design Gráfico",
     area: "Design",
     endYear: 2009,
-    featured: true,
-    order: 2,
     sanitized: true,
     document: {
       kind: "webp",
@@ -134,7 +221,6 @@ export const credentials: readonly Credential[] = [
     title: "Técnica em Eletrotécnica e Mecatrônica",
     area: "Engenharia",
     issueDate: "13/07/2020",
-    order: 3,
     sanitized: true,
     document: {
       kind: "webp",
@@ -150,7 +236,6 @@ export const credentials: readonly Credential[] = [
     title: "Lógica de Programação",
     area: "Programação",
     issueDate: "04/09/2021",
-    order: 4,
     document: {
       kind: "webp",
       image: kasolutionLogica,
@@ -168,7 +253,6 @@ export const credentials: readonly Credential[] = [
     description: "Curso de 25 horas sobre Power BI aplicado à gestão: obtenção e modelagem de dados, cálculos, visualização, publicação e automatização.",
     skills: ["Power BI", "Modelagem de dados", "DAX", "Visualização de dados"],
     credentialUrl: "https://www.escolavirtual.gov.br",
-    order: 5,
     document: {
       kind: "webp",
       image: enapPowerBi1,
@@ -192,7 +276,6 @@ export const credentials: readonly Credential[] = [
     area: "Gestão de TI",
     issueDate: "07/07/2020",
     description: "Curso autoinstrucional, nível de atualização, 5 horas.",
-    order: 6,
     document: {
       kind: "webp",
       image: fgvTi,
@@ -210,7 +293,6 @@ export const credentials: readonly Credential[] = [
     description: "Curso de 40 horas sobre administração do SEI: estrutura organizacional, controle de acesso, relatórios e auditoria.",
     skills: ["Administração do SEI", "Controle de acesso", "Auditoria de processos"],
     credentialUrl: "https://www.escolavirtual.gov.br",
-    order: 7,
     document: {
       kind: "webp",
       image: enapSei1,
@@ -235,7 +317,6 @@ export const credentials: readonly Credential[] = [
     issueDate: "11/10/2023",
     description: "Curso de 8 horas sobre eletricidade, mecânica, hidráulica, pneumática e normas técnicas aplicadas à segurança de máquinas e equipamentos.",
     credentialUrl: "https://www.escolavirtual.gov.br",
-    order: 8,
     document: {
       kind: "webp",
       image: enapNr121,

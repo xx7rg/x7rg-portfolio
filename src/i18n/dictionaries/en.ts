@@ -174,7 +174,6 @@ export const en: Dictionary = {
     title: "Education & Credentials",
     intro: "Professional growth is a continuous process. This is where I gather the studies, specializations and credentials that support the technical and creative work in this portfolio — documentation as evidence, not as a showcase.",
     filters: {
-      all: "All",
       academic: "Academic",
       training: "Training",
       credential: "Credentials",
@@ -183,7 +182,8 @@ export const en: Dictionary = {
     emptyCategory: "No items in this category yet.",
     evidenceUnavailable: "This credential doesn't have documented evidence yet.",
     viewCredential: "View credential",
-    viewAll: "View all credentials",
+    viewAll: "View all",
+    viewLess: "Show less",
     documentPrevious: "Previous document",
     documentNext: "Next document",
     privacyNotice: "Some personal information has been blurred in this public copy to protect the holder's privacy.",
@@ -1347,6 +1347,10 @@ export const en: Dictionary = {
       "credential.enapNr122": "Machine and equipment safety NR12 certificate — Enap, page 2 of 2",
       "credential.kasolutionLogica": "Programming Logic certificate — Centro Educacional Ka Solution",
       "credential.fgvTi": "IT Management Fundamentals declaration — FGV Online",
+      "credential.facuminasInteligenciaArtificial": "Postgraduate certificate in Artificial Intelligence, Faculdade Facuminas de Pós-Graduação (personal data blurred)",
+      "credential.facuminasBusinessIntelligence": "Postgraduate certificate in Business Intelligence, Faculdade Facuminas de Pós-Graduação (personal data blurred)",
+      "credential.facuminasPericiaForense": "Postgraduate certificate in Computer Forensics, Faculdade Facuminas de Pós-Graduação (personal data blurred)",
+      "credential.facuminasGovernancaTi": "Postgraduate certificate in IT Governance and Management, Faculdade Facuminas de Pós-Graduação (personal data blurred)",
     },
   },
 };

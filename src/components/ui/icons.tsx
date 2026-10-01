@@ -156,30 +156,6 @@ export const GraduationIcon = (p: IconProps) => (
   </Icon>
 );
 
-/** Livro: categoria "Formação Acadêmica". */
-export const BookIcon = (p: IconProps) => (
-  <Icon {...p}>
-    <path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H12v18H6.5A2.5 2.5 0 0 1 4 18.5v-13Z" />
-    <path d="M20 5.5A2.5 2.5 0 0 0 17.5 3H12v18h5.5a2.5 2.5 0 0 0 2.5-2.5v-13Z" />
-  </Icon>
-);
-
-/** Bússola: categoria "Formação e Especializações" (percurso contínuo). */
-export const CompassIcon = (p: IconProps) => (
-  <Icon {...p}>
-    <circle cx="12" cy="12" r="8.5" />
-    <path d="m14.5 9.5-2 5-5 2 2-5 5-2Z" />
-  </Icon>
-);
-
-/** Selo com fitas: categoria "Credenciais". */
-export const CertificateIcon = (p: IconProps) => (
-  <Icon {...p}>
-    <circle cx="12" cy="9" r="5.5" />
-    <path d="m8.5 13.5-2 7 5.5-3 5.5 3-2-7" />
-  </Icon>
-);
-
 /** Quatro cantos apontando para fora: "ampliar". */
 export const ExpandIcon = (p: IconProps) => (
   <Icon {...p}>

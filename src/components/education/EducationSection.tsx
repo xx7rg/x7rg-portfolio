@@ -1,24 +1,24 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useRef, useState, type ComponentType, type ReactNode, type SVGProps } from "react";
-import { credentialDocuments, credentials, type Credential, type CredentialType } from "@/content/credentials";
-import { BookIcon, CertificateIcon, ChevronLeftIcon, ChevronRightIcon, CompassIcon, GraduationIcon } from "@/components/ui/icons";
+import { useEffect, useRef, useState, type ReactNode } from "react";
+import { credentialDocuments, credentials, credentialSortKey, type Credential, type CredentialType } from "@/content/credentials";
+import { ChevronLeftIcon, ChevronRightIcon, GraduationIcon } from "@/components/ui/icons";
 import { MediaViewerProvider } from "@/components/media-viewer/MediaViewer";
 import { ZoomMedia } from "@/components/media-viewer/ZoomMedia";
 import { SectionLabel } from "@/components/ui/SectionLabel";
 import type { Dictionary } from "@/i18n/types";
 import styles from "./education.module.css";
 
-type FilterKey = "all" | CredentialType;
+type FilterKey = CredentialType;
 
-const filterOrder: readonly FilterKey[] = ["all", "academic", "training", "credential"];
+/** Só as três categorias reais — não existe mais uma aba "Todos" misturando tudo (correção de
+ * Rogério): cada categoria é sua própria navegação, sempre cronológica. */
+const filterOrder: readonly FilterKey[] = ["academic", "training", "credential"];
 
-const categoryIcon: Record<CredentialType, ComponentType<SVGProps<SVGSVGElement>>> = {
-  academic: BookIcon,
-  training: CompassIcon,
-  credential: CertificateIcon,
-};
+/** Quantas credenciais aparecem antes de "Ver todas" — a correção de Rogério pede uma jornada
+ * cronológica (mais antigo → mais recente), não uma vitrine das mais recentes primeiro. */
+const COLLAPSED_COUNT = 6;
 
 /**
  * Revelar restrito: o bloco sobe e ganha opacidade uma vez, quando entra na tela — a mesma técnica
@@ -64,10 +64,13 @@ function period(entry: Credential): string | null {
 
 /**
  * Formação & Credenciais: arquivo profissional documentado, não um currículo nem uma vitrine de
- * certificados. Os três tipos são filtro real (+ "todos"), a lista é plana e o painel da direita é
- * o visualizador de evidência — sempre imagem (fase E2.2: o visualizador de PDF nativo do
- * navegador foi removido de propósito, porque expunha baixar/imprimir/abrir original, que Rogério
- * rejeitou). Os dois diplomas principais entram como derivados SANITIZADOS (RG/CPF/data de
+ * certificados. As três categorias (Acadêmica/Especializações/Credenciais) são navegações
+ * independentes — não existe mais uma aba "Todos" misturando tudo (correção de Rogério): cada
+ * categoria tem sua própria lista cronológica (mais antigo → mais recente), sua própria credencial
+ * inicial (a mais antiga dela) e seu próprio limite de 6 itens antes de "Ver todas". O painel da
+ * direita é o visualizador de evidência — sempre imagem (fase E2.2: o visualizador de PDF nativo
+ * do navegador foi removido de propósito, porque expunha baixar/imprimir/abrir original, que
+ * Rogério rejeitou). Os dois diplomas principais entram como derivados SANITIZADOS (RG/CPF/data de
  * nascimento/assinaturas apagados do pixel, não só cobertos por CSS); os certificados de curso são
  * páginas planas do PDF original (nunca continham dado sensível). Reusa o ZoomMedia pela mesma
  * interface pública de qualquer projeto — nunca o original, sempre o derivado.
@@ -78,27 +81,40 @@ function period(entry: Credential): string | null {
  */
 export function EducationSection({ dict }: { dict: Dictionary }) {
   const { education: copy, viewer } = dict;
-  const [activeFilter, setActiveFilter] = useState<FilterKey>("all");
+  const [activeFilter, setActiveFilter] = useState<FilterKey>("academic");
   const [manualSelectedId, setManualSelectedId] = useState<string | null>(null);
   const [documentIndex, setDocumentIndex] = useState(0);
   const [lastSelectedId, setLastSelectedId] = useState<string | null>(null);
+  const [expanded, setExpanded] = useState(false);
+  const [lastFilter, setLastFilter] = useState<FilterKey>("academic");
 
-  const filtered = (activeFilter === "all" ? credentials : credentials.filter((entry) => entry.type === activeFilter))
+  const filtered = credentials
+    .filter((entry) => entry.type === activeFilter)
     .slice()
-    .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+    .sort((a, b) => credentialSortKey(a) - credentialSortKey(b));
 
-  const selectedId = filtered.some((entry) => entry.id === manualSelectedId)
-    ? manualSelectedId
-    : (filtered.find((entry) => entry.featured)?.id ?? filtered[0]?.id ?? null);
+  // Sem destaque editorial (nunca mais `featured`): a credencial inicial de cada categoria é
+  // sempre a cronologicamente mais antiga dela — o mesmo critério que ordena a lista inteira.
+  const selectedId = filtered.some((entry) => entry.id === manualSelectedId) ? manualSelectedId : (filtered[0]?.id ?? null);
   const selected = filtered.find((entry) => entry.id === selectedId) ?? null;
 
-  // Reinicia o documento em foco sempre que a credencial selecionada muda (nunca o índice antigo
-  // de uma credencial diferente). Ajuste de estado durante a renderização (padrão oficial do
-  // React para "resetar estado quando uma prop muda"), não um efeito — evita o render em cascata.
+  // Reinicia o documento em foco sempre que a credencial selecionada muda, e troca de categoria
+  // sempre recolhe a lista E limpa a seleção manual (nunca herda o item escolhido numa categoria
+  // diferente — a seleção inicial da nova categoria é sempre a mais antiga dela). Ajuste de estado
+  // durante a renderização (padrão oficial do React para "resetar estado quando uma prop muda"),
+  // não um efeito — evita o render em cascata.
   if (selectedId !== lastSelectedId) {
     setLastSelectedId(selectedId);
     setDocumentIndex(0);
   }
+  if (activeFilter !== lastFilter) {
+    setLastFilter(activeFilter);
+    setExpanded(false);
+    setManualSelectedId(null);
+  }
+
+  const visibleEntries = expanded ? filtered : filtered.slice(0, COLLAPSED_COUNT);
+  const hasMoreEntries = filtered.length > COLLAPSED_COUNT;
 
   const documents = selected ? credentialDocuments(selected) : [];
   const currentDocument = documents[documentIndex] ?? null;
@@ -143,10 +159,9 @@ export function EducationSection({ dict }: { dict: Dictionary }) {
             </div>
 
             {filtered.length > 0 ? (
-              <ul className={styles.groupList}>
-                {filtered.map((entry) => {
-                  const Icon = categoryIcon[entry.type];
-                  return (
+              <>
+                <ul className={styles.groupList}>
+                  {visibleEntries.map((entry) => (
                     <li key={entry.id}>
                       <button
                         type="button"
@@ -154,15 +169,25 @@ export function EducationSection({ dict }: { dict: Dictionary }) {
                         aria-current={selectedId === entry.id ? "true" : undefined}
                         onClick={() => selectCredential(entry.id)}
                       >
-                        {activeFilter === "all" && <Icon aria-hidden="true" className={styles.entryIcon} />}
                         <span className={styles.entryTitle}>{entry.title}</span>
                         {entry.institution && <span className={styles.entryInstitution}>{entry.institution}</span>}
+                        {entry.level && <span className={styles.entryLevel}>{entry.level}</span>}
                         {period(entry) && <span className={styles.entryPeriod}>{period(entry)}</span>}
                       </button>
                     </li>
-                  );
-                })}
-              </ul>
+                  ))}
+                </ul>
+                {hasMoreEntries && (
+                  <button
+                    type="button"
+                    className={styles.listToggle}
+                    aria-expanded={expanded}
+                    onClick={() => setExpanded((value) => !value)}
+                  >
+                    {expanded ? copy.viewLess : `${copy.viewAll} (${filtered.length})`}
+                  </button>
+                )}
+              </>
             ) : (
               <p className={styles.groupEmpty}>{credentials.length > 0 ? copy.emptyCategory : copy.preparing}</p>
             )}
@@ -174,6 +199,7 @@ export function EducationSection({ dict }: { dict: Dictionary }) {
             ) : (
               <article className={styles.detail}>
                 {selected.institution && <p className={styles.detailInstitution}>{selected.institution}</p>}
+                {selected.level && <p className={styles.detailLevel}>{selected.level}</p>}
                 <h3 className={styles.detailTitle}>{selected.title}</h3>
                 {selected.area && <p className={styles.detailArea}>{selected.area}</p>}
                 {period(selected) && <p className={styles.detailPeriod}>{period(selected)}</p>}

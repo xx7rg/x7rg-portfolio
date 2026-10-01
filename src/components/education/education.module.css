@@ -82,16 +82,20 @@
 .filters {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 4px;
 }
 
+/* Preenchimento mais estreito que o padrão de pílula do resto do portfólio: as três categorias
+   (sem o "Todos" que existia antes) precisam caber numa única linha dentro da coluna do índice —
+   o texto e o tamanho da fonte continuam os mesmos, só o respiro horizontal da pílula encolheu. */
 .filter {
-  padding: 8px 16px;
+  padding: 5px 6px;
   border: 1px solid var(--rule);
   border-radius: 999px;
   background: none;
   color: var(--ink-3);
   font-size: var(--text-small);
+  white-space: nowrap;
   cursor: pointer;
   transition:
     border-color var(--dur-fast) var(--ease-press),
@@ -125,6 +129,26 @@
   list-style: none;
 }
 
+/* Alterna entre os 6 itens mais antigos e o acervo cronológico completo — texto simples, sem
+   pílula/borda, no mesmo espírito discreto do resto do índice. */
+.listToggle {
+  margin-top: 12px;
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--ink-3);
+  font-size: var(--text-small);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+  transition: color var(--dur-fast) var(--ease-press);
+}
+
+.listToggle:hover,
+.listToggle:focus-visible {
+  color: var(--accent);
+}
+
 .entry {
   display: flex;
   flex-wrap: wrap;
@@ -142,13 +166,6 @@
   transition: color var(--dur-fast) var(--ease-press);
 }
 
-.entryIcon {
-  flex: none;
-  align-self: center;
-  font-size: 1rem;
-  color: var(--ink-4);
-}
-
 .entryTitle {
   color: var(--ink-2);
   font-size: var(--text-small);
@@ -164,6 +181,14 @@
 .entryInstitution {
   color: var(--ink-4);
   font-size: var(--text-meta);
+}
+
+/* Nível acadêmico (ex.: "Pós-graduação Lato Sensu · Especialista"), só quando a credencial o
+   declara — distingue pós-graduação de graduação sem precisar de um filtro novo. */
+.entryLevel {
+  color: var(--ink-4);
+  font-size: var(--text-meta);
+  font-style: italic;
 }
 
 .entryPeriod {
@@ -202,6 +227,13 @@
   color: var(--ink-4);
   font-size: var(--text-meta);
   letter-spacing: 0.02em;
+}
+
+.detailLevel {
+  margin: 0;
+  color: var(--ink-4);
+  font-size: var(--text-meta);
+  font-style: italic;
 }
 
 .detailTitle {

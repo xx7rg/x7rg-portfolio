@@ -738,9 +738,9 @@ export type Dictionary = {
     label: string;
     title: string;
     intro: string;
-    /** Os três tipos de credencial (content/credentials.ts: CredentialType) + "todos". */
+    /** As três categorias (content/credentials.ts: CredentialType) — sem um "todos" combinado;
+     * cada uma é sua própria navegação, sempre cronológica. */
     filters: {
-      all: string;
       academic: string;
       training: string;
       credential: string;
@@ -753,8 +753,12 @@ export type Dictionary = {
     evidenceUnavailable: string;
     /** Ação sobre uma credencial com evidência (documento PDF, aberto em nova aba). */
     viewCredential: string;
-    /** Ação futura (fase E2) para abrir o acervo completo, com destaques + arquivo. */
+    /** Expande a categoria atual além dos 6 itens mais antigos — o componente anexa "(N)" com a
+     * contagem total da categoria (ex.: "Ver todas (8)"), nunca "todas as credenciais" (não existe
+     * mais uma vista combinada de todas as categorias). */
     viewAll: string;
+    /** Recolhe de volta aos 6 itens mais antigos da categoria atual, depois de "viewAll" expandir. */
+    viewLess: string;
     /** Rótulo acessível do controle "documento anterior" do visualizador. */
     documentPrevious: string;
     /** Rótulo acessível do controle "próximo documento" do visualizador. */
