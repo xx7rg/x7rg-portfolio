@@ -155,6 +155,9 @@ npm run check:behavior -- --quick
 
 O CI verifica tipos, lint, o manifesto visual quando disponível, o build e as
 interações no navegador. A auditoria de produção bloqueia alertas altos e críticos.
+No Linux do CI, o Chrome roda em uma tela virtual com Xvfb (`--headed`), para
+que os testes de mouse e hover tenham as capacidades de um navegador desktop.
+O comando local mantém o modo headless por padrão.
 
 O patch `patches/braces+3.0.3.patch` é aplicado automaticamente na instalação
 e limita a profundidade de padrões e dos percursos recursivos. A instalação falha
