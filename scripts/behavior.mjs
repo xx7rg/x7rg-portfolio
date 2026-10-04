@@ -58,10 +58,19 @@ const view = async (w, h, { mobile = false, reduced = false, touch = false } = {
   await send("Emulation.setEmulatedMedia", { features: [{ name: "prefers-reduced-motion", value: reduced ? "reduce" : "no-preference" }] });
   await send("Emulation.setTouchEmulationEnabled", touch ? { enabled: true, maxTouchPoints: 1 } : { enabled: false });
 };
-const open = async (route, settle = 2600) => {
+const open = async (route, settleMs = 2600) => {
   const a = once("Page.loadEventFired"); await send("Page.navigate", { url: "about:blank" }); await a;
   const b = once("Page.loadEventFired"); await send("Page.navigate", { url: BASE + route }); await b;
-  await sleep(settle);
+  await settle(settleMs);
+  const slug = new URL(route, BASE).hash.slice(1);
+  if (slug) {
+    const deadline = Date.now() + 15000;
+    while (Date.now() < deadline) {
+      if (await ev(`document.getElementById(${JSON.stringify(`${slug}-case`)})?.hidden === false`)) break;
+      await frame();
+      await sleep(100);
+    }
+  }
 };
 const ev = async (expression) => {
   const r = await send("Runtime.evaluate", { returnByValue: true, awaitPromise: true, expression });
@@ -158,8 +167,16 @@ async function languageControl() {
   // O idioma novo abre o MESMO projeto.
   await view(1440, 900);
   await open("/pt#light-login", 2600);
-  await ev(`document.querySelector('a[hreflang=en]')?.click()`); await sleep(2500);
-  const loc = await ev(`({ p: location.pathname + location.hash, open: !document.getElementById('light-login-case')?.hidden })`);
+  await ev(`document.querySelector('a[hreflang=en]')?.click()`);
+  // A transição do App Router precisa de quadros no navegador headless.
+  // Aguarde o resultado real em vez de uma pausa fixa sem renderização.
+  const navigationDeadline = Date.now() + 15000;
+  let loc;
+  do {
+    await frame();
+    await sleep(100);
+    loc = await ev(`({ p: location.pathname + location.hash, open: document.getElementById('light-login-case')?.hidden === false })`);
+  } while ((loc.p !== "/en#light-login" || !loc.open) && Date.now() < navigationDeadline);
   check("idioma", "trocar PT->EN mantém o projeto aberto", loc.p === "/en#light-login" && loc.open, JSON.stringify(loc));
 }
 

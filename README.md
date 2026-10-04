@@ -3,13 +3,15 @@
 
   # x7rG Portfolio
 
+  [![CI](https://github.com/xx7rg/x7rg-portfolio/actions/workflows/ci.yml/badge.svg)](https://github.com/xx7rg/x7rg-portfolio/actions/workflows/ci.yml)
+
   **Portfólio multilíngue de Rogério Gomes — Developer × Graphic Designer.**
 
-  [![Next.js](https://img.shields.io/badge/Next.js-16.3.5-000000?logo=nextdotjs)](https://nextjs.org/)
+  [![Next.js](https://img.shields.io/badge/Next.js-16.3.8-000000?logo=nextdotjs)](https://nextjs.org/)
   [![React](https://img.shields.io/badge/React-19.2.8-149ECA?logo=react&logoColor=white)](https://react.dev/)
   [![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
   ![Idiomas](https://img.shields.io/badge/idiomas-PT--BR%20%7C%20EN%20%7C%20ES-c99a28)
-  ![Projetos](https://img.shields.io/badge/projetos-10-6f4cff)
+  ![Projetos](https://img.shields.io/badge/projetos-11-6f4cff)
 
   **Publicado por x7rG ENTERPRISE™**
 
@@ -76,6 +78,7 @@ O portfólio foi construído como uma experiência editorial responsiva. Ele ofe
 - **Login The Moon** e **Light Login** exploram narrativas e interações em telas de acesso.
 - **Checkout** estuda uma interface educativa de pagamento com React, TypeScript e CSS 3D; não processa pagamentos.
 - **Recibo Digital** simula a impressão de um recibo diretamente no navegador.
+- **Matteo** apresenta um convite afetivo com ambientes de dia, tarde e noite, galeria e informações da celebração.
 
 ## Como funciona
 
@@ -109,7 +112,8 @@ Os projetos são cadastrados em `src/content/projects.ts`. O campo `kind` define
 
 ## Executar localmente
 
-Requisitos: **Node.js 20 ou mais recente** e npm.
+Requisitos: **Node.js 22 ou mais recente** e npm. Os testes de comportamento
+usam o WebSocket nativo do Node e precisam de Edge ou Chrome instalado.
 
 ```bash
 git clone https://github.com/xx7rg/x7rg-portfolio.git
@@ -131,6 +135,8 @@ Abra [http://localhost:3000/pt](http://localhost:3000/pt).
 | `npm run preview` | Serve localmente a pasta `out` em `http://127.0.0.1:3000`. |
 | `npm run check:behavior -- --quick` | Verifica idiomas, responsividade, abertura dos casos, histórico, mídia e interações principais. Requer `npm run dev` ou `npm run preview` em outro terminal. |
 | `npm run check:approved` | Confere o manifesto visual interno quando ele estiver presente; no clone público, informa `SKIP`. |
+| `npm run test:security` | Testa a proteção local contra recursão excessiva em `braces`. |
+| `npm run audit:dev` | Executa os testes de segurança e audita toda a árvore, aceitando apenas o alerta coberto pelo patch local. |
 
 Para testar o build de produção:
 
@@ -144,6 +150,20 @@ Em outro terminal:
 ```bash
 npm run check:behavior -- --quick
 ```
+
+## Validação automática e segurança
+
+O CI verifica tipos, lint, o manifesto visual quando disponível, o build e as
+interações no navegador. A auditoria de produção bloqueia alertas altos e críticos.
+
+O patch `patches/braces+3.0.3.patch` é aplicado automaticamente na instalação
+e limita a profundidade de padrões e dos percursos recursivos. A instalação falha
+se o patch não puder ser aplicado. O `npm audit` original ainda lista
+[GHSA-vfj7-8cjw-p6xm](https://github.com/advisories/GHSA-vfj7-8cjw-p6xm),
+porque consulta a versão publicada, sem analisar a correção local.
+`npm run audit:dev` exige que os testes dessa proteção passem e aceita somente
+esse alerta específico; qualquer outro alerta bloqueia o CI. O patch e a exceção
+devem ser removidos quando houver uma versão oficial corrigida.
 
 ## Estrutura principal
 
