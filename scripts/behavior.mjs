@@ -18,7 +18,6 @@ const PROJECT_COUNT = (fs.readFileSync(path.join(ROOT, "src/content/projects.ts"
 
 const BASE = process.env.BASE || "http://localhost:3000";
 const QUICK = process.argv.includes("--quick");
-const HEADED = process.argv.includes("--headed");
 const CANDIDATES = [
   process.env.EDGE_PATH,
   "C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe",
@@ -35,7 +34,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const race = (p, ms) => Promise.race([p, new Promise((r) => setTimeout(() => r("timeout"), ms))]);
 const PORT = 9700 + Math.floor(Math.random() * 200);
 const profile = fs.mkdtempSync(path.join(os.tmpdir(), "x7rg-behavior-"));
-const proc = spawn(BROWSER, [...(HEADED ? [] : ["--headless=new"]), `--remote-debugging-port=${PORT}`, `--user-data-dir=${profile}`, "--no-first-run", "--hide-scrollbars", "about:blank"], { stdio: "ignore" });
+const proc = spawn(BROWSER, ["--headless=new", `--remote-debugging-port=${PORT}`, `--user-data-dir=${profile}`, "--no-first-run", "--hide-scrollbars", "about:blank"], { stdio: "ignore" });
 let cleaned = false;
 const cleanup = () => { if (cleaned) return; cleaned = true; try { proc.kill(); } catch {} setTimeout(() => { try { fs.rmSync(profile, { recursive: true, force: true }); } catch {} }, 800); };
 process.on("exit", cleanup);
