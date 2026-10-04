@@ -55,7 +55,13 @@ await send("Page.enable"); await send("Runtime.enable");
 
 const view = async (w, h, { mobile = false, reduced = false, touch = false } = {}) => {
   await send("Emulation.setDeviceMetricsOverride", { width: w, height: h, deviceScaleFactor: 1, mobile });
-  await send("Emulation.setEmulatedMedia", { features: [{ name: "prefers-reduced-motion", value: reduced ? "reduce" : "no-preference" }] });
+  await send("Emulation.setEmulatedMedia", { features: [
+    { name: "prefers-reduced-motion", value: reduced ? "reduce" : "no-preference" },
+    { name: "pointer", value: touch ? "coarse" : "fine" },
+    { name: "any-pointer", value: touch ? "coarse" : "fine" },
+    { name: "hover", value: touch ? "none" : "hover" },
+    { name: "any-hover", value: touch ? "none" : "hover" },
+  ] });
   await send("Emulation.setTouchEmulationEnabled", touch ? { enabled: true, maxTouchPoints: 1 } : { enabled: false });
 };
 const open = async (route, settleMs = 2600) => {
@@ -183,6 +189,8 @@ async function languageControl() {
 async function badgeShield() {
   await view(1440, 900);
   await open("/pt", 3200);
+  const mouseCapabilities = await ev(`matchMedia('(any-hover: hover) and (any-pointer: fine)').matches`);
+  check("ambiente", "desktop simula mouse com hover e ponteiro fino", mouseCapabilities);
   const stable = async () => { let last = ""; for (let i = 0; i < 40; i++) { const now = await ev(`(() => { const r = document.querySelector('[class*=shieldSlot]').parentElement.getBoundingClientRect(); return [r.left, r.top, r.width].map((n) => n.toFixed(1)).join(); })()`); if (now === last) return; last = now; await sleep(400); } };
   await stable();
   const c = await ev(`(() => { const s = document.querySelector('[class*=shieldSlot]'); const r = s.parentElement.getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2, R: r.width / 2, persp: getComputedStyle(s).perspective, slotPE: getComputedStyle(s).pointerEvents, top: (() => { const e = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2); return s.parentElement.contains(e); })() }; })()`);
